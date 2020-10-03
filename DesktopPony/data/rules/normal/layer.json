@@ -1,0 +1,26 @@
+{
+    "layer_order":[
+        "body.head.ears.behind",
+        "mane.head.behind",
+        "mane.neck.behind",
+        "body.wings.behind",
+        "tail.behind",
+        "body.legs.fore.behind",
+		"body.legs.hind.behind",
+        "body.body.main",
+        "tail.front",
+		"body.neck.main",
+        "body.head.main",
+        "body.head.eyes.behind",
+        "body.head.mouth.main",
+        "body.head.nose.main",
+        "body.head.horn.main",
+        "body.head.eyes.front",
+        "body.legs.fore.front",
+		"body.legs.hind.front",
+        "wings.front",
+        "mane.head.front",
+        "mane.neck.front",
+        "head.ear.front"
+    ]
+}

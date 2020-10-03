@@ -1,6 +1,4 @@
 build-DesktopPony-Desktop_Qt_5_13_0_MinGW_32_bit-Debug
 build-DesktopPony-Desktop_Qt_5_13_0_MinGW_32_bit-Release
 DesktopPony/DesktopPony.pro.user
-rules
-old
-Doxygen
+杂项

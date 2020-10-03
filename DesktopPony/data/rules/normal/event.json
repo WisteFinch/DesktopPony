@@ -1,0 +1,20 @@
+{
+    "event_trot": {
+        "signal": "signal_trot",
+        "is_main": true,
+        "event_cancel": {
+            "event_stand": true,
+            "event_blink": false
+        },
+        "main_action": "trot",
+        "additional_action": {}
+    },
+    "event_blink": {
+        "signal": "signal_blink",
+        "is_main": false,
+        "event_cancel": {},
+        "additional_action": [
+            "blink"
+        ]
+    }
+}

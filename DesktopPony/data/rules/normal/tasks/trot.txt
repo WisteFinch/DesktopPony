@@ -1,0 +1,40 @@
+{
+	name = trot;
+	author = root;
+	desc = test;
+	standard = normal;
+	group_trigger = {};
+	group_option = {};
+	events = {
+			{
+				name = begin;
+				trigger = {};
+				option = {};
+			};
+			{
+				name = end;
+				trigger = {};
+				option = {};
+			};
+		};
+};		
+{
+        name = stand;
+        author = root;
+        desc = test;
+        standard = normal;
+        group_trigger = {};
+        group_option = {};
+        events = {
+                        {
+                                name = begin;
+                                trigger = {};
+                                option = {};
+                        };
+                        {
+                                name = end;
+                                trigger = {};
+                                option = {};
+                        };
+                };
+};
