@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>data/rules/normal/action.json</file>
+        <file>data/rules/normal/layer.json</file>
+        <file>data/rules/normal/tasks/trot.txt</file>
+    </qresource>
+</RCC>
