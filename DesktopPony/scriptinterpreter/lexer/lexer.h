@@ -39,14 +39,16 @@ class ScriptLexer
 public:
     ScriptLexer();
 
-    QVector<QPair<QString, SYN>> *m_token;
+    QVector<TokenData> *m_tokens;
 
-    QVector<QPair<QString, SYN>>* divToken(QString str);
+    QVector<TokenData>* divToken(QString str);
 
 private:
     QChar m_ch;
     QString m_token_num, m_str;
     int m_point;
+    int m_line;
+    int m_row;
 
     SYN judge();
     inline QChar getNext();

@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>QSS/uisettings.css</file>
+        <file>QSS/default.css</file>
     </qresource>
 </RCC>

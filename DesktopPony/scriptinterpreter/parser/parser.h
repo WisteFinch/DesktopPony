@@ -34,28 +34,39 @@
 #include <QString>
 #include <QPair>
 #include <QDebug>
+#include "iostream"
 
 class ScriptParser
 {
 public:
-    ScriptParser(ScriptLexer *l);
+    ScriptParser();
+
+    enum MODE{
+        mode_normal,
+        mode_cond
+    };
 
     ScriptParserNode *m_p_root; ///< 根节点
     ScriptLexer *m_p_lexer; ///< 词法划分器
 
     int m_index; ///< 序号
 
-/*Test_Begin
+/*test
     void ergodic(ScriptParserNode *n);
-    void test();
-Test_End*/
+    void test(QString s);
+*/
+
+    void set(QString s);
+    void set(QString s, MODE m);
+    void set(ScriptLexer *l);
+    void set(ScriptLexer *l, MODE m);
 
     void eat(QString s);
     void eat(SYN s);
-    QPair<QString, SYN> getToken();
-    QPair<QString, SYN> curToken();
-    QPair<QString, SYN> lookAhead();
-    QPair<QString, SYN> lookAhead(int i);
+    TokenData getToken();
+    TokenData curToken();
+    TokenData lookAhead();
+    TokenData lookAhead(int i);
     void errorExit();
 
     void pStatementList(ScriptParserNode *node); ///< 语句列表

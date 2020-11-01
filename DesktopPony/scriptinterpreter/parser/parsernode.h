@@ -41,12 +41,12 @@ public:
     ~ScriptParserNode();
 
     void set(QString d, PARSER p, ScriptParserNode *l, ScriptParserNode *r);
-    void set(QString d, PARSER p, ScriptParserNode *l, ScriptParserNode *r, SYN syn);
+    void set(QString d, PARSER p, ScriptParserNode *l, ScriptParserNode *r, TokenData t);
     ScriptParserNode *m_p_left_child = nullptr;
     ScriptParserNode *m_p_right_child = nullptr;
     PARSER m_p = parser_null;
     QString m_d = nullptr;
-    SYN m_syn = syn_null;
+    TokenData m_t;
 
 };
 

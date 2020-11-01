@@ -146,4 +146,33 @@ enum PARSER{
     parser_string_literal
 };
 
+struct TokenData{
+    SYN syn = syn_null;
+    QString str = nullptr;
+    int line = 0;
+    int row = 0;
+};
+
+enum VALUE_TYPE{
+    type_int,
+    type_float,
+    type_bool,
+    type_str,
+    type_null,
+    type_empty,
+    type_error
+};
+
+struct Value{
+    int _int = 0;
+    float _float = 0;
+    bool _bool = false;
+    QString _str = nullptr;
+    VALUE_TYPE type = type_empty;
+    void set(int i){type = type_int; _int = i;}
+    void set(float f ){type = type_float; _float = f;}
+    void set(bool b){type = type_bool; _bool = b;}
+    void set(QString s){type = type_str; _str = s;}
+};
+
 #endif // LIMIT_H
