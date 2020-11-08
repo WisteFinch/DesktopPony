@@ -29,7 +29,7 @@
 #ifndef PARSERNODE_H
 #define PARSERNODE_H
 
-#include "scriptinterpreter/limit.h"
+#include "scriptinterpreter/scriptlimit.h"
 #include <QPair>
 #include <QString>
 
@@ -40,13 +40,13 @@ public:
     ScriptParserNode();
     ~ScriptParserNode();
 
-    void set(QString d, PARSER p, ScriptParserNode *l, ScriptParserNode *r);
-    void set(QString d, PARSER p, ScriptParserNode *l, ScriptParserNode *r, TokenData t);
-    ScriptParserNode *m_p_left_child = nullptr;
-    ScriptParserNode *m_p_right_child = nullptr;
-    PARSER m_p = parser_null;
-    QString m_d = nullptr;
-    TokenData m_t;
+    void set(QString d, PARSER p, ScriptParserNode *l, ScriptParserNode *r); ///< 设置节点信息
+    void set(QString d, PARSER p, ScriptParserNode *l, ScriptParserNode *r, TokenData t); ///< 设置节点信息
+    ScriptParserNode *m_p_left_child = nullptr; ///< 左节点
+    ScriptParserNode *m_p_right_child = nullptr; ///< 右节点
+    PARSER m_p = parser_null; ///< 语法类型
+    QString m_d = nullptr; ///< 文本数据
+    TokenData m_t; ///< 词块
 
 };
 

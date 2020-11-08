@@ -56,17 +56,46 @@ public:
     void test(QString s);
 */
 
+    /**
+     * @brief 设置语法树
+     * @param 脚本文本
+     */
     void set(QString s);
+
+    /**
+     * @brief 设置语法树
+     * @param 脚本文本, 类型
+     */
     void set(QString s, MODE m);
+
+    /**
+     * @brief 设置语法树
+     * @param 词法划分器
+     */
     void set(ScriptLexer *l);
+
+    /**
+     * @brief 设置语法树
+     * @param 词法划分器, 类型
+     */
     void set(ScriptLexer *l, MODE m);
 
+
+    /**
+     * @brief 取词块
+     * @param 词块文本
+     */
     void eat(QString s);
+
+    /**
+     * @brief 取词块
+     * @param 词块类型
+     */
     void eat(SYN s);
-    TokenData getToken();
-    TokenData curToken();
-    TokenData lookAhead();
-    TokenData lookAhead(int i);
+    TokenData getToken(); ///< 获取词块
+    TokenData curToken(); ///< 当前词块
+    TokenData lookAhead(); ///< 前一词块
+    TokenData lookAhead(int i); ///< 前第n个词块
     void errorExit();
 
     void pStatementList(ScriptParserNode *node); ///< 语句列表

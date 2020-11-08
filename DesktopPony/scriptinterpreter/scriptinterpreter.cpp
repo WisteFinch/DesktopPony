@@ -9,24 +9,36 @@ Value ScriptInterpreter::run(ScriptParserNode *node)
 {
     QMap<QString, QVector<QPair<int, Value> >* > *data = new QMap<QString, QVector<QPair<int, Value>>*>;
     QVector<QVector<QString> *> *record = new QVector<QVector<QString> *>;
-    if(node->m_p == parser_sl)
-    {
-        iStatementList(node, data, record, 0);
-    }else if(node->m_p == parser_exp)
-    {
-        return iExpression(node, data, record, 0).first();
-    }else if(node->m_p == parser_cond_head_exp)
-    {
-        return iConditionalHeadExpression(node, data, record, 0);
+    try {
+        if(node->m_p == parser_sl)
+        {
+            iStatementList(node, data, record, 0);
+        }else if(node->m_p == parser_exp)
+        {
+            return iExpression(node, data, record, 0).first();
+        }else if(node->m_p == parser_cond_head_exp)
+        {
+            return iConditionalHeadExpression(node, data, record, 0);
+        }
+    } catch (ScriptException& se) {
+        ExceptionHandle(se);
     }
-    return Value();
+    Value v;
+    v.type = type_error;
+    return v;
 }
 
 Value ScriptInterpreter::run(QString str)
 {
 
     ScriptParser *s = new ScriptParser();
-    s->set(str);
+    try {
+        s->set(str);
+    } catch (ScriptException& se) {
+        ExceptionHandle(se);
+        Value v;
+        v.type = type_error;
+    }
     return run(s->m_p_root);
 }
 
@@ -96,25 +108,31 @@ void ScriptInterpreter::iIf(ScriptParserNode *node, QMap<QString, QVector<QPair<
     record->append(new QVector<QString>);
     QVector<Value> value = iExpression(node->m_p_left_child, data, record, layer + 1);
     clearVariable(data, record, layer + 1);
-    if(value.size() > 1)
+    if(value.size() != 1)
+    {
+        /************
+         * 异常
+         * 参数数量错误
+         ************/
+        QVector<TokenData> t;
+        t.append(node->m_t);
+        QVector<int> i;
+        i.append(1);
+        i.append(value.size());
+        throw new ScriptException(ScriptException::C001, t, i);
+    }else if(value.first().type != type_bool && value.first().type != type_int)
     {
         /*
-         * 错误
-         * 过多参数
+         * 异常
+         * 数据类型
          */
-    }else if(value.first().type != type_bool)
-    {
-        /*
-         * 错误
-         * 数据类型不匹配(期望bool)
-        */
     }
-    iIfBody(node->m_p_right_child, data, record, layer, value.first()._bool);
+    iIfBody(node->m_p_right_child, data, record, layer, value.first());
 }
 
-void ScriptInterpreter::iIfBody(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer, bool flag)
+void ScriptInterpreter::iIfBody(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer, Value flag)
 {
-    if(flag)
+    if(flag._bool || flag._int)
     {
         iCompoundStatement(node->m_p_left_child, data, record, layer);
     }else if(node->m_p_right_child != nullptr)
@@ -182,7 +200,7 @@ void ScriptInterpreter::iDeclareBasic(ScriptParserNode *node, QMap<QString, QVec
         if(e.size() > 1)
         {
             /*
-             * 错误
+             * 异常
              * 过多参数
              */
         }
@@ -192,7 +210,7 @@ void ScriptInterpreter::iDeclareBasic(ScriptParserNode *node, QMap<QString, QVec
         }else
         {
             /*
-             * 错误
+             * 异常
              * 数据类型不匹配(期望int)
             */
         }
@@ -205,7 +223,7 @@ void ScriptInterpreter::iDeclareBasic(ScriptParserNode *node, QMap<QString, QVec
         }else
         {
             /*
-            * 错误
+            * 异常
             * 数据类型不匹配
             */
         }
@@ -217,7 +235,7 @@ void ScriptInterpreter::iDeclareBasic(ScriptParserNode *node, QMap<QString, QVec
         }else
         {
             /*
-            * 错误
+            * 异常
             * 数据类型不匹配
             */
         }
@@ -229,7 +247,7 @@ void ScriptInterpreter::iDeclareBasic(ScriptParserNode *node, QMap<QString, QVec
         }else
         {
             /*
-            * 错误
+            * 异常
             * 数据类型不匹配
             */
         }
@@ -241,7 +259,7 @@ void ScriptInterpreter::iDeclareBasic(ScriptParserNode *node, QMap<QString, QVec
         }else
         {
             /*
-             * 错误
+             * 异常
              * 数据类型不匹配
              */
         }
@@ -261,10 +279,22 @@ TokenData ScriptInterpreter::iId(ScriptParserNode *node)
 QVector<Value> ScriptInterpreter::iExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     QVector<Value> value;
-    value.append(iAssignmentExpression(node->m_p_left_child, data, record, layer));
+
+    //文法：EXP -> AEXP
+    try {
+        value.append(iAssignmentExpression(node->m_p_left_child, data, record, layer));
+    } catch (ScriptException&se) {
+        throw se;
+    }
+
+    //文法：EXP -> AEXP, EXP
     if(node->m_p_right_child != nullptr)
     {
-        value.append(iExpression(node->m_p_right_child, data, record, layer));
+        try {
+            value.append(iExpression(node->m_p_right_child, data, record, layer));
+        } catch (ScriptException& se) {
+            throw se;
+        }
     }
     return value;
 }
@@ -273,71 +303,126 @@ Value ScriptInterpreter::iAssignmentExpression(ScriptParserNode *node, QMap<QStr
 {
     if(node->m_p_left_child->m_p == parser_cond_head_exp)
     {
-        return iConditionalHeadExpression(node->m_p_left_child, data, record, layer);
+        //文法：AEXP -> CHEXP
+        try {
+            return iConditionalHeadExpression(node->m_p_left_child, data, record, layer);
+        } catch (ScriptException& se) {
+            throw se;
+        }
+    }else{
+        /*
+        * UEXP AOP AEXP
+        */
     }
-    /*
-     * 赋值运算
-     */
 }
 
 Value ScriptInterpreter::iConditionalHeadExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value value = iLogicalOrExpression(node->m_p_left_child, data, record, layer);
+    Value left;
+
+    //文法：CHEXP	 -> LOREXP
+    //解释左节点
+    try {
+        left = iLogicalOrExpression(node->m_p_left_child, data, record, layer);
+    } catch (ScriptException& se) {
+        throw se;
+    }
+
+    //文法：CHEXP -> LOREXP ? CBEXP
     if(node->m_p_right_child != nullptr)
     {
-        if(value.type != type_bool)
+        if(left.type != type_bool && left.type != type_int) //异常：数据类型不符
         {
             /*
-             * 错误
-             * 数据类型不匹配（期望bool）
-             */
+            * 异常
+            * 数据类型不匹配（期望bool,int）
+            */
         }
-        return iConditionalBodyExpression(value._bool, node->m_p_left_child, data, record, layer);
+
+        try {
+            return iConditionalBodyExpression(node->m_p_left_child, data, record, layer, left);
+        } catch (ScriptException& se) {
+            throw se;
+        }
     }
-    return value;
+    return left;
 }
 
-Value ScriptInterpreter::iConditionalBodyExpression(bool flag, ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iConditionalBodyExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer, Value flag)
 {
-    if(flag)
+    //文法：CBEXP	 -> AEXP : CHEXP
+    if(flag._bool || flag._int)
     {
-        QVector<Value> value = iExpression(node->m_p_left_child, data, record, layer);
-        if(value.size() > 1)
-        {
-            /*
-             * 错误
-             * 过多参数
-             */
+        QVector<Value> value;
+        try {
+            value = iExpression(node->m_p_left_child, data, record, layer);
+        } catch (ScriptException& se) {
+            throw se;
         }
+
+        if(value.size() != 1)
+        {
+            /************
+             * 异常
+             * 参数数量错误
+             ************/
+            QVector<TokenData> t;
+            t.append(node->m_t);
+            QVector<int> i;
+            i.append(1);
+            i.append(value.size());
+            throw new ScriptException(ScriptException::C001, t, i);
+        }
+
         return value.first();
-    }else
-    {
-        return iConditionalHeadExpression(node->m_p_right_child, data, record, layer);
+    }else{
+        try {
+            return iConditionalHeadExpression(node->m_p_right_child, data, record, layer);
+        } catch (ScriptException& se) {
+            throw se;
+        }
     }
 }
 
 Value ScriptInterpreter::iLogicalOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value left = iLogicalAndExpression(node->m_p_left_child, data, record, layer);
+    Value left;
+
+    //文法：LOREXP -> LANDEXP
+    //解释左节点
+    try {
+        left = iLogicalAndExpression(node->m_p_left_child, data, record, layer);
+    } catch (ScriptException& se) {
+        throw se;
+    }
+
+    //文法：LOREXP -> LANDEXP || LOREXP
     if(node->m_p_right_child != nullptr)
     {
-        if(left.type != type_bool)
-        {
-            /*
-             * 错误
-             * 数据类型不匹配（期望bool）
-             */
+        Value right;
+        //解释右节点
+        try {
+            right = iLogicalOrExpression(node->m_p_right_child, data, record, layer);
+        } catch (ScriptException& se) {
+            throw se;
         }
-        Value right = iLogicalOrExpression(node->m_p_right_child, data, record, layer);
-        if(right.type != type_bool)
+
+        if((left.type != type_bool && left.type != type_int) || (right.type != type_bool && right.type != type_int))
         {
-            /*
-             * 错误
-             * 数据类型不匹配（期望bool）
-             */
+            /***********
+             * 异常
+             * 无效的运算
+             ***********/
+            QVector<Value> v;
+            v.append(left);
+            v.append(right);
+            QVector<TokenData> t;
+            t.append(node->m_t);
+            throw new ScriptException(ScriptException::C002, t, v);
         }
+
         Value value;
-        value.set(left._bool || right._bool);
+        value.set((left.type == type_bool ? left._bool : left._int) || (right.type == type_bool ? right._bool : right._int));
         return value;
     }
     return left;
@@ -345,24 +430,41 @@ Value ScriptInterpreter::iLogicalOrExpression(ScriptParserNode *node, QMap<QStri
 
 Value ScriptInterpreter::iLogicalAndExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value left = iInclusiveOrExpression(node->m_p_left_child, data, record, layer);
+    Value left;
+
+    //文法：LANDEXP -> IOREXP
+    //解释左节点
+    try {
+        left = iInclusiveOrExpression(node->m_p_left_child, data, record, layer);
+    } catch (ScriptException& se) {
+        throw se;
+    }
+
+    //文法：LANDEXP -> IOREXP && LANDEXP
     if(node->m_p_right_child != nullptr)
     {
-        if(left.type != type_bool && left.type != type_int)
-        {
-            /*
-             * 错误
-             * 数据类型不匹配（期望int,bool）
-             */
+        Value right;
+        //解释右节点
+        try {
+            right = iLogicalAndExpression(node->m_p_right_child, data, record, layer);
+        } catch (ScriptException& se) {
+            throw se;
         }
-        Value right = iLogicalAndExpression(node->m_p_right_child, data, record, layer);
-        if(right.type != type_bool && right.type != type_int)
+
+        if((left.type != type_bool && left.type != type_int) || (right.type != type_bool && right.type != type_int))
         {
-            /*
-             * 错误
-             * 数据类型不匹配（期望int,bool）
-             */
+            /***********
+             * 异常
+             * 无效的运算
+             ***********/
+            QVector<Value> v;
+            v.append(left);
+            v.append(right);
+            QVector<TokenData> t;
+            t.append(node->m_t);
+            throw new ScriptException(ScriptException::C002, t, v);
         }
+
         Value value;
         value.set((left.type == type_bool ? left._bool : left._int) && (right.type == type_bool ? right._bool : right._int));
         return value;
@@ -372,24 +474,41 @@ Value ScriptInterpreter::iLogicalAndExpression(ScriptParserNode *node, QMap<QStr
 
 Value ScriptInterpreter::iInclusiveOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value left = iExclusiveOrExpression(node->m_p_left_child, data, record, layer);
+    Value left;
+
+    //文法：LANDEXP -> IOREXP
+    //解释左节点
+    try {
+        left = iExclusiveOrExpression(node->m_p_left_child, data, record, layer);
+    } catch (ScriptException& se) {
+        throw se;
+    }
+
+    //文法：LANDEXP -> IOREXP | IOREXP
     if(node->m_p_right_child != nullptr)
     {
-        if(left.type != type_bool && left.type != type_int)
-        {
-            /*
-             * 错误
-             * 数据类型不匹配（期望int,bool）
-             */
+        Value right;
+        //解释右节点
+        try {
+            right = iInclusiveOrExpression(node->m_p_right_child, data, record, layer);
+        } catch (ScriptException& se) {
+            throw se;
         }
-        Value right = iInclusiveOrExpression(node->m_p_right_child, data, record, layer);
-        if(right.type != type_bool && right.type != type_int)
+
+        if((left.type != type_bool && left.type != type_int) || (right.type != type_bool && right.type != type_int))
         {
-            /*
-             * 错误
-             * 数据类型不匹配（期望int,bool）
-             */
+            /***********
+             * 异常
+             * 无效的运算
+             ***********/
+            QVector<Value> v;
+            v.append(left);
+            v.append(right);
+            QVector<TokenData> t;
+            t.append(node->m_t);
+            throw new ScriptException(ScriptException::C002, t, v);
         }
+
         Value value;
         value.set((left.type == type_bool ? left._bool : left._int) | (right.type == type_bool ? right._bool : right._int));
         return value;
@@ -399,24 +518,41 @@ Value ScriptInterpreter::iInclusiveOrExpression(ScriptParserNode *node, QMap<QSt
 
 Value ScriptInterpreter::iExclusiveOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value left = iAndExpression(node->m_p_left_child, data, record, layer);
+    Value left;
+
+    //文法：EOREXP -> ANDEXP
+    //解释左节点
+    try {
+        left = iAndExpression(node->m_p_left_child, data, record, layer);
+    } catch (ScriptException& se) {
+        throw se;
+    }
+
+    //文法：EOREXP -> ANDEXP ^ EOREXP
     if(node->m_p_right_child != nullptr)
     {
-        if(left.type != type_bool && left.type != type_int)
-        {
-            /*
-             * 错误
-             * 数据类型不匹配（int,bool）
-             */
+        Value right;
+        //解释右节点
+        try {
+            right = iExclusiveOrExpression(node->m_p_right_child, data, record, layer);
+        } catch (ScriptException& se) {
+            throw se;
         }
-        Value right = iExclusiveOrExpression(node->m_p_right_child, data, record, layer);
-        if(right.type != type_bool && right.type != type_int)
+
+        if((left.type != type_bool && left.type != type_int) || (right.type != type_bool && right.type != type_int))
         {
-            /*
-             * 错误
-             * 数据类型不匹配（int,bool）
-             */
+            /***********
+             * 异常
+             * 无效的运算
+             ***********/
+            QVector<Value> v;
+            v.append(left);
+            v.append(right);
+            QVector<TokenData> t;
+            t.append(node->m_t);
+            throw new ScriptException(ScriptException::C002, t, v);
         }
+
         Value value;
         value.set((left.type == type_bool ? left._bool : left._int) ^ (right.type == type_bool ? right._bool : right._int));
         return value;
@@ -426,24 +562,41 @@ Value ScriptInterpreter::iExclusiveOrExpression(ScriptParserNode *node, QMap<QSt
 
 Value ScriptInterpreter::iAndExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value left = iEqualityExpression(node->m_p_left_child, data, record, layer);
+    Value left;
+
+    //文法：ANDEXP -> EQUALEXP
+    //解释左节点
+    try {
+        left = iEqualityExpression(node->m_p_left_child, data, record, layer);
+    } catch (ScriptException& se) {
+        throw se;
+    }
+
+    //文法：ANDEXP -> EQUALEXP & ANDEXP
     if(node->m_p_right_child != nullptr)
     {
-        if(left.type != type_bool && left.type != type_int)
-        {
-            /*
-             * 错误
-             * 数据类型不匹配（int,bool）
-             */
+        Value right;
+        //解释右节点
+        try {
+            right = iAndExpression(node->m_p_right_child, data, record, layer);
+        } catch (ScriptException& se) {
+            throw se;
         }
-        Value right = iAndExpression(node->m_p_right_child, data, record, layer);
-        if(right.type != type_bool && right.type != type_int)
+
+        if((left.type != type_bool && left.type != type_int) || (right.type != type_bool && right.type != type_int))
         {
-            /*
-             * 错误
-             * 数据类型不匹配（bool,int）
-             */
+            /***********
+             * 异常
+             * 无效的运算
+             ***********/
+            QVector<Value> v;
+            v.append(left);
+            v.append(right);
+            QVector<TokenData> t;
+            t.append(node->m_t);
+            throw new ScriptException(ScriptException::C002, t, v);
         }
+
         Value value;
         value.set((left.type == type_bool ? left._bool : left._int) & (right.type == type_bool ? right._bool : right._int));
         return value;
@@ -453,11 +606,30 @@ Value ScriptInterpreter::iAndExpression(ScriptParserNode *node, QMap<QString, QV
 
 Value ScriptInterpreter::iEqualityExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value left = iRelationalExpression(node->m_p_left_child, data, record, layer);
+    Value left;
+
+    //文法：EQUALEXP -> RELAEXP
+    //解释左节点
+    try {
+        left = iRelationalExpression(node->m_p_left_child, data, record, layer);
+    } catch (ScriptException& se) {
+        throw se;
+    }
+
+
     if(node->m_p_right_child != nullptr)
     {
         Value value;
-        Value right = iEqualityExpression(node->m_p_left_child, data, record, layer);
+        Value right;
+
+        //解释右节点
+        try {
+            right = iEqualityExpression(node->m_p_left_child, data, record, layer);
+        } catch (ScriptException& se) {
+            throw se;
+        }
+
+        //文法：EQUALEXP -> RELAEXP == EQUALEXP
         if(node->m_t.syn == syn_eq_op)
         {
             if(left.type == type_str || left.type == type_null)
@@ -469,10 +641,16 @@ Value ScriptInterpreter::iEqualityExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._str == nullptr);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
                 return value;
             }else if(left.type == type_int)
@@ -484,10 +662,16 @@ Value ScriptInterpreter::iEqualityExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._int == right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_bool)
             {
@@ -498,20 +682,33 @@ Value ScriptInterpreter::iEqualityExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._bool == right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else{
-                /*
-                 * 错误
-                 * 数据类型不匹配
-                 */
+                /***********
+                 * 异常
+                 * 无效的运算
+                 ***********/
+                QVector<Value> v;
+                v.append(left);
+                v.append(right);
+                QVector<TokenData> t;
+                t.append(node->m_t);
+                throw new ScriptException(ScriptException::C002, t, v);
             }
             return value;
-        }else
-        {
+        }
+        //文法：EQUALEXP -> RELAEXP != EQUALEXP
+        else{
             if(left.type == type_str || left.type == type_null)
             {
                 if(right.type == type_str)
@@ -521,10 +718,16 @@ Value ScriptInterpreter::iEqualityExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._str != nullptr);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
                 return value;
             }else if(left.type == type_int)
@@ -536,10 +739,16 @@ Value ScriptInterpreter::iEqualityExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._int != right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_bool)
             {
@@ -550,16 +759,28 @@ Value ScriptInterpreter::iEqualityExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._bool != right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else{
-                /*
-                 * 错误
-                 * 数据类型不匹配
-                 */
+                /***********
+                 * 异常
+                 * 无效的运算
+                 ***********/
+                QVector<Value> v;
+                v.append(left);
+                v.append(right);
+                QVector<TokenData> t;
+                t.append(node->m_t);
+                throw new ScriptException(ScriptException::C002, t, v);
             }
             return value;
         }
@@ -569,11 +790,29 @@ Value ScriptInterpreter::iEqualityExpression(ScriptParserNode *node, QMap<QStrin
 
 Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value left = iShiftExpression(node->m_p_left_child, data, record, layer);
+    Value left;
+
+    //文法：RELAEXP -> SHIFTEXP
+    //解释左节点
+    try {
+        left = iShiftExpression(node->m_p_left_child, data, record, layer);
+    } catch (ScriptException& se) {
+        throw se;
+    }
+
     if(node->m_p_right_child != nullptr)
     {
         Value value;
-        Value right = iEqualityExpression(node->m_p_left_child, data, record, layer);
+        Value right;
+
+        //解释右节点
+        try {
+            right = iRelationalExpression(node->m_p_left_child, data, record, layer);
+        } catch (ScriptException& se) {
+            throw se;
+        }
+
+        //文法：RELAEXP -> SHIFTEXP < RELAEXP
         if(node->m_t.syn == syn_left)
         {
             if(left.type == type_int)
@@ -588,10 +827,16 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
                 {
                     value.set(left._int < right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_float)
             {
@@ -605,10 +850,16 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
                 {
                     value.set(left._float < right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_bool)
             {
@@ -622,20 +873,34 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
                 {
                     value.set(left._bool < right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else
             {
-                /*
-                 * 错误
-                 * 数据类型不匹配
-                 */
+                /***********
+                 * 异常
+                 * 无效的运算
+                 ***********/
+                QVector<Value> v;
+                v.append(left);
+                v.append(right);
+                QVector<TokenData> t;
+                t.append(node->m_t);
+                throw new ScriptException(ScriptException::C002, t, v);
             }
             return value;
-        }else if(node->m_t.syn == syn_right)
+        }
+        //文法：RELAEXP -> SHIFTEXP > RELAEXP
+        else if(node->m_t.syn == syn_right)
         {
             if(left.type == type_int)
             {
@@ -649,10 +914,16 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
                 {
                     value.set(left._int > right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_float)
             {
@@ -666,10 +937,16 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
                 {
                     value.set(left._float > right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_bool)
             {
@@ -683,20 +960,34 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
                 {
                     value.set(left._bool > right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else
             {
-                /*
-                 * 错误
-                 * 数据类型不匹配
-                 */
+                /***********
+                 * 异常
+                 * 无效的运算
+                 ***********/
+                QVector<Value> v;
+                v.append(left);
+                v.append(right);
+                QVector<TokenData> t;
+                t.append(node->m_t);
+                throw new ScriptException(ScriptException::C002, t, v);
             }
             return value;
-        }else if(node->m_t.syn == syn_le_op)
+        }
+        //文法：RELAEXP -> SHIFTEXP <= RELAEXP
+        else if(node->m_t.syn == syn_le_op)
         {
             if(left.type == type_int)
             {
@@ -710,10 +1001,16 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
                 {
                     value.set(left._int <= right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_float)
             {
@@ -727,10 +1024,16 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
                 {
                     value.set(left._float <= right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_bool)
             {
@@ -744,20 +1047,34 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
                 {
                     value.set(left._bool <= right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else
             {
-                /*
-                 * 错误
-                 * 数据类型不匹配
-                 */
+                /***********
+                 * 异常
+                 * 无效的运算
+                 ***********/
+                QVector<Value> v;
+                v.append(left);
+                v.append(right);
+                QVector<TokenData> t;
+                t.append(node->m_t);
+                throw new ScriptException(ScriptException::C002, t, v);
             }
             return value;
-        }else
+        }
+        //文法：RELAEXP -> SHIFTEXP >= RELAEXP
+        else
         {
             if(left.type == type_int)
             {
@@ -771,10 +1088,16 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
                 {
                     value.set(left._int >= right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_float)
             {
@@ -788,10 +1111,16 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
                 {
                     value.set(left._float >= right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_bool)
             {
@@ -805,17 +1134,29 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
                 {
                     value.set(left._bool >= right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else
             {
-                /*
-                 * 错误
-                 * 数据类型不匹配
-                 */
+                /***********
+                 * 异常
+                 * 无效的运算
+                 ***********/
+                QVector<Value> v;
+                v.append(left);
+                v.append(right);
+                QVector<TokenData> t;
+                t.append(node->m_t);
+                throw new ScriptException(ScriptException::C002, t, v);
             }
             return value;
         }
@@ -825,11 +1166,29 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
 
 Value ScriptInterpreter::iShiftExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value left = iAdditiveExpression(node->m_p_left_child, data, record, layer);
+    Value left;
+
+    //文法:SHIFTEXP -> ADDEXP
+    //解释左节点
+    try {
+        left = iAdditiveExpression(node->m_p_left_child, data, record, layer);
+    } catch (ScriptException& se) {
+        throw se;
+    }
+
     if(node->m_p_right_child != nullptr)
     {
         Value value;
-        Value right = iShiftExpression(node->m_p_left_child, data, record, layer);
+        Value right;
+
+        //解释右节点
+        try {
+            right = iShiftExpression(node->m_p_left_child, data, record, layer);
+        } catch (ScriptException& se) {
+            throw se;
+        }
+
+        //文法:SHIFTEXP -> ADDEXP << SHIFTEXP
         if(node->m_t.syn == syn_left_op){
             if(left.type == type_int)
             {
@@ -840,10 +1199,16 @@ Value ScriptInterpreter::iShiftExpression(ScriptParserNode *node, QMap<QString, 
                 {
                     value.set(left._int << right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_bool)
             {
@@ -854,22 +1219,35 @@ Value ScriptInterpreter::iShiftExpression(ScriptParserNode *node, QMap<QString, 
                 {
                     value.set(left._bool << right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else
             {
-                /*
-                 * 错误
-                 * 数据类型不匹配
-                 */
+                /***********
+                 * 异常
+                 * 无效的运算
+                 ***********/
+                QVector<Value> v;
+                v.append(left);
+                v.append(right);
+                QVector<TokenData> t;
+                t.append(node->m_t);
+                throw new ScriptException(ScriptException::C002, t, v);
             }
             return value;
-        }else{
-            Value value;
-            Value right = iShiftExpression(node->m_p_left_child, data, record, layer);
+        }
+        //文法:SHIFTEXP -> ADDEXP >> SHIFTEXP
+        else
+        {
             if(node->m_t.syn == syn_left_op){
                 if(left.type == type_int)
                 {
@@ -880,10 +1258,16 @@ Value ScriptInterpreter::iShiftExpression(ScriptParserNode *node, QMap<QString, 
                     {
                         value.set(left._int >> right._bool);
                     }else{
-                        /*
-                         * 错误
-                         * 数据类型不匹配
-                         */
+                        /***********
+                         * 异常
+                         * 无效的运算
+                         ***********/
+                        QVector<Value> v;
+                        v.append(left);
+                        v.append(right);
+                        QVector<TokenData> t;
+                        t.append(node->m_t);
+                        throw new ScriptException(ScriptException::C002, t, v);
                     }
                 }else if(left.type == type_bool)
                 {
@@ -894,17 +1278,29 @@ Value ScriptInterpreter::iShiftExpression(ScriptParserNode *node, QMap<QString, 
                     {
                         value.set(left._bool >> right._bool);
                     }else{
-                        /*
-                         * 错误
-                         * 数据类型不匹配
-                         */
+                        /***********
+                         * 异常
+                         * 无效的运算
+                         ***********/
+                        QVector<Value> v;
+                        v.append(left);
+                        v.append(right);
+                        QVector<TokenData> t;
+                        t.append(node->m_t);
+                        throw new ScriptException(ScriptException::C002, t, v);
                     }
                 }else
                 {
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
                 return value;
             }
@@ -915,11 +1311,29 @@ Value ScriptInterpreter::iShiftExpression(ScriptParserNode *node, QMap<QString, 
 
 Value ScriptInterpreter::iAdditiveExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value left = iMultiplicativeExpression(node->m_p_left_child, data, record, layer);
+    Value left;
+
+    //文法：ADDEXP -> MULTEXP
+    //解释左节点
+    try {
+        //left = iMultiplicativeExpression(node->m_p_left_child, data, record, layer);
+    } catch (ScriptException& se) {
+        throw se;
+    }
+
     if(node->m_p_right_child != nullptr)
     {
         Value value;
-        Value right = iAdditiveExpression(node->m_p_left_child, data, record, layer);
+        Value right;
+
+        //解释右节点
+        try {
+            right = iAdditiveExpression(node->m_p_left_child, data, record, layer);
+        } catch (ScriptException& se) {
+            throw se;
+        }
+
+        //文法：ADDEXP -> MULTEXP	 + ADDEXP
         if(node->m_t.syn == syn_add)
         {
             if(left.type == type_str  || node->m_t.syn == syn_null)
@@ -931,10 +1345,16 @@ Value ScriptInterpreter::iAdditiveExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._str);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配(期望str)
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
                 return value;
             }else if(left.type == type_int)
@@ -949,10 +1369,16 @@ Value ScriptInterpreter::iAdditiveExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._int + right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_float)
             {
@@ -966,10 +1392,16 @@ Value ScriptInterpreter::iAdditiveExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._float + right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_bool)
             {
@@ -983,20 +1415,34 @@ Value ScriptInterpreter::iAdditiveExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._bool + right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }
-        }else if(node->m_t.syn == syn_sub)
+        }
+        //文法：ADDEXP -> MULTEXP	 - ADDEXP
+        else
         {
             if(left.type == type_str  || node->m_t.syn == syn_null)
             {
-                /*
-                 * 错误
-                 * 无法运算
-                 */
+                /***********
+                 * 异常
+                 * 无效的运算
+                 ***********/
+                QVector<Value> v;
+                v.append(left);
+                v.append(right);
+                QVector<TokenData> t;
+                t.append(node->m_t);
+                throw new ScriptException(ScriptException::C002, t, v);
             }else if(left.type == type_int)
             {
                 if(right.type == type_int)
@@ -1009,10 +1455,16 @@ Value ScriptInterpreter::iAdditiveExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._int - right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_float)
             {
@@ -1026,10 +1478,16 @@ Value ScriptInterpreter::iAdditiveExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._float - right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }else if(left.type == type_bool)
             {
@@ -1043,10 +1501,16 @@ Value ScriptInterpreter::iAdditiveExpression(ScriptParserNode *node, QMap<QStrin
                 {
                     value.set(left._bool - right._bool);
                 }else{
-                    /*
-                     * 错误
-                     * 数据类型不匹配
-                     */
+                    /***********
+                     * 异常
+                     * 无效的运算
+                     ***********/
+                    QVector<Value> v;
+                    v.append(left);
+                    v.append(right);
+                    QVector<TokenData> t;
+                    t.append(node->m_t);
+                    throw new ScriptException(ScriptException::C002, t, v);
                 }
             }
         }
@@ -1062,7 +1526,7 @@ void ScriptInterpreter::insertVariable(QString id, Value v, QMap<QString, QVecto
         if(vector->last().first == layer)
         {
             /*
-             * 错误
+             * 异常
              * 重复定义
              */
         }
@@ -1082,11 +1546,10 @@ Value ScriptInterpreter::getVariable(QString id, VALUE_TYPE t, QMap<QString, QVe
     if(v.type != t)
     {
         /*
-         * 错误
+         * 异常
          * 数据类型不匹配
          */
     }
-    return v;
 }
 
 void ScriptInterpreter::clearVariable(QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)

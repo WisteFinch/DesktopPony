@@ -124,7 +124,7 @@ void ImageProcessing::init(QString name, Config *tmpConfig, FileCharacter *tmpFi
     this->m_struct_characterdata.name = name;//获得角色名，写入数组m_struct_characterdata
 
     __doReadCharacter();//读取角色数据(包含获取配件数据)
-    __initDatapool();
+    //__initDatapool();
 }
 
 void ImageProcessing::__doReadCharacter()
@@ -346,10 +346,10 @@ void ImageProcessing::__doCompositeImage()
 const QPixmap ImageProcessing::getFrame()
 {
     //缺少：获取系统变量
-    __doHandleTasks();//处理任务
-    __doHandleFrames();//修改帧属性
-    __doHandleImages("", "", ImageStruct::Scombdata{0, 0, 0, 0, 0, "", ""});//获得图像
-    __doCompositeImage();
+    //__doHandleTasks();//处理任务
+    //__doHandleFrames();//修改帧属性
+    //__doHandleImages("", "", ImageStruct::Scombdata{0, 0, 0, 0, 0, "", ""});//获得图像
+    //__doCompositeImage();
 
     return QPixmap::fromImage(*this->image);
 

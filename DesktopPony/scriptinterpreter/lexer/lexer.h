@@ -28,7 +28,7 @@
 
 #ifndef LEXER_H
 #define LEXER_H
-#include "scriptinterpreter/limit.h"
+#include "scriptinterpreter/scriptlimit.h"
 #include <QString>
 #include <QChar>
 #include <QPair>
@@ -39,20 +39,25 @@ class ScriptLexer
 public:
     ScriptLexer();
 
-    QVector<TokenData> *m_tokens;
+    QVector<TokenData> *m_tokens; ///< 词列表
 
+    /**
+     * @brief 划分词块
+     * @param 脚本文本
+     */
     QVector<TokenData>* divToken(QString str);
 
 private:
-    QChar m_ch;
-    QString m_token_num, m_str;
-    int m_point;
-    int m_line;
-    int m_row;
+    QChar m_ch; ///< 当前字符
+    QString m_token_num; ///< 当前词块文本
+    QString m_str; ///< 脚本文本
+    int m_point; ///< 位置
+    int m_line; ///< 行
+    int m_row; ///< 列
 
-    SYN judge();
-    inline QChar getNext();
-    inline QChar get(int n);
+    SYN judge(); ///< 判断词类型
+    inline QChar getNext(); ///< 获取下一个词
+    inline QChar get(int n); ///< 获取词
 };
 
 #endif // LEXER_H

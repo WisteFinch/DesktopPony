@@ -26,10 +26,11 @@
  * SOFTWARE.
  */
 
-#ifndef LIMIT_H
-#define LIMIT_H
+#ifndef SCRIPTLIMIT_H
+#define SCRIPTLIMIT_H
 
 #include <QStringList>
+#include <QVector>
 
 enum SYN{
     syn_null = -2,
@@ -175,4 +176,6 @@ struct Value{
     void set(QString s){type = type_str; _str = s;}
 };
 
-#endif // LIMIT_H
+
+
+#endif // SCRIPTLIMIT_H

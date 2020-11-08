@@ -1,6 +1,7 @@
 #ifndef DESKTOPPONY_H
 #define DESKTOPPONY_H
 
+#include "limit.h"
 #include "imageprocessing/imageprocessing.h"
 #include "ui/uisettings.h"
 #include "file/config.h"

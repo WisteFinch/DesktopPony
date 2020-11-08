@@ -36,6 +36,7 @@ SOURCES += \
     desktoppony.cpp \
     limit.cpp \
     qss.cpp \
+    scriptinterpreter/scriptexception.cpp \
     scriptinterpreter/scriptinterpreter.cpp \
     ui/uicharacter/uicharacter.cpp \
     ui/uicharacter/uicharacterlistcard.cpp \
@@ -62,8 +63,9 @@ HEADERS += \
     limit.h \
     metadata.h \
     qss.h \
-    scriptinterpreter/limit.h \
+    scriptinterpreter/scriptexception.h \
     scriptinterpreter/scriptinterpreter.h \
+    scriptinterpreter/scriptlimit.h \
     ui/uicharacter/uicharacter.h \
     ui/uicharacter/uicharacterlistcard.h \
     ui/uipony.h \
