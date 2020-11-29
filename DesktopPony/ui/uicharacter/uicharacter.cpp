@@ -71,7 +71,7 @@ void UICharacter::init(Localisation *tmpLocalisation, Config *tmpConfig, FileCha
     //=========================test============================
 
         QFile *a = new QFile;
-        a->setFileName("a.css");
+        a->setFileName(":/qss/default.css");
         a->open(QFile::ReadOnly);
         QString s = a->readAll();
         this->setStyleSheet(s);
@@ -300,7 +300,7 @@ void UICharacter::slotAddCharacter()
         QStringList list = QFileDialog::getOpenFileNames(this,
                                       this->m_p_localisation->get("uicharacter_msgbox_addnew_files_title"),
                                       ".",
-                                      "JOSN(*.json);;ALL(*.*)");
+                                      "JSON(*.json);;ALL(*.*)");
 
         QJsonObject indexObj = this->m_p_file_character->getCharacterIndexJsonObject();
 

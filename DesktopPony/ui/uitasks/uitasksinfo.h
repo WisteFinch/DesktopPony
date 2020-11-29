@@ -2,7 +2,7 @@
 #define UITASKSINFO_H
 
 #include "file/localisation.h"
-#include "file/filetasks.h"
+#include "file/fileevent.h"
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>

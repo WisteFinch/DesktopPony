@@ -1,148 +1,148 @@
 QListWidget::item{
-	height:50px;
-	background: rgba(47,144,185,0);
-	color: black;
+        height:50px;
+        background: rgba(47,144,185,0);
+        color: black;
 }
 
 QListWidget::item:hover{
-	background: rgba(47,144,185,20);
+        background: rgba(47,144,185,20);
 }
 
 QListWidget::item:focus{
-	background: rgba(47,144,185,40);
+        background: rgba(47,144,185,40);
 }
 
 QLineEdit
 {
-	background: transparent;
-	border: none;
-	border-bottom: 1px solid black;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid black;
 }
 
 QLineEdit:focus
 {
-	border-bottom: 1px solid rgb(47,144,185);
+        border-bottom: 1px solid rgb(47,144,185);
 }
 
 /*****UISettings*****/
 
 #uisettings_button_tab_character, #uisettings_button_tab_general, #uisettings_button_tab_info{
-	background-color:rgba(255,255,255,125);
-	color: black;
-	height: 50px;
-	width: 120px;
-	font-size: 15px;
-	border: none;
+        background-color:rgba(255,255,255,125);
+        color: black;
+        height: 50px;
+        width: 120px;
+        font-size: 15px;
+        border: none;
 }
 
 #uisettings_button_tab_character:hover, #uisettings_button_tab_general:hover, #uisettings_button_tab_info:hover{
-	background-color: rgba(255,255,255,150);
+        background-color: rgba(255,255,255,150);
 }
 
 #uisettings_button_tab_character:pressed, #uisettings_button_tab_general:pressed, #uisettings_button_tab_info:pressed{
-	background-color: rgba(255,255,255,175);
+        background-color: rgba(255,255,255,175);
 }
 
 #uisettings_button_tab_character:disabled, #uisettings_button_tab_general:disabled, #uisettings_button_tab_info:disabled{
-	background-color: rgba(255,255,255,200);
+        background-color: rgba(255,255,255,200);
 }
 
 QStackedWidget, QScrollArea
 {
-	background-color: rgba(255,255,255,0);
-	border: none;
+        background-color: rgba(255,255,255,0);
+        border: none;
 }
 
 #uisettings_widget_character, #uisettings_widget_general, #uisettings_widget_info{
-	background-color: rgba(255,255,255,220);
+        background-color: rgba(255,255,255,220);
 }
 
 #horzontal_line{
-	background-color: rgba(0,0,0,50);
+        background-color: rgba(0,0,0,50);
 }
 
 #uisettings_label_character_switch_content, #uisettings_label_tasks_content, #uisettings_label_general_option_character_size_content, #uisettings_label_general_constant_gravitational_acceleration_content, #uisettings_label_general_constant_obstruction_content, #uisettings_label_info_desc_content, #uisettings_label_info_version_content, #uisettings_label_info_doc_content, #uisettings_label_info_log_content
 {
-	color: #777777;
+        color: #777777;
 }
 
 #uisettings_button_character_switch, #uisettings_button_tasks, #uisettings_button_info_desc, #uisettings_button_info_update, #uisettings_button_info_doc, #uisettings_button_info_log{
-	background: rgba(47,144,185,0);
-	border-radius: 15px;
-	width: 30px;
-	height: 30px;
+        background: rgba(47,144,185,0);
+        border-radius: 15px;
+        width: 30px;
+        height: 30px;
 }
 
 #uisettings_button_character_switch:hover, #uisettings_button_tasks:hover, #uisettings_button_info_desc:hover, #uisettings_button_info_update:hover, #uisettings_button_info_doc:hover, #uisettings_button_info_log:hover{
-	background: rgba(47,144,185,20);
+        background: rgba(47,144,185,20);
 }
 
 #uisettings_button_character_switch:pressed, #uisettings_button_tasks:pressed, #uisettings_button_info_desc:pressed, #uisettings_button_info_update:pressed, #uisettings_button_info_doc:pressed, #uisettings_button_info_log:pressed{
-	background: rgba(47,144,185,40);
+        background: rgba(47,144,185,40);
 }
 
 /*****UICharacter*****/
 #uicharacter_widget_character{
-	background-color: rgba(255,255,255,220);
+        background-color: rgba(255,255,255,220);
 }
 
 #uicharacter_button_addnew, #uicharacter_button_edit, #uicharacter_button_delete, #uicharacter_button_refresh, #uicharacter_button_confirm, #uicharacter_button_cancel{
-	background-color:rgba(255,255,255,150);
-	color: black;
-	height: 20px;
-	width: 85px;
-	font-size: 15px;
-	border: none;
+        background-color:rgba(255,255,255,150);
+        color: black;
+        height: 20px;
+        width: 85px;
+        font-size: 15px;
+        border: none;
 }
 
 #uicharacter_label_metadata_name, #uicharacter_label_metadata_author, #uicharacter_label_metadata_desc, #uicharacter_label_metadata_standard{
-	background-color:rgba(255,255,255,150);
-}	
+        background-color:rgba(255,255,255,150);
+}
 
 #uicharacter_button_addnew:hover, #uicharacter_button_edit:hover, #uicharacter_button_delete:hover, #uicharacter_button_refresh:hover, #uicharacter_button_confirm:hover, #uicharacter_button_cancel:hover{
-	background-color:rgba(255,255,255,175);
+        background-color:rgba(255,255,255,175);
 }
 
 #uicharacter_button_addnew:pressed, #uicharacter_button_edit:pressed, #uicharacter_button_delete:pressed, #uicharacter_button_refresh:pressed, #uicharacter_button_confirm:pressed, #uicharacter_button_cancel:pressed{
-	background-color:rgba(255,255,255,200);
+        background-color:rgba(255,255,255,200);
 }
 
 #uicharacter_list_card_widget{
-	background-color: rgba(0,0,0,0);
-	border: none;
+        background-color: rgba(0,0,0,0);
+        border: none;
 }
 
 /*****UITasks*****/
 #uitasks_widget_standards{
-	background-color: rgba(255,255,255,175);
+        background-color: rgba(255,255,255,175);
 }
 
 #uitasks_widget_tasks{
-	background-color: rgba(255,255,255,220);
+        background-color: rgba(255,255,255,220);
 }
 
 #uitasks_button_info, #uitasks_button_switch, #uitasks_button_delete, #uitasks_button_refresh, #uitasks_button_exit{
-	background-color:rgba(255,255,255,150);
-	color: black;
-	height: 20px;
-	font-size: 15px;
-	border: none;
+        background-color:rgba(255,255,255,150);
+        color: black;
+        height: 20px;
+        font-size: 15px;
+        border: none;
 }
 
 #uitasks_button_info:hover, #uitasks_button_switch:hover, #uitasks_button_refresh:hover, #uitasks_button_exit:hover{
-	background-color:rgba(255,255,255,175);
+        background-color:rgba(255,255,255,175);
 }
 
 #uitasks_button_info:pressed, #uitasks_button_swicth:pressed, #uitasks_button_refresh:pressed, #uitasks_button_exit:pressed{
-	background-color:rgba(255,255,255,200);
+        background-color:rgba(255,255,255,200);
 }
 
 /*****UITasksInfo*****/
 #uitasksinfo_widget_info{
-	background-color: rgba(255, 255, 255, 175);
+        background-color: rgba(255, 255, 255, 175);
 }
 
 #uitasksinfo_widget QTextEdit{
-	border: none;
-	background-color: rgba(255, 255, 255, 225);
+        border: none;
+        background-color: rgba(255, 255, 255, 225);
 }

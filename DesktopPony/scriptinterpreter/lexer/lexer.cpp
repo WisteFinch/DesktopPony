@@ -56,13 +56,20 @@ SYN ScriptLexer::judge()
     }
     else if(m_ch >= '0' && m_ch <= '9'){
         //为数字
+        int point = 0;
         while((m_ch >= '0'&& m_ch <= '9') || m_ch == '.'){
+            if(m_ch == '.')
+                point++;
             m_token_num += m_ch;
             m_ch = getNext();
         }
         m_point--;
         m_row--;
-        return syn_const_num;
+        if(point > 1)
+        {
+            //=======================================error===============================
+        }
+        return point == 0 ? syn_int : syn_float;
     }
     else {
         //为符号

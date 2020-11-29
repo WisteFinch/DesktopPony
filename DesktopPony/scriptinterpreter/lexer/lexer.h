@@ -1,8 +1,8 @@
 /**
  * @file scriptinterpreter/lexer/lexer.h
- * @brief 词法划分器
+ * @brief 脚本-词法划分器-主类
  * @author WisteFinch
- * @date 2020.10.3
+ * @date 2020.10.29
  *
  * MIT License
  * Copyright (c) 2019-2020 WisteFinch

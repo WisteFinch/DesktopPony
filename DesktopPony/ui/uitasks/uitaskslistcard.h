@@ -1,7 +1,7 @@
 #ifndef UITASKSLISTCARD_H
 #define UITASKSLISTCARD_H
 
-#include "file/filetasks.h"
+#include "file/fileevent.h"
 #include <QWidget>
 #include <QLabel>
 #include <QHBoxLayout>

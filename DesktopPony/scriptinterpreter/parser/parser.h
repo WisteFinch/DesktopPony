@@ -1,8 +1,8 @@
 /**
  * @file scriptinterpreter/parser/parser.h
- * @brief 语法分析器
+ * @brief 脚本-语法分析器-主类
  * @author WisteFinch
- * @date 2020.10.3
+ * @date 2020.11.29
  *
  * MIT License
  * Copyright (c) 2019-2020 WisteFinch
@@ -31,6 +31,7 @@
 
 #include "scriptinterpreter/lexer/lexer.h"
 #include "scriptinterpreter/parser/parsernode.h"
+#include "scriptinterpreter/scriptlimit.h"
 #include <QString>
 #include <QPair>
 #include <QDebug>
@@ -101,8 +102,8 @@ public:
     void pStatementList(ScriptParserNode *node); ///< 语句列表
     void pStatement(ScriptParserNode *node); ///< 语句
     void pCompoundStatement(ScriptParserNode *node); ///< 复合语句
-    //void pExpressionStatement(ScriptParserNode *node); ///< 表达式语句
-    void pFunction(ScriptParserNode *node); ///< 函数
+    void pExpressionStatement(ScriptParserNode *node); ///< 表达式语句
+    void pJumpStatement(ScriptParserNode *node); ///< 跳转语句
     void pIf(ScriptParserNode *node); ///< if
     void pIfBody(ScriptParserNode *node); ///< if主体
     void pWhile(ScriptParserNode *node); ///< while

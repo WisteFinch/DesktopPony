@@ -118,14 +118,9 @@ void ScriptParser::pStatementList(ScriptParserNode *node)
     //分析文法
     //获取当前单词
     TokenData token = curToken();
-    if(token.syn == syn_front_body)
-    {
-        node->m_p_left_child = new ScriptParserNode();
-        pCompoundStatement(node->m_p_left_child);
-    }else{
-        node->m_p_left_child = new ScriptParserNode();
-        pStatement(node->m_p_left_child);
-    }
+    node->m_p_left_child = new ScriptParserNode();
+    pStatement(node->m_p_left_child);
+
     token = curToken();
     if(token.syn != syn_end && token.syn != syn_back_body)
     {
@@ -145,19 +140,20 @@ void ScriptParser::pStatement(ScriptParserNode *node)
     if(token.syn == syn_int || token.syn == syn_float || token.syn == syn_bool || token.syn == syn_string)
     {
         pDeclare(node->m_p_left_child);
-        eat(syn_semi);
-    }else if(token.syn == syn_id && aheadToken.syn == syn_front_bracket)
+    }else if(token.syn == syn_while)
     {
-        pFunction(node->m_p_left_child);
-        eat(syn_semi);
+        pCompoundStatement(node->m_p_left_child);
     }else if(token.syn == syn_while)
     {
         pWhile(node->m_p_left_child);
     }else if(token.syn == syn_if)
     {
         pIf(node->m_p_left_child);
+    }else if(token.syn == syn_break || token.syn == syn_continue)
+    {
+        pJumpStatement(node->m_p_left_child);
     }else{
-        pExpression(node->m_p_left_child);
+        pExpressionStatement(node->m_p_left_child);
     }
 }
 
@@ -183,20 +179,13 @@ void ScriptParser::pCompoundStatement(ScriptParserNode *node)
     }
 }
 
-void ScriptParser::pFunction(ScriptParserNode *node)
+void ScriptParser::pJumpStatement(ScriptParserNode *node)
 {
-    node->set("", parser_function, nullptr, nullptr);
     //分析文法
-    node->m_p_left_child = new ScriptParserNode();
-    pId(node->m_p_left_child);
-    eat(syn_front_bracket);
-    TokenData token = curToken();
-    if(token.syn != syn_back_bracket)
-    {
-        node->m_p_right_child = new ScriptParserNode();
-        pExpression(node->m_p_right_child);
-    }
-    eat(syn_back_bracket);
+    //获取下一个单词
+    TokenData token = getToken();
+    node->set(token.str, parser_js, nullptr, nullptr);
+    eat(syn_semi);
 }
 
 void ScriptParser::pIf(ScriptParserNode *node)
@@ -218,7 +207,7 @@ void ScriptParser::pIfBody(ScriptParserNode *node)
     node->set("", parser_if_body, nullptr, nullptr);
     //分析文法
     node->m_p_left_child = new ScriptParserNode();
-    pCompoundStatement(node->m_p_left_child);
+    pStatement(node->m_p_left_child);
     TokenData token = curToken();
     if(token.syn == syn_else)
     {
@@ -230,7 +219,7 @@ void ScriptParser::pIfBody(ScriptParserNode *node)
             pIf(node->m_p_right_child);
         }else{
             node->m_p_right_child = new ScriptParserNode();
-            pCompoundStatement(node->m_p_right_child);
+            pStatement(node->m_p_right_child);
         }
     }
 }
@@ -245,7 +234,7 @@ void ScriptParser::pWhile(ScriptParserNode *node)
     pExpression(node->m_p_left_child);
     eat(syn_back_bracket);
     node->m_p_right_child = new ScriptParserNode();
-    pCompoundStatement(node->m_p_right_child);
+    pStatement(node->m_p_right_child);
 }
 
 void ScriptParser::pDeclare(ScriptParserNode *node)
@@ -262,6 +251,7 @@ void ScriptParser::pDeclare(ScriptParserNode *node)
     }else{
         errorExit();
     }
+    eat(syn_semi);
 }
 
 void ScriptParser::pDeclareBody(ScriptParserNode *node)
@@ -331,6 +321,21 @@ void ScriptParser::pId(ScriptParserNode *node)
     node->set(token.str, parser_id, nullptr, nullptr);
 }
 
+void ScriptParser::pExpressionStatement(ScriptParserNode *node)
+{
+    //分析文法
+    node->set(nullptr, parser_es, nullptr, nullptr);
+    TokenData token = curToken();
+    if(token.syn == syn_semi)
+    {
+        eat(syn_semi);
+        return;
+    }
+    node->m_p_left_child = new ScriptParserNode();
+    pExpression(node->m_p_left_child);
+    eat(syn_semi);
+}
+
 void ScriptParser::pExpression(ScriptParserNode *node)
 {
     //分析文法
@@ -352,7 +357,7 @@ void ScriptParser::pAssignmentExpression(ScriptParserNode *node)
     //分析文法
     node->m_p_left_child = new ScriptParserNode();
     TokenData token = curToken();
-    if(token.syn == syn_const_num || token.syn == syn_const_char || token.syn == syn_const_bool ||
+    if(token.syn == syn_const_int || token.syn == syn_const_float || token.syn == syn_const_char || token.syn == syn_const_bool ||
         token.syn == syn_str_lit || token.syn == syn_id || token.syn == syn_front_bracket ||
         token.syn == syn_inc_op || token.syn == syn_dec_op)
     {
@@ -670,7 +675,7 @@ void ScriptParser::pUnaryExpression(ScriptParserNode *node)
 
 void ScriptParser::pPostfixExpression(ScriptParserNode *node)
 {
-    node->set("", parser_post_exp, nullptr, nullptr);
+    node->set(nullptr, parser_post_exp, nullptr, nullptr);
     //分析文法
     node->m_p_left_child = new ScriptParserNode();
     pPrimaryExpression(node->m_p_left_child);
@@ -701,18 +706,22 @@ void ScriptParser::pPrimaryExpression(ScriptParserNode *node)
     TokenData token = curToken();
     if(token.syn == syn_id)
     {
+        node->m_t = token;
         node->m_p_left_child = new ScriptParserNode();
         pId(node->m_p_left_child);
-    }else if(token.syn == syn_const_num || token.syn == syn_const_bool || token.syn == syn_const_char)
+    }else if(token.syn == syn_const_int || token.syn == syn_const_float || token.syn == syn_const_bool || token.syn == syn_const_char)
     {
+        node->m_t = token;
         node->m_p_left_child = new ScriptParserNode();
         pConstant(node->m_p_left_child);
     }else if(token.syn == syn_str_lit)
     {
+        node->m_t = token;
         node->m_p_left_child = new ScriptParserNode();
         pStringLiteral(node->m_p_left_child);
     }else if(token.syn == syn_front_bracket)
     {
+        node->m_t = token;
         eat(syn_front_bracket);
         if(lookAhead().str != syn_back_bracket)
         node->m_p_left_child = new ScriptParserNode();
@@ -726,8 +735,10 @@ void ScriptParser::pConstant(ScriptParserNode *node)
     //分析文法
     //获取下一个单词
     TokenData token = getToken();
-    if(token.syn == syn_const_num)
-        node->set(token.str, parser_constant_num, nullptr, nullptr);
+    if(token.syn == syn_const_int)
+        node->set(token.str, parser_constant_int, nullptr, nullptr);
+    else if(token.syn == syn_const_float)
+        node->set(token.str, parser_constant_float, nullptr, nullptr);
     else if(token.syn == syn_const_bool)
         node->set(token.str, parser_constant_bool, nullptr, nullptr);
     else if(token.syn == syn_const_char)

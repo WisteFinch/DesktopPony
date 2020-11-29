@@ -4,7 +4,7 @@
 #include "file/localisation.h"
 #include "imageprocessing/imageprocessing.h"
 #include "file/config.h"
-#include "file/filetasks.h"
+#include "file/fileevent.h"
 #include "ui/uitasks/uitaskslistcard.h"
 #include "ui/uitasks/uitasksstandardlistcard.h"
 #include "ui/uitasks/uitasksinfo.h"

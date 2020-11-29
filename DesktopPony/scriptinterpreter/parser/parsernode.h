@@ -1,8 +1,8 @@
 /**
  * @file scriptinterpreter/parser/parsernode.h
- * @brief 语法分析节点
+ * @brief 脚本-语法分析器-节点
  * @author WisteFinch
- * @date 2020.10.3
+ * @date 2020.10.29
  *
  * MIT License
  * Copyright (c) 2019-2020 WisteFinch

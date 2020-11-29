@@ -1,6 +1,6 @@
 /**
- * @file desktoppony.h
- * @brief 桌面小马主类
+ * @file file/qss.h
+ * @brief 文件-样式表
  * @author WisteFinch
  * @date 2020.11.29
  *
@@ -26,42 +26,22 @@
  * SOFTWARE.
  */
 
-#ifndef DESKTOPPONY_H
-#define DESKTOPPONY_H
+#ifndef QSS_H
+#define QSS_H
 
-#include "limit.h"
-#include "imageprocessing/imageprocessing.h"
-#include "ui/uisettings.h"
-#include "file/config.h"
-#include "file/fileevent.h"
-#include "metadata.h"
-#include "file/filecharacter.h"
-#include "qss.h"
-#include "ui/uipony.h"
-#include "file/localisation.h"
-#include <QObject>
-
-class DesktopPony : QObject
+#include <QString>
+#include <QFile>
+#include <QTextStream>
+class QSS
 {
-    Q_OBJECT
 public:
-    DesktopPony();
-    void start();
-    void initConnect();
+    QSS();
+    void setQSS();
 
+    QString UISettings;
 private:
-    FileTasks *fileTasks;
-    Config *config;
-    Localisation *localisation;
-    FileCharacter *fileCharacter;
-    Limit *limit;
-    QSS *qss;
-    UISettings *uiSettings;
-    UIPony *uiPony;
-    ImageProcessing *imageProcessing;
-
-private slots:
-    void slotSettings(int);
+    QString readQSS(QString path);
+    const QString pathUISettings = ":/qss/default.css";
 };
 
-#endif // DESKTOPPONY_H
+#endif // QSS_H

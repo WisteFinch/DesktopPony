@@ -1,8 +1,8 @@
 /**
  * @file file/config.h
- * @brief 配置文件
+ * @brief 文件-配置文件
  * @author WisteFinch
- * @date 2020.10.3
+ * @date 2020.11.29
  *
  * MIT License
  * Copyright (c) 2019-2020 WisteFinch

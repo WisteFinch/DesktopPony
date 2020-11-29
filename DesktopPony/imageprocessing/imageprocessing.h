@@ -1,8 +1,8 @@
 /**
  * @file imageprocessing/imageprocessing.h
- * @brief 图像处理
+ * @brief 图像处理-主类
  * @author WisteFinch
- * @date 2020.10.3
+ * @date 2020.11.29
  *
  * MIT License
  * Copyright (c) 2019-2020 WisteFinch
@@ -32,7 +32,7 @@
 #include "imageprocessing/imagestruct.h"
 #include "imageprocessing/accessories.h"
 #include "imagestruct.h"
-#include "file/filetasks.h"
+#include "file/fileevent.h"
 #include "file/config.h"
 #include "file/filecharacter.h"
 #include "scriptinterpreter/scriptinterpreter.h"

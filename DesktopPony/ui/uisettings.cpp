@@ -105,7 +105,7 @@ void UISettings::init(Localisation *tmpLocalisation, Config *tmpConfig, FileChar
 //=========================test============================
 
     QFile *a = new QFile;
-    a->setFileName("a.css");
+    a->setFileName(":/qss/default.css");
     a->open(QFile::ReadOnly);
     QString s = a->readAll();
     this->setStyleSheet(s);
@@ -402,7 +402,7 @@ QFrame *UISettings::horizontalLine(QString objectName, QWidget *parent)
 void UISettings::setBackGround()
 {
 
-    QDir rootDir(":\\background");
+    QDir rootDir(":\\img\\background");
     QDir userDir("background");
     rootDir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     rootDir.setSorting(QDir::Name);

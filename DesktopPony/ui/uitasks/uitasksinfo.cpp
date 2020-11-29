@@ -106,7 +106,7 @@ void UITasksInfo::init(Localisation *tmpLocalisation, FileTasks::STaskdata *tmpT
     //=========================test============================
 
         QFile *a = new QFile;
-        a->setFileName("a.css");
+        a->setFileName(":/qss/default.css");
         a->open(QFile::ReadOnly);
         QString s = a->readAll();
         this->setStyleSheet(s);

@@ -1,4 +1,4 @@
-#include "qss.h"
+#include "file/fileqss.h"
 
 QSS::QSS()
 {

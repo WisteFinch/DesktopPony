@@ -1,8 +1,8 @@
 /**
  * @file ui/uipony.h
- * @brief 小马显示界面
+ * @brief 界面-小马
  * @author WisteFinch
- * @date 2020.10.3
+ * @date 2020.11.29
  *
  * MIT License
  * Copyright (c) 2019-2020 WisteFinch

@@ -1,8 +1,8 @@
 /**
  * @file ui/uisettings.h
- * @brief 设置界面
+ * @brief 界面-设置
  * @author WisteFinch
- * @date 2020.10.3
+ * @date 2020.11.29
  *
  * MIT License
  * Copyright (c) 2019-2020 WisteFinch
@@ -32,7 +32,7 @@
 #include "file/localisation.h"
 #include "file/config.h"
 #include "file/filecharacter.h"
-#include "file/filetasks.h"
+#include "file/fileevent.h"
 #include "ui/uicharacter/uicharacter.h"
 #include "ui/uitasks/uitasks.h"
 #include <QWidget>
