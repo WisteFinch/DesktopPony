@@ -105,7 +105,7 @@ void UISettings::init(Localisation *tmpLocalisation, Config *tmpConfig, FileChar
 //=========================test============================
 
     QFile *a = new QFile;
-    a->setFileName(":/qss/default.css");
+    a->setFileName(":/css/default.css");
     a->open(QFile::ReadOnly);
     QString s = a->readAll();
     this->setStyleSheet(s);

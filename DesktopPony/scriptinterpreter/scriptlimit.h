@@ -114,11 +114,11 @@ enum PARSER{
     parser_cs,
     parser_es,
     parser_js,
-    parser_declare,
-    parser_declare_body,
-    parser_declares,
-    parser_declare_basic,
-    parser_type,
+    parser_declaration,     ///< 声明
+    parser_init_declarator_list,///< 初始化声明列表
+    parser_init_declarator, ///< 初始化声明
+    parser_declarator,      ///<声明符
+    parser_declaration_type_specifier,///< 类型说明符
     parser_if,
     parser_if_body,
     parser_while,
@@ -165,7 +165,8 @@ enum VALUE_TYPE{
     type_empty, ///< 无数据
     type_var,   ///< 变量指针
     type_id,    ///< 标识符
-    type_void   ///< 缺省
+    type_void,   ///< 缺省
+    type_error  ///< 错误
 };
 
 struct Value{
@@ -183,6 +184,14 @@ struct Value{
     ~Value(){_var = nullptr;}
 };
 
-
+struct Variable
+{
+    void setVariable(VALUE_TYPE t){type = t;}
+    void setVariable(VALUE_TYPE t, int s){type = t; size = s; isArray = true; v.resize(s);}
+    QVector<Value> v;
+    int size;
+    bool isArray = false;
+    VALUE_TYPE type = type_empty;
+};
 
 #endif // SCRIPTLIMIT_H

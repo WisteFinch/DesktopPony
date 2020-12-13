@@ -41,7 +41,7 @@ public:
     QString UISettings;
 private:
     QString readQSS(QString path);
-    const QString pathUISettings = ":/qss/default.css";
+    const QString pathUISettings = ":/css/default.css";
 };
 
 #endif // QSS_H

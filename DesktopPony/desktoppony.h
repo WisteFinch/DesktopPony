@@ -36,7 +36,7 @@
 #include "file/fileevent.h"
 #include "metadata.h"
 #include "file/filecharacter.h"
-#include "qss.h"
+#include "file/fileqss.h"
 #include "ui/uipony.h"
 #include "file/localisation.h"
 #include <QObject>

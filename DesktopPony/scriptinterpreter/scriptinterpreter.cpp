@@ -5,52 +5,93 @@ ScriptInterpreter::ScriptInterpreter()
 
 }
 
-Value ScriptInterpreter::run(ScriptParserNode *node)
+QStringList ScriptInterpreter::run(ScriptParserNode *node)
 {
-    QMap<QString, QVector<QPair<int, Value> >* > *data = new QMap<QString, QVector<QPair<int, Value>>*>;
-    QVector<QVector<QString> *> *record = new QVector<QVector<QString> *>;
+    //清空输出
+    this->m_output.clear();
+    //开始解释脚本
+    QMap<QString, QVector<QPair<int, Variable> > *> *data = new QMap<QString, QVector<QPair<int, Variable> > *>;//局部变量数据
+    QVector<QVector<QString> *> *record = new QVector<QVector<QString> *>;  //局部变量记录
     try {
+        //根节点为语句列表
         if(node->m_p == parser_sl)
         {
             iStatementList(node, data, record, 0);
-        }else if(node->m_p == parser_exp)
+        }
+        //根节点为表达式
+        else if(node->m_p == parser_exp)
         {
-            return iExpression(node, data, record, 0).first();
-        }else if(node->m_p == parser_cond_head_exp)
+            this->m_output.append(valueToString(iExpression(node, data, record, 0).first()));
+        }
+        //根节点为条件表达式
+        else if(node->m_p == parser_cond_head_exp)
         {
-            return iConditionalHeadExpression(node, data, record, 0);
+            this->m_output.append(valueToString(iConditionalHeadExpression(node, data, record, 0)));
         }
     } catch (ScriptException& se) {
         ExceptionHandle(se);
     }
-    Value v;
-    v.type = type_error;
-    return v;
+    //解释脚本结束
+    //返回输出
+    return this->m_output;
 }
 
-Value ScriptInterpreter::run(QString str)
+QStringList ScriptInterpreter::run(QString str)
 {
-
+    //清空输出
+    this->m_output.clear();
+    //从脚本文本生成语法树
     ScriptParser *s = new ScriptParser();
     try {
         s->set(str);
     } catch (ScriptException& se) {
         ExceptionHandle(se);
-        Value v;
-        v.type = type_error;
     }
+    //解释脚本
     return run(s->m_p_root);
 }
 
-void ScriptInterpreter::iStatementList(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer)
+QString ScriptInterpreter::valueToString(Value v)
 {
+    if(v.type == type_int)
+        return QString(v._int);
+    else if(v.type == type_float)
+        return QString("%1").arg(static_cast<double>(v._float));
+    else if(v.type == type_bool)
+    {
+        if(v._bool)
+            return "true";
+        else
+            return "false";
+    }
+    else if(v.type == type_str)
+        return "\"" + v._str + "\"";
+    else if(v.type == type_id)
+        return "id:" + v._id;
+    else if(v.type == type_var)
+        return "var:" + valueToString(*v._var);
+    else
+        return nullptr;
+}
+
+Value ScriptInterpreter::ExceptionHandle(ScriptException &se)
+{
+
+}
+
+void ScriptInterpreter::iStatementList(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
+{
+    //获取子节点类型
     PARSER p = node->m_p_left_child->m_p;
+    //子节点类型为语句
     if(p == parser_s)
     {
         iStatement(node->m_p_left_child, data, record, layer);
         if(node->m_p_right_child != nullptr)
             iStatementList(node->m_p_right_child, data, record, layer);
-    }else if(p == parser_cs)
+    }
+    //子节点类型为复合语句
+    else if(p == parser_cs)
     {
         iCompoundStatement(node->m_p_left_child, data, record, layer);
         if(node->m_p_right_child != nullptr)
@@ -58,35 +99,47 @@ void ScriptInterpreter::iStatementList(ScriptParserNode *node, QMap<QString, QVe
     }
 }
 
-void ScriptInterpreter::iStatement(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer)
+void ScriptInterpreter::iStatement(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
+    //分析子节点类型
     PARSER p = node->m_p_left_child->m_p;
-    if(p == parser_declare)
+    //子节点类型为声明
+    if(p == parser_declaration)
     {
-        iDeclare(node->m_p_left_child, data, record, layer);
-    }else if(p == parser_while)
+        iDeclaration(node->m_p_left_child, data, record, layer);
+    }
+    //子节点类型为while
+    else if(p == parser_while)
     {
         iWhile(node->m_p_left_child, data, record, layer);
-    }else if(p == parser_if)
+    }
+    //子节点类型为if
+    else if(p == parser_if)
     {
         iIf(node->m_p_left_child, data, record, layer);
     }
 }
 
-void ScriptInterpreter::iCompoundStatement(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer)
+void ScriptInterpreter::iCompoundStatement(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
+    //添加新变量记录
+    record->append(new QVector<QString>);
+    //分析子节点类型
     PARSER p = node->m_p_left_child->m_p;
+    //子节点类型为语句
     if(p == parser_s)
     {
-        record->append(new QVector<QString>);
+        //解释子节点（变量层数加一）
         iStatement(node->m_p_left_child, data, record, layer + 1);
-        clearVariable(data, record, layer + 1);
-    }else if(p == parser_sl)
-    {
-        record->append(new QVector<QString>);
-        iStatementList(node->m_p_left_child, data, record, layer + 1);
-        clearVariable(data, record, layer + 1);
     }
+    //子节点类型为语句列表
+    else if(p == parser_sl)
+    {
+        //解释子节点（变量层数加一）
+        iStatementList(node->m_p_left_child, data, record, layer + 1);
+    }
+    //删除新变量记录
+    clearVariable(data, record, layer + 1);
 }
 
 void ScriptInterpreter::iJumpStatement(ScriptParserNode *node)
@@ -96,17 +149,23 @@ void ScriptInterpreter::iJumpStatement(ScriptParserNode *node)
      *******/
 }
 
-Value ScriptInterpreter::iFunction(Value id, ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iFunction(Value id, ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     record->append(new QVector<QString>);
-    QVector<Value> value = iExpression(node->m_p_right_child, data, record, layer + 1);
-    clearVariable(data, record, layer + 1);
+    QVector<Value> value;
+    try {
+        value = iExpression(node->m_p_right_child, data, record, layer + 1);
+        clearVariable(data, record, layer + 1);
+    } catch (ScriptException &se) {
+        throw se;
+    }
+
     /*
      * 未完成
      */
 }
 
-void ScriptInterpreter::iIf(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer)
+void ScriptInterpreter::iIf(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     record->append(new QVector<QString>);
     QVector<Value> value = iExpression(node->m_p_left_child, data, record, layer + 1);
@@ -125,80 +184,143 @@ void ScriptInterpreter::iIf(ScriptParserNode *node, QMap<QString, QVector<QPair<
         throw new ScriptException(ScriptException::C001, t, i);
     }else if(value.first().type != type_bool && value.first().type != type_int)
     {
-        /*
+        /***********
          * 异常
-         * 数据类型
-         */
+         * 无效的运算
+         ***********/
+        QVector<Value> v;
+        v.append(value.first());
+        QVector<TokenData> t;
+        t.append(t);
+        throw new ScriptException(ScriptException::C002, t, v);
     }
     iIfBody(node->m_p_right_child, data, record, layer, value.first());
 }
 
-void ScriptInterpreter::iIfBody(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer, Value flag)
+void ScriptInterpreter::iIfBody(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer, Value flag)
 {
-    if(flag._bool || flag._int)
-    {
-        iStatement(node->m_p_left_child, data, record, layer);
-    }else if(node->m_p_right_child != nullptr)
-    {
-        PARSER p = node->m_p_right_child->m_p;
-        if(p == parser_if)
+    try {
+        //真
+        if(flag._bool || flag._int)
         {
-            iIf(node->m_p_right_child, data, record, layer);
-        }else{
+            iStatement(node->m_p_left_child, data, record, layer);
+        }
+        // 假
+        else if(node->m_p_right_child != nullptr)
+        {
+            PARSER p = node->m_p_right_child->m_p;
+            if(p == parser_if)
+            {
+                iIf(node->m_p_right_child, data, record, layer);
+            }else{
+                iStatement(node->m_p_right_child, data, record, layer);
+            }
+        }
+    } catch (ScriptException &se) {
+        throw se;
+    }
+}
+
+void ScriptInterpreter::iWhile(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
+{
+    record->append(new QVector<QString>);
+    bool flag;
+    try {
+        flag = iExpression(node->m_p_left_child, data, record, layer + 1).first()._bool;
+        clearVariable(data, record, layer + 1);
+    } catch (ScriptException &se)
+    {
+        throw se;
+    }
+    while(flag)
+    {
+        try {
             iStatement(node->m_p_right_child, data, record, layer);
+            record->append(new QVector<QString>);
+            flag = iExpression(node->m_p_left_child, data, record, layer + 1).first()._bool;
+            clearVariable(data, record, layer + 1);
+        } catch (SYN &syn) {
+            if(syn == syn_break)
+            {
+                break;
+            }else if(syn == syn_continue)
+            {
+                continue;
+            }
+        } catch (ScriptException &se)
+        {
+            throw se;
         }
     }
 }
 
-void ScriptInterpreter::iWhile(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer)
+void ScriptInterpreter::iDeclaration(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    record->append(new QVector<QString>);
-    bool flag = iExpression(node->m_p_left_child, data, record, layer + 1).first()._bool;
-    clearVariable(data, record, layer + 1);
-    while(flag)
-    {
-        iStatement(node->m_p_right_child, data, record, layer);
-
-        record->append(new QVector<QString>);
-        flag = iExpression(node->m_p_left_child, data, record, layer + 1).first()._bool;
-        clearVariable(data, record, layer + 1);
+    //文法:DECLARATION -> DECLARATIONTYPESPEC INITDECLARATORLIST
+    try {
+        //获取声明类型
+        TokenData type = iDeclarationTypeSpecifier(node->m_p_left_child);
+        //解释右节点
+        iInitDeclaratorList(type, node, data, record, layer);
+    } catch (ScriptException &se) {
+        throw se;
     }
 }
 
-void ScriptInterpreter::iDeclare(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer)
+void ScriptInterpreter::iInitDeclaratorList(TokenData t, ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    TokenData type = iType(node->m_p_left_child);
-    iDeclares(node->m_p_right_child, data, record, layer, type);
-}
-
-void ScriptInterpreter::iDeclares(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer, TokenData t)
-{
-    iDeclareBody(node->m_p_left_child, data, record, layer, t);
-    if(node->m_p_right_child != nullptr)
-    {
-        iDeclares(node->m_p_right_child, data, record, layer, t);
+    try {
+        //文法:NITDECLARATORLIST -> INITDECLARATOR
+        iInitDeclarator(t, node->m_p_left_child, data, record, layer);
+        //文法:NITDECLARATORLIST -> INITDECLARATOR, INITDECLARATORLIST
+        if(node->m_p_right_child != nullptr)
+        {
+            iInitDeclaratorList(t, node->m_p_right_child, data, record, layer);
+        }
+    } catch (ScriptException &se) {
+        throw se;
     }
 }
 
-void ScriptInterpreter::iDeclareBody(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer, TokenData t)
+void ScriptInterpreter::iInitDeclarator(TokenData t, ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value value;
-    if(node->m_p_right_child != nullptr)
-    {
-        value = iExpression(node->m_p_right_child, data, record, layer).first();
+    //文法:INITDECLARATOR-> DECLARATOR
+    //                  -> DECLARATOR = INITIALIZER
+    try {
+        Value value;
+        //存在右节点
+        if(node->m_p_right_child != nullptr)
+        {
+            //获取初始化值
+            value = iAssignmentExpression(node->m_p_right_child, data, record, layer);
+        }
+        iDeclarator(t, value, node->m_p_left_child, data, record, layer);
+    } catch (ScriptInterpreter &se) {
+        throw se;
     }
-    iDeclareBasic(node->m_p_left_child, data, record, layer, t, value);
 }
 
-void ScriptInterpreter::iDeclareBasic(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer, TokenData t, Value v)
+void ScriptInterpreter::iDeclarator(TokenData type, Value rValue, ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    QString id;
-    id = iId(node->m_p_left_child)._id;
+    //文法:DECLARATOR -> ID
+    bool isArray = false;
+    int size = 0;
+    //获取标识符
+    QString id = iId(node->m_p_left_child)._id;
+    //判断是否为数组
     if(node->m_p_right_child != nullptr)
     {
-        record->append(new QVector<QString>);
-        QVector<Value> e = iExpression(node->m_p_right_child, data, record, layer + 1);
-        clearVariable(data, record, layer + 1);
+        QVector<Value> e;
+        //文法:DECLARATOR -> ID[EXP]
+        isArray = true;
+        //解释下标
+        try {
+            record->append(new QVector<QString>);
+            e = iExpression(node->m_p_right_child, data, record, layer + 1);
+            clearVariable(data, record, layer + 1);
+        } catch (ScriptException &se) {
+            throw se;
+        }
         if(e.size() > 1)
         {
             /************
@@ -214,9 +336,8 @@ void ScriptInterpreter::iDeclareBasic(ScriptParserNode *node, QMap<QString, QVec
         }
         if(e.first().type == type_int)
         {
-            id.append('[' + QString::number(e.first()._int) + ']');
-        }else
-        {
+            size = e.first()._int;
+        }else{
             /***************
              * 异常
              * 数组下标不是整数
@@ -228,58 +349,56 @@ void ScriptInterpreter::iDeclareBasic(ScriptParserNode *node, QMap<QString, QVec
             throw new ScriptException(ScriptException::C005, t, v);
         }
     }
-    if(t.syn == syn_int)
-    {
-        if(v.type == type_int || v.type == type_empty)
+
+    //插入变量
+    try {
+        if(isArray)
         {
-            insertVariable(id, v, data, record, layer);
-        }else
-        {
-            /*
-            * 异常
-            * 数据类型不匹配
-            */
+            if(rValue.type != type_empty)
+            {
+                /************
+                 * 异常
+                 * 无法初始化变量
+                 ************/
+                QVector<TokenData> t;
+                t.append(node->m_t);
+                QVector<Value> v;
+                v.append(rValue);
+                throw new ScriptException(ScriptException::C009, t, v);
+            }
+            insertVariable(id, size, type, data, record, layer);
         }
-    }else if(t.syn == syn_float)
-    {
-        if(v.type == type_float || v.type == type_empty)
+        else
+            insertVariable(id, rValue, type ,data, record, layer);
+    } catch (ScriptException::EXCEPTION_TYPE &se) {
+        if(se == ScriptException::C009)
         {
-            insertVariable(id, v, data, record, layer);
-        }else
-        {
-            /*
-            * 异常
-            * 数据类型不匹配
-            */
-        }
-    }else if(t.syn == syn_bool)
-    {
-        if(v.type == type_bool || v.type == type_empty)
-        {
-            insertVariable(id, v, data, record, layer);
-        }else
-        {
-            /*
-            * 异常
-            * 数据类型不匹配
-            */
-        }
-    }else if(t.syn == syn_string)
-    {
-        if(v.type == type_str || v.type == type_empty)
-        {
-            insertVariable(id, v, data, record, layer);
-        }else
-        {
-            /*
+            /************
              * 异常
-             * 数据类型不匹配
-             */
+             * 无法初始化变量
+             ************/
+            QVector<TokenData> t;
+            t.append(node->m_t);
+            QVector<Value> v;
+            v.append(rValue);
+            throw new ScriptException(ScriptException::C009, t, v);
+        }
+        else if(se == ScriptException::C010)
+        {
+            /************
+             * 异常
+             * 重复成员
+             ************/
+            QVector<TokenData> t;
+            t.append(node->m_t);
+            QVector<Value> v;
+            v.append(rValue);
+            throw new ScriptException(ScriptException::C009, t, v);
         }
     }
 }
 
-TokenData ScriptInterpreter::iType(ScriptParserNode *node)
+TokenData ScriptInterpreter::iDeclarationTypeSpecifier(ScriptParserNode *node)
 {
     return node->m_t;
 }
@@ -292,7 +411,7 @@ Value ScriptInterpreter::iId(ScriptParserNode *node)
     return v;
 }
 
-QVector<Value> ScriptInterpreter::iExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+QVector<Value> ScriptInterpreter::iExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     QVector<Value> value;
 
@@ -318,7 +437,7 @@ QVector<Value> ScriptInterpreter::iExpression(ScriptParserNode *node, QMap<QStri
     return value;
 }
 
-Value ScriptInterpreter::iAssignmentExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iAssignmentExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     //文法：AEXP -> CHEXP
     if(node->m_p_left_child->m_p == parser_cond_head_exp)
@@ -374,7 +493,7 @@ Value ScriptInterpreter::iAssignmentExpression(ScriptParserNode *node, QMap<QStr
     }
 }
 
-Value ScriptInterpreter::iConditionalHeadExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iConditionalHeadExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     Value left;
 
@@ -412,13 +531,13 @@ Value ScriptInterpreter::iConditionalHeadExpression(ScriptParserNode *node, QMap
     return left;
 }
 
-Value ScriptInterpreter::iConditionalBodyExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer, bool flag)
+Value ScriptInterpreter::iConditionalBodyExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer, bool flag)
 {
     //文法：CBEXP	 -> AEXP : CHEXP
     //标示为真
     if(flag)
     {
-        try {   
+        try {
             //返回左节点
             return iAssignmentExpression(node->m_p_left_child, data, record, layer);
         } catch (ScriptException& se) {
@@ -436,7 +555,7 @@ Value ScriptInterpreter::iConditionalBodyExpression(ScriptParserNode *node, QMap
     }
 }
 
-Value ScriptInterpreter::iLogicalOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iLogicalOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     Value left;
 
@@ -464,7 +583,7 @@ Value ScriptInterpreter::iLogicalOrExpression(ScriptParserNode *node, QMap<QStri
     return left;
 }
 
-Value ScriptInterpreter::iLogicalAndExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iLogicalAndExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     Value left;
 
@@ -492,7 +611,7 @@ Value ScriptInterpreter::iLogicalAndExpression(ScriptParserNode *node, QMap<QStr
     return left;
 }
 
-Value ScriptInterpreter::iInclusiveOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iInclusiveOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     Value left;
 
@@ -520,7 +639,7 @@ Value ScriptInterpreter::iInclusiveOrExpression(ScriptParserNode *node, QMap<QSt
     return left;
 }
 
-Value ScriptInterpreter::iExclusiveOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iExclusiveOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     Value left;
 
@@ -548,7 +667,7 @@ Value ScriptInterpreter::iExclusiveOrExpression(ScriptParserNode *node, QMap<QSt
     return left;
 }
 
-Value ScriptInterpreter::iAndExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iAndExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     Value left;
 
@@ -576,7 +695,7 @@ Value ScriptInterpreter::iAndExpression(ScriptParserNode *node, QMap<QString, QV
     return left;
 }
 
-Value ScriptInterpreter::iEqualityExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iEqualityExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     Value left;
 
@@ -605,7 +724,7 @@ Value ScriptInterpreter::iEqualityExpression(ScriptParserNode *node, QMap<QStrin
     return left;
 }
 
-Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     Value left;
 
@@ -638,7 +757,7 @@ Value ScriptInterpreter::iRelationalExpression(ScriptParserNode *node, QMap<QStr
     return left;
 }
 
-Value ScriptInterpreter::iShiftExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iShiftExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     Value left;
 
@@ -667,7 +786,7 @@ Value ScriptInterpreter::iShiftExpression(ScriptParserNode *node, QMap<QString, 
     return left;
 }
 
-Value ScriptInterpreter::iAdditiveExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iAdditiveExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     Value left;
 
@@ -696,7 +815,7 @@ Value ScriptInterpreter::iAdditiveExpression(ScriptParserNode *node, QMap<QStrin
     return left;
 }
 
-Value ScriptInterpreter::iMultiplicativeExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iMultiplicativeExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     Value left;
 
@@ -731,7 +850,7 @@ Value ScriptInterpreter::iMultiplicativeExpression(ScriptParserNode *node, QMap<
     return left;
 }
 
-Value ScriptInterpreter::iUnaryExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iUnaryExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     //文法：UEXP -> ++UEXP
     if(node->m_t.syn == syn_inc_op)
@@ -831,7 +950,7 @@ Value ScriptInterpreter::iUnaryExpression(ScriptParserNode *node, QMap<QString, 
     }
 }
 
-Value ScriptInterpreter::iPostfixExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iPostfixExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     Value left;
 
@@ -856,9 +975,12 @@ Value ScriptInterpreter::iPostfixExpression(ScriptParserNode *node, QMap<QString
 
         //文法：PEXP	-> PRIMEXP<id> | PRIMEXP[EXP]
         QString id = left._id;
+        int subscripte = 0;
+        bool isArray = false;
+        QVector<Value> right;
         if(node->m_p_right_child != nullptr)
         {
-            QVector<Value> right;
+            isArray = true;
             try {
                 right = iExpression(node->m_p_right_child, data, record, layer + 1);
             } catch (ScriptException& se) {
@@ -880,7 +1002,7 @@ Value ScriptInterpreter::iPostfixExpression(ScriptParserNode *node, QMap<QString
             }
             if(right.first().type == type_int)
             {
-                id.append('[' + QString::number(right.first()._int) + ']');
+                subscripte = right.first()._int;
             }else
             {
                 /***************
@@ -895,18 +1017,52 @@ Value ScriptInterpreter::iPostfixExpression(ScriptParserNode *node, QMap<QString
             }
         }
         try {
-            return getVariablePointer(id, data);
-        } catch (ScriptException& se) {
-            throw se;
+            if(isArray)
+                return getVariablePointer(id, subscripte, data);
+            else
+                return getVariablePointer(id, data);
+        } catch (ScriptException::EXCEPTION_TYPE& se) {
+            if(se == ScriptException::C002)
+            {
+                /***********
+                 * 异常
+                 * 无效的运算
+                 ***********/
+                QVector<Value> v;
+                v.append(left);
+                QVector<TokenData> t;
+                t.append(t);
+                throw new ScriptException(ScriptException::C002, t, v);
+            }else if(se == ScriptException::C011)
+            {
+                /***********
+                 * 异常
+                 * 数组索引超出数组结尾
+                 ***********/
+                QVector<Value> v;
+                v.append(left);
+                QVector<TokenData> t;
+                t.append(t);
+                throw new ScriptException(ScriptException::C011, t, v);
+            }else if(se == ScriptException::C012)
+            {
+                /***********
+                 * 异常
+                 * 下标值不是数组
+                 ***********/
+                QVector<Value> v;
+                v.append(left);
+                QVector<TokenData> t;
+                t.append(t);
+                throw new ScriptException(ScriptException::C012, t, v);
+            }
         }
     }
     return left;
 }
 
-Value ScriptInterpreter::iPrimaryExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::iPrimaryExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value left;
-
     //文法：PRIMEXP	-> CONST
     if(node->m_t.syn == syn_const_int || node->m_t.syn == syn_const_float || node->m_t.syn == syn_const_bool || node->m_t.syn == syn_const_char)
     {
@@ -997,48 +1153,161 @@ Value ScriptInterpreter::iStringLiteral(ScriptParserNode *node)
     return v;
 }
 
-void ScriptInterpreter::insertVariable(QString id, Value v, QMap<QString, QVector<QPair<int, Value> >* > *data, QVector<QVector<QString> *> *record, int layer)
+void ScriptInterpreter::insertVariable(QString id, Value rValue, TokenData type, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
+    //判断类型
+    if(type.syn == syn_int || type.syn == syn_bool)
+    {
+        if(rValue.type != type_int && rValue.type != type_bool)
+        {
+            throw ScriptException::C009;//异常：无法初始化变量
+        }
+    }
+    else if(type.syn == syn_string)
+    {
+        if(rValue.type != type_str)
+        {
+            throw ScriptException::C009;//异常：无法初始化变量
+        }
+    }
+    else if(type.syn == syn_float)
+    {
+        if(rValue.type != type_float)
+        {
+            throw ScriptException::C009;//异常：无法初始化变量
+        }
+    }
+
+    Variable var;
+    if(type.syn == syn_int)
+    {
+        var.setVariable(type_int);
+    }else if(type.syn == syn_float)
+    {
+        var.setVariable(type_float);
+    }else if(type.syn == syn_bool)
+    {
+        var.setVariable(type_bool);
+    }else if(type.syn == syn_string)
+    {
+        var.setVariable(type_str);
+    }
+    var.v.first() = rValue;
+
     if(data->contains(id))
     {
-        QVector<QPair<int, Value> >* vector = data->value(id);
+        QVector<QPair<int, Variable> >* vector = data->value(id);
         if(vector->last().first == layer)
         {
-            /*
-             * 异常
-             * 重复定义
-             */
-
+            throw ScriptException::C010;//异常:重复成员
         }
-        vector->append(QPair<int, Value>(layer, v));
     }else{
-        QVector<QPair<int, Value> >* vector = new QVector<QPair<int, Value> >;
-        vector->append(QPair<int, Value>(layer, v));
+        QVector<QPair<int, Variable> >* vector = new QVector<QPair<int, Variable> >;
+        vector->append(QPair<int, Variable>(layer, var));
     }
 
     QVector<QString> *subRecord = record->last();
     subRecord->append(id);
 }
 
-Value ScriptInterpreter::getVariable(QString id, VALUE_TYPE t, QMap<QString, QVector<QPair<int, Value> > *> *data)
+void ScriptInterpreter::insertVariable(QString id, int size, TokenData type, QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-    Value v = data->value(id)->last().second;
-    if(v.type != t)
+    Variable var;
+    if(type.syn == syn_int)
     {
-        /*
-         * 异常
-         * 数据类型不匹配
-         */
+        var.setVariable(type_int, size);
+    }else if(type.syn == syn_float)
+    {
+        var.setVariable(type_float, size);
+    }else if(type.syn == syn_bool)
+    {
+        var.setVariable(type_bool, size);
+    }else if(type.syn == syn_string)
+    {
+        var.setVariable(type_str, size);
     }
+
+    if(data->contains(id))
+    {
+        QVector<QPair<int, Variable> >* vector = data->value(id);
+        if(vector->last().first == layer)
+        {
+            throw ScriptException::C010;//异常:重复成员
+        }
+    }else{
+        QVector<QPair<int, Variable> >* vector = new QVector<QPair<int, Variable> >;
+        vector->append(QPair<int, Variable>(layer, var));
+    }
+
+    QVector<QString> *subRecord = record->last();
+    subRecord->append(id);
 }
 
-Value ScriptInterpreter::getVariablePointer(QString id, QMap<QString, QVector<QPair<int, Value> > *> *data)
+Value ScriptInterpreter::getVariable(QString id, QMap<QString, QVector<QPair<int, Variable> > *> *data)
 {
-    Value v = data->value(id)->last().second;
-
+    //获取变量
+    Variable v = data->value(id)->last().second;
+    if(v.isArray == true)
+    {
+        throw ScriptException::C002;//异常：无效的运算
+    }
+    return v.v.first();
 }
 
-void ScriptInterpreter::clearVariable(QMap<QString, QVector<QPair<int, Value> > *> *data, QVector<QVector<QString> *> *record, int layer)
+Value ScriptInterpreter::getVariable(QString id, int subscripte, QMap<QString, QVector<QPair<int, Variable> > *> *data)
+{
+    //获取变量
+    Variable v = data->value(id)->last().second;
+    //判断下标是否越界
+    if(subscripte >= v.size)
+    {
+        throw QPair<int, ScriptException::EXCEPTION_TYPE>(v.size, ScriptException::C011);//异常：数组下标超出数组结尾
+    }
+    //判断是否非数组
+    else if(v.isArray == false)
+    {
+        throw ScriptException::C012;//异常：下标值不是数组
+    }
+    return v.v.at(subscripte);
+}
+
+Value ScriptInterpreter::getVariablePointer(QString id, QMap<QString, QVector<QPair<int, Variable> > *> *data)
+{
+    //获取变量指针
+    Variable var = data->value(id)->last().second;
+    if(var.isArray == true)
+    {
+        throw ScriptException::C002;//异常：无效的运算
+    }
+
+    Value v;
+    v.type = type_var;
+    v._var = &var.v.first();
+    return v;
+}
+
+Value ScriptInterpreter::getVariablePointer(QString id, int subscripte, QMap<QString, QVector<QPair<int, Variable> > *> *data)
+{
+    //获取变量
+    Variable var = data->value(id)->last().second;
+    //判断下标是否越界
+    if(subscripte >= var.size)
+    {
+        throw QPair<int, ScriptException::EXCEPTION_TYPE>(var.size, ScriptException::C011);//异常：数组下标超出数组结尾
+    }
+    //判断是否非数组
+    else if(var.isArray == false)
+    {
+        throw ScriptException::C012;//异常：下标值不是数组
+    }
+
+    Value v;
+    v.type = type_var;
+    v._var = &var.v[subscripte];
+    return v;
+}
+
+void ScriptInterpreter::clearVariable(QMap<QString, QVector<QPair<int, Variable> > *> *data, QVector<QVector<QString> *> *record, int layer)
 {
     while(record->size() >= layer)
     {
@@ -1048,7 +1317,7 @@ void ScriptInterpreter::clearVariable(QMap<QString, QVector<QPair<int, Value> > 
             QString id = subRecord->at(i);
             if(data->contains(id))
             {
-                QVector<QPair<int, Value> > *vector = data->value(id);
+                QVector<QPair<int, Variable> > *vector = data->value(id);
                 if(!vector->isEmpty())
                 {
                     while(vector->last().first > layer)
@@ -1076,8 +1345,9 @@ void ScriptInterpreter::clearVariable(QMap<QString, QVector<QPair<int, Value> > 
 
 Value ScriptInterpreter::operation(Value left, Value right, TokenData t)
 {
+    Value v;
     try {
-        _operation(left, right, t);
+         v = _operation(left, right, t);
     } catch (ScriptException::EXCEPTION_TYPE &e) {
         if(e == ScriptException::C002)
         {
@@ -1093,6 +1363,7 @@ Value ScriptInterpreter::operation(Value left, Value right, TokenData t)
             throw new ScriptException(ScriptException::C002, t, v);
         }
     }
+    return v;
 }
 
 Value ScriptInterpreter::_operation(Value left, Value right, TokenData t)
@@ -1768,3 +2039,4 @@ Value ScriptInterpreter::_operation(Value left, Value right, TokenData t)
     //返回运算结果
     return value;
 }
+

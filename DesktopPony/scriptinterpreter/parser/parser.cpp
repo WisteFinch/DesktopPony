@@ -139,7 +139,7 @@ void ScriptParser::pStatement(ScriptParserNode *node)
     node->m_p_left_child = new ScriptParserNode();
     if(token.syn == syn_int || token.syn == syn_float || token.syn == syn_bool || token.syn == syn_string)
     {
-        pDeclare(node->m_p_left_child);
+        pDeclaration(node->m_p_left_child);
     }else if(token.syn == syn_while)
     {
         pCompoundStatement(node->m_p_left_child);
@@ -237,29 +237,49 @@ void ScriptParser::pWhile(ScriptParserNode *node)
     pStatement(node->m_p_right_child);
 }
 
-void ScriptParser::pDeclare(ScriptParserNode *node)
+void ScriptParser::pDeclaration(ScriptParserNode *node)
 {
-    node->set("", parser_declare, nullptr, nullptr);
+    node->set("", parser_declaration, nullptr, nullptr);
     //分析文法
     node->m_p_left_child = new ScriptParserNode();
-    pType(node->m_p_left_child);
+    pDeclarationTypeSpecifier(node->m_p_left_child);
     TokenData token = curToken();
     if(token.syn == syn_id)
     {
         node->m_p_right_child = new ScriptParserNode();
-        pDeclares(node->m_p_right_child);
+        pInitDeclaratorList(node->m_p_right_child);
     }else{
         errorExit();
     }
     eat(syn_semi);
 }
 
-void ScriptParser::pDeclareBody(ScriptParserNode *node)
+void ScriptParser::pInitDeclaratorList(ScriptParserNode *node)
 {
-    node->set("", parser_declare_body, nullptr, nullptr);
+    node->set("", parser_init_declarator_list, nullptr, nullptr);
     //分析文法
     node->m_p_left_child = new ScriptParserNode();
-    pDeclareBasic(node->m_p_left_child);
+    pInitDeclarator(node->m_p_left_child);
+    TokenData token = curToken();
+    if(token.syn == syn_comma)
+    {
+        eat(syn_comma);
+        if(token.syn == syn_id)
+        {
+            node->m_p_right_child = new ScriptParserNode();
+            pInitDeclaratorList(node->m_p_right_child);
+        }else{
+            errorExit();
+        }
+    }
+}
+
+void ScriptParser::pInitDeclarator(ScriptParserNode *node)
+{
+    node->set("", parser_init_declarator, nullptr, nullptr);
+    //分析文法
+    node->m_p_left_child = new ScriptParserNode();
+    pDeclarator(node->m_p_left_child);
     TokenData token = curToken();
     if(token.syn == syn_equal)
     {
@@ -269,29 +289,9 @@ void ScriptParser::pDeclareBody(ScriptParserNode *node)
     }
 }
 
-void ScriptParser::pDeclares(ScriptParserNode *node)
+void ScriptParser::pDeclarator(ScriptParserNode *node)
 {
-    node->set("", parser_declares, nullptr, nullptr);
-    //分析文法
-    node->m_p_left_child = new ScriptParserNode();
-    pDeclareBody(node->m_p_left_child);
-    TokenData token = curToken();
-    if(token.syn == syn_comma)
-    {
-        eat(syn_comma);
-        if(token.syn == syn_id)
-        {
-            node->m_p_right_child = new ScriptParserNode();
-            pDeclares(node->m_p_right_child);
-        }else{
-            errorExit();
-        }
-    }
-}
-
-void ScriptParser::pDeclareBasic(ScriptParserNode *node)
-{
-    node->set("", parser_declare_basic, nullptr, nullptr);
+    node->set("", parser_declarator, nullptr, nullptr);
     //分析文法
     node->m_p_left_child = new ScriptParserNode();
     pId(node->m_p_left_child);
@@ -305,12 +305,12 @@ void ScriptParser::pDeclareBasic(ScriptParserNode *node)
     }
 }
 
-void ScriptParser::pType(ScriptParserNode *node)
+void ScriptParser::pDeclarationTypeSpecifier(ScriptParserNode *node)
 {
     //分析文法
     //获取下一个单词
     TokenData token = getToken();
-    node->set(token.str, parser_type, nullptr, nullptr);
+    node->set(token.str, parser_declaration_type_specifier, nullptr, nullptr);
 }
 
 void ScriptParser::pId(ScriptParserNode *node)

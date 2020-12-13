@@ -31,7 +31,7 @@
 
 #include "imageprocessing/imageprocessing.h"
 #include "limit.h"
-#include "qss.h"
+#include "file/fileqss.h"
 #include "file/localisation.h"
 #include "file/config.h"
 #include <QWidget>

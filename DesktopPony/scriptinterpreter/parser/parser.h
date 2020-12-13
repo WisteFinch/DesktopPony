@@ -107,11 +107,11 @@ public:
     void pIf(ScriptParserNode *node); ///< if
     void pIfBody(ScriptParserNode *node); ///< if主体
     void pWhile(ScriptParserNode *node); ///< while
-    void pDeclare(ScriptParserNode *node); ///< 声明
-    void pDeclareBody(ScriptParserNode *node); ///< 声明主体
-    void pDeclares(ScriptParserNode *node); ///< 声明列表
-    void pDeclareBasic(ScriptParserNode *node); ///< 基本声明
-    void pType(ScriptParserNode *node); ///< 类型
+    void pDeclaration(ScriptParserNode *node); ///< 声明
+    void pInitDeclaratorList(ScriptParserNode *node); ///< 初始化声明列表
+    void pInitDeclarator(ScriptParserNode *node); ///<  初始化声明
+    void pDeclarator(ScriptParserNode *node); ///< 声明符
+    void pDeclarationTypeSpecifier(ScriptParserNode *node); ///< 类型说明符
     void pId(ScriptParserNode *node); ///< id
     void pExpression(ScriptParserNode *node); ///< 表达式
     void pAssignmentExpression(ScriptParserNode *node); ///< 赋值表达式

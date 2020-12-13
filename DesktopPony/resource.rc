@@ -19,13 +19,12 @@ VS_VERSION_INFO VERSIONINFO
 		BEGIN
 			BLOCK "000404b0"
 			BEGIN
-				VALUE "CompanyName", "F-Studio\0"
 				VALUE "FileDescription", "A Pony-themed Desktop Pet\0"
-                                VALUE "FileVersion", "0.1.1.0\0"
-                                VALUE "LegalCopyright", "Copyright(C) 2019 F-Studio WiFiChina\0"
+                VALUE "FileVersion", "0.0.0.0\0"
+                VALUE "LegalCopyright", "Copyright (c) 2019-2020 WisteFinch\0"
 				VALUE "OriginalFilename", "DesktopPony.exe\0"
 				VALUE "ProductName", "DesktopPony\0"
-                                VALUE "ProductVersion", "0.1.1.0\0"
+                VALUE "ProductVersion", "0.0.0.0\0"
 			END
 		END
 		BLOCK "VarFileInfo"

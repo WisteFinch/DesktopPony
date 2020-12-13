@@ -108,9 +108,9 @@ FORMS += \
     ui/uitasks/uitasksinfo.ui
 
 RESOURCES += \
+    css.qrc \
     image.qrc \
     localisation.qrc \
-    qss.qrc \
     data.qrc
 
 RC_FILE += resource.rc

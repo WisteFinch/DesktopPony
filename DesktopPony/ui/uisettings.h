@@ -2,7 +2,7 @@
  * @file ui/uisettings.h
  * @brief 界面-设置
  * @author WisteFinch
- * @date 2020.11.29
+ * @date 2020.12.13
  *
  * MIT License
  * Copyright (c) 2019-2020 WisteFinch

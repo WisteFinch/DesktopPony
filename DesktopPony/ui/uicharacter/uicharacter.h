@@ -2,7 +2,7 @@
  * @file ui/uicharacter/uicharacter.h
  * @brief 界面-角色-主类
  * @author WisteFinch
- * @date 2020.11.29
+ * @date 2020.12.13
  *
  * MIT License
  * Copyright (c) 2019-2020 WisteFinch

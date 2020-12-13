@@ -2,7 +2,7 @@
  * @file scriptinterpreter/scriptexception.h
  * @brief 脚本-异常
  * @author WisteFinch
- * @date 2020.11.29
+ * @date 2020.12.13
  *
  * MIT License
  * Copyright (c) 2019-2020 WisteFinch
@@ -45,6 +45,10 @@ public:
         C006,   ///< 无法增加指定类型的值
         C007,   ///< 无法减少指定类型的值
         C008,   ///< 表达式不可赋值
+        C009,   ///< 无法初始化变量
+        C010,   ///< 重复成员
+        C011,   ///< 数组索引超出数组结尾
+        C012,   ///< 下标值不是数组
     };
 
     ScriptException(EXCEPTION_TYPE e, QVector<TokenData> t);
@@ -52,7 +56,6 @@ public:
     ScriptException(EXCEPTION_TYPE e, QVector<TokenData> t, QVector<int> i);
     ScriptException(EXCEPTION_TYPE e, QVector<TokenData> t, QVector<QString> str);
     ScriptException(EXCEPTION_TYPE e, QVector<TokenData> t, QVector<int> i, QVector<QString> str);
-
 
 
     EXCEPTION_TYPE e;
