@@ -5,7 +5,7 @@
  * @date 2020.10.29
  *
  * MIT License
- * Copyright (c) 2019-2020 WisteFinch
+ * Copyright (c) 2019-2021 WisteFinch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@
 
 #ifndef LEXER_H
 #define LEXER_H
-#include "scriptinterpreter/scriptlimit.h"
+#include "../scriptlimit.h"
 #include <QString>
 #include <QChar>
 #include <QPair>

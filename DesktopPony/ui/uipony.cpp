@@ -107,7 +107,7 @@ void UIPony::initThis(Config *tempConfig, Limit *tempLimit, QSS *tempQSS, Locali
 
 //设置窗体
     this->setWindowTitle(localisation->localisation["uiSettingsTitle"]);
-    this->setFixedSize(limit->uiPony.fixedWidth, limit->uiPony.fixedHeight);
+    this->setFixedSize(this->width, this->height);
 //设置布局
     setItemsLayout();
 //初始化组件

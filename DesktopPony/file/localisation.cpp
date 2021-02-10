@@ -12,8 +12,8 @@ bool Localisation::readLocalisation(QString lang)
 
     bool flag = false;
     //读取文件夹
-    QDir rootDir(":\\localisation\\");
-    QDir userDir("localisation\\");
+    QDir rootDir(":/localisation/");
+    QDir userDir("localisation/");
     rootDir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     rootDir.setSorting(QDir::Name);
     userDir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);

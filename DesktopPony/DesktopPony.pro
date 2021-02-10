@@ -4,7 +4,7 @@
 # Author: WisteFinch
 #
 # MIT License
-# Copyright (c) 2019-2020 WisteFinch
+# Copyright (c) 2019-2021 WisteFinch
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -59,6 +59,8 @@ SOURCES += \
     limit.cpp \
     scriptinterpreter/scriptexception.cpp \
     scriptinterpreter/scriptinterpreter.cpp \
+    scriptinterpreter/scriptlimit.cpp \
+    scriptinterpreter/scriptvariable.cpp \
     ui/uicharacter/uicharacter.cpp \
     ui/uicharacter/uicharacterlistcard.cpp \
     ui/uipony.cpp \
@@ -87,6 +89,7 @@ HEADERS += \
     scriptinterpreter/scriptexception.h \
     scriptinterpreter/scriptinterpreter.h \
     scriptinterpreter/scriptlimit.h \
+    scriptinterpreter/scriptvariable.h \
     ui/uicharacter/uicharacter.h \
     ui/uicharacter/uicharacterlistcard.h \
     ui/uipony.h \
@@ -113,7 +116,9 @@ RESOURCES += \
     localisation.qrc \
     data.qrc
 
-RC_FILE += resource.rc
+VERSION = 0.0.0.1
+RC_ICONS = img/icon.ico
+RC_FILE += winappinfo.rc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

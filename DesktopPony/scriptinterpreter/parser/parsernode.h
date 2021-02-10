@@ -5,7 +5,7 @@
  * @date 2020.10.29
  *
  * MIT License
- * Copyright (c) 2019-2020 WisteFinch
+ * Copyright (c) 2019-2021 WisteFinch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +29,10 @@
 #ifndef PARSERNODE_H
 #define PARSERNODE_H
 
-#include "scriptinterpreter/scriptlimit.h"
+#include "../scriptlimit.h"
 #include <QPair>
 #include <QString>
+#include <QDebug>
 
 class ScriptParserNode
 {
@@ -47,7 +48,28 @@ public:
     PARSER m_p = parser_null; ///< 语法类型
     QString m_d = nullptr; ///< 文本数据
     TokenData m_t; ///< 词块
+};
 
+class ScriptParserDebugNode
+{
+public:
+
+    ScriptParserDebugNode();
+    ~ScriptParserDebugNode();
+
+    void set(ScriptParserNode *n);
+    void _set(ScriptParserNode *n, QString synName, ParserDebugInfo *parserDebugInfo); ///< 设置节点
+    QString getAbridgedparserName(QString s); ///< 获取缩略parser名
+    void moveNode(ScriptParserDebugNode *n); ///< 移动节点信息
+    void breakLink(); ///< 断开链接
+    QString print(); ///< 输出调试信息
+    QString ergodicNode(QString head, QString attached); ///< 输出节点
+    ScriptParserDebugNode *m_p_left_child = nullptr; ///< 左节点
+    ScriptParserDebugNode *m_p_right_child = nullptr; ///< 右节点
+    QString m_parser_name = nullptr; ///< parser名
+    QString m_abridged_parser_name = nullptr; ///< 缩略parser名
+    ScriptParserNode *m_link_node = nullptr; ///< 链接的原节点
+    bool m_is_node = false;
 };
 
 #endif // PARSERNODE_H

@@ -5,7 +5,7 @@
  * @date 2020.12.13
  *
  * MIT License
- * Copyright (c) 2019-2020 WisteFinch
+ * Copyright (c) 2019-2021 WisteFinch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,12 +31,12 @@
 
 #include <QString>
 #include <QVector>
-#include "scriptinterpreter/scriptlimit.h"
+#include "scriptlimit.h"
 
 class ScriptException
 {
 public:
-    enum EXCEPTION_TYPE{
+    enum EXCEPTION_TYPE {
         C001,   ///< 参数数量错误
         C002,   ///< 无效的运算
         C003,   ///< 数组大小不是整数类型
@@ -49,20 +49,24 @@ public:
         C010,   ///< 重复成员
         C011,   ///< 数组索引超出数组结尾
         C012,   ///< 下标值不是数组
+        C013,   ///< 数组不可赋值
     };
 
+    struct ExceptionData {
+        EXCEPTION_TYPE e; /// 异常类型
+        QVector<TokenData> token; ///< 位置和内容信息
+        QVector<Value> value;
+        QVector<int> i;
+        QVector<QString> str;
+        VALUE_TYPE value_type;
+    } m_exception_data;
+
+    ScriptException(ExceptionData e);
     ScriptException(EXCEPTION_TYPE e, QVector<TokenData> t);
     ScriptException(EXCEPTION_TYPE e, QVector<TokenData> t, QVector<Value> v);
     ScriptException(EXCEPTION_TYPE e, QVector<TokenData> t, QVector<int> i);
     ScriptException(EXCEPTION_TYPE e, QVector<TokenData> t, QVector<QString> str);
     ScriptException(EXCEPTION_TYPE e, QVector<TokenData> t, QVector<int> i, QVector<QString> str);
-
-
-    EXCEPTION_TYPE e;
-    QVector<TokenData> t;
-    QVector<int> i;
-    QVector<QString> str;
-    QVector<Value> v;
 };
 
 #endif // SCRIPTEXCEPTION_H

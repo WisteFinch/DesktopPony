@@ -5,7 +5,7 @@
  * @date 2020.11.29
  *
  * MIT License
- * Copyright (c) 2019-2020 WisteFinch
+ * Copyright (c) 2019-2021 WisteFinch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -69,6 +69,10 @@ public:
     void initSystemTray();
     void ponyPosWrite();
     void display();
+
+    //黄金比例:D
+    const int width = 600;
+    const int height = 370;
 
     int imagesNumber;
     int eventID;

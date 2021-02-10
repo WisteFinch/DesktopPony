@@ -5,7 +5,7 @@
  * @date 2020.11.29
  *
  * MIT License
- * Copyright (c) 2019-2020 WisteFinch
+ * Copyright (c) 2019-2021 WisteFinch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,12 +29,13 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "scriptinterpreter/lexer/lexer.h"
-#include "scriptinterpreter/parser/parsernode.h"
-#include "scriptinterpreter/scriptlimit.h"
+#include "../lexer/lexer.h"
+#include "../parser/parsernode.h"
+#include "../scriptlimit.h"
 #include <QString>
 #include <QPair>
 #include <QDebug>
+#include <QMap>
 #include "iostream"
 
 class ScriptParser
@@ -42,7 +43,7 @@ class ScriptParser
 public:
     ScriptParser();
 
-    enum MODE{
+    enum MODE {
         mode_normal,
         mode_cond
     };
@@ -51,11 +52,6 @@ public:
     ScriptLexer *m_p_lexer; ///< 词法划分器
 
     int m_index; ///< 序号
-
-/*test
-    void ergodic(ScriptParserNode *n);
-    void test(QString s);
-*/
 
     /**
      * @brief 设置语法树
@@ -97,6 +93,7 @@ public:
     TokenData curToken(); ///< 当前词块
     TokenData lookAhead(); ///< 前一词块
     TokenData lookAhead(int i); ///< 前第n个词块
+    TokenData moveTokenIndex(int i); ///< 改变词块序号
     void errorExit();
 
     void pStatementList(ScriptParserNode *node); ///< 语句列表
@@ -111,7 +108,10 @@ public:
     void pInitDeclaratorList(ScriptParserNode *node); ///< 初始化声明列表
     void pInitDeclarator(ScriptParserNode *node); ///<  初始化声明
     void pDeclarator(ScriptParserNode *node); ///< 声明符
+    void pDeclaratorSize(ScriptParserNode *node); ///< 声明数组大小
     void pDeclarationTypeSpecifier(ScriptParserNode *node); ///< 类型说明符
+    void pInitializer(ScriptParserNode *node); ///< 初始化
+    void pInitializerList(ScriptParserNode *node); ///< 初始化列表
     void pId(ScriptParserNode *node); ///< id
     void pExpression(ScriptParserNode *node); ///< 表达式
     void pAssignmentExpression(ScriptParserNode *node); ///< 赋值表达式
@@ -133,6 +133,7 @@ public:
     void pPrimaryExpression(ScriptParserNode *node); ///< 基本表达式
     void pConstant(ScriptParserNode *node); ///< 常量
     void pStringLiteral(ScriptParserNode *node); ///< 字符串常量
+    void pVariableSubscripte(ScriptParserNode *node); ///< 变量下标
 };
 
 #endif // PARSER_H

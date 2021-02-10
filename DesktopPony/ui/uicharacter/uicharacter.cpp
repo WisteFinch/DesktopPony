@@ -206,7 +206,7 @@ void UICharacter::doLoadList()
     doClearList();
 
     QFile *loadFile = new QFile;
-    loadFile->setFileName(STR_CHARACTER_ROOT_PATH + "\\index.json");
+    loadFile->setFileName(STR_CHARACTER_ROOT_PATH + "/index.json");
     if(!loadFile->open(QIODevice::ReadOnly))
     {
         return;
@@ -309,11 +309,11 @@ void UICharacter::slotAddCharacter()
             QFileInfo copyFileInfo(list.at(i));
             QString copyFileBaseName = copyFileInfo.baseName();
             QString copyFileSuffix = copyFileInfo.suffix();
-            while(QFile::exists(STR_CHARACTER_ROOT_PATH + "\\" + copyFileBaseName + '.' + copyFileSuffix))
+            while(QFile::exists(STR_CHARACTER_ROOT_PATH + "/" + copyFileBaseName + '.' + copyFileSuffix))
             {
                 copyFileBaseName = addSerial(copyFileBaseName);
             }
-            QString copyFilePath = STR_CHARACTER_ROOT_PATH + "\\" + copyFileBaseName + '.' + copyFileSuffix;
+            QString copyFilePath = STR_CHARACTER_ROOT_PATH + "/" + copyFileBaseName + '.' + copyFileSuffix;
             QFile::copy(copyFileInfo.filePath(), copyFilePath);
 
             QJsonObject copyObj;
@@ -372,7 +372,7 @@ void UICharacter::slotDeleteCharacter()
     if(flag == 0)
     {
         QFile *loadFile = new QFile;
-        loadFile->setFileName(STR_CHARACTER_ROOT_PATH + "\\index.json");
+        loadFile->setFileName(STR_CHARACTER_ROOT_PATH + "/index.json");
         if(!loadFile->open(QIODevice::ReadOnly))
         {
             return;

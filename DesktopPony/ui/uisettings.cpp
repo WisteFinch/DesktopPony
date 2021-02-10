@@ -82,10 +82,9 @@ UISettings::~UISettings()
 
 void UISettings::closeEvent(QCloseEvent *event)
 {
+    event->ignore();
     saveValue();
-    //event->ignore();
     this->hide();
-
     qApp->quit();
     //emit signalBack(closeAction);
 
@@ -256,11 +255,11 @@ void UISettings::initText()
     this->m_button_tab_character->setText(this->m_p_localisation->get(this->m_button_tab_character->objectName()));
     this->m_label_character_switch_title->setText(this->m_p_localisation->get(this->m_label_character_switch_title->objectName()) + this->m_p_config->characterName); //“选择角色”
     this->m_label_character_switch_content->setText(this->m_p_localisation->get(this->m_label_character_switch_content->objectName()));
-    this->m_button_character_switch->setIcon(QIcon(QPixmap(":\\img\\next.png")));
+    this->m_button_character_switch->setIcon(QIcon(QPixmap(":/img/next.png")));
     this->m_button_character_switch->setToolTip(this->m_p_localisation->get(this->m_button_character_switch->objectName()+"_tooltip"));
     this->m_label_tasks_title->setText(this->m_p_localisation->get(this->m_label_tasks_title->objectName())); //“任务”
     this->m_label_tasks_content->setText(this->m_p_localisation->get(this->m_label_tasks_content->objectName()));
-    this->m_button_tasks->setIcon(QIcon(QPixmap(":\\img\\next.png")));
+    this->m_button_tasks->setIcon(QIcon(QPixmap(":/img/next.png")));
     this->m_button_tasks->setToolTip(this->m_p_localisation->get(this->m_button_tasks->objectName()+"_tooltip"));
     //第二页：常规
     this->m_button_tab_general->setText(this->m_p_localisation->get(this->m_button_tab_general->objectName()));
@@ -276,17 +275,17 @@ void UISettings::initText()
     this->m_label_info_desc_title->setText(this->m_p_localisation->get(this->m_label_info_desc_title->objectName()));
     this->m_label_info_desc_content->setWordWrap(true);
     this->m_label_info_desc_content->setText(this->m_p_localisation->get(this->m_label_info_desc_content->objectName()));
-    this->m_button_info_desc->setIcon(QIcon(QPixmap(":\\img\\linkout.png")));
+    this->m_button_info_desc->setIcon(QIcon(QPixmap(":/img/linkout.png")));
     this->m_button_info_desc->setToolTip(this->m_p_localisation->get(this->m_button_info_desc->objectName()+"_tooltip"));
     this->m_label_info_version_title->setText(this->m_p_localisation->get(this->m_label_info_version_title->objectName()));
     this->m_label_info_version_content->setText(this->m_p_config->version);
-    this->m_button_info_update->setIcon(QIcon(QPixmap(":\\img\\refresh.png")));
+    this->m_button_info_update->setIcon(QIcon(QPixmap(":/img/refresh.png")));
     this->m_button_info_update->setToolTip(this->m_p_localisation->get(this->m_button_info_update->objectName()+"_tooltip"));
     this->m_label_info_doc_title->setText(this->m_p_localisation->get(this->m_label_info_doc_title->objectName()));
     this->m_label_info_doc_content->setText(this->m_p_localisation->get(this->m_label_info_doc_content->objectName()));
-    this->m_button_info_doc->setIcon(QIcon(QPixmap(":\\img\\linkout.png")));
+    this->m_button_info_doc->setIcon(QIcon(QPixmap(":/img/linkout.png")));
     this->m_button_info_doc->setToolTip(this->m_p_localisation->get(this->m_button_info_doc->objectName()+"_tooltip"));
-    this->m_button_info_log->setIcon(QIcon(QPixmap(":\\img\\next.png")));
+    this->m_button_info_log->setIcon(QIcon(QPixmap(":/img/next.png")));
     this->m_label_info_log_title->setText(this->m_p_localisation->get(this->m_label_info_log_title->objectName()));
     this->m_label_info_log_content->setText(this->m_p_localisation->get(this->m_label_info_log_content->objectName()));
     this->m_button_info_log->setToolTip(this->m_p_localisation->get(this->m_button_info_log->objectName()+"_tooltip"));
@@ -402,61 +401,59 @@ QFrame *UISettings::horizontalLine(QString objectName, QWidget *parent)
 void UISettings::setBackGround()
 {
 
-    QDir rootDir(":\\img\\background");
-    QDir userDir("background");
+    QDir rootDir(":/img/background/");
+    QDir userDir("background/");
     rootDir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     rootDir.setSorting(QDir::Name);
     userDir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     userDir.setSorting(QDir::Name);
     QFileInfoList rootList = rootDir.entryInfoList();
     QFileInfoList userList = userDir.entryInfoList();
-    QFileInfoList list;
+    QFileInfoList imgList;
     for(int i = 0; i < rootList.size(); i++)
     {
-        list.push_back(rootList.at(i));
+        imgList.push_back(rootList.at(i));
     }
     for(int i = 0; i < userList.size(); i++)
     {
         QFileInfo file(userList.at(i));
         QString suffix = file.suffix().toLower();
-        if(suffix == "png" || suffix == "jpg" || suffix == "jpeg" || suffix == "gif")
-            list.push_back(userList.at(i));
+        if(suffix == "png" || suffix == "jpg" || suffix == "jpeg" || suffix == "gif" || suffix == "bmp")
+            imgList.push_back(userList.at(i));
     }
-
-    //取随机数
-    QTime time;
-    time= QTime::currentTime();
-    qsrand(static_cast <uint>(time.msec()+time.second()*1000));
-    int rand = qrand() % list.size();
 
     //获取图像
-    QImage image(list.at(rand).filePath());
-
-    //缩放图像
-    int w = image.width();
-    int h = image.height();
-    int sw = w, sh = h;
-    if(w>=h)
+    QImage img;
+    if(imgList.size() == 0)
     {
-        if(h > 800)
-        {
-            sh = 800;
-            sw = w*800/h;
-        }
+        QPixmap pixmap(this->size());
+        pixmap.fill(Qt::transparent);
+        img = pixmap.toImage();
     }else
     {
-        if(w > 800)
-        {
-            sw = 800;
-            sh = h*800/w;
-        }
+        img.load(imgList.at(QRandomGenerator::global()->bounded(imgList.size())).filePath());
     }
 
-    QImage imgScaled(image.scaled(sw, sh,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+    //缩放图像
+    int w = img.width();
+    int h = img.height();
+    int sw = w , sh = h;
+    int scale = this->height * 1.5;
+    if(w >= h)
+    {
+        sh = scale;
+        sw = w * scale / h;
+    }else
+    {
+        sw = scale;
+        sh = h * scale / w;
+    }
+
+    QImage imgScaled(img.scaled(sw, sh, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
     //随机位置
-    int x = qrand()% (imgScaled.width() - this->width);
-    int y = qrand()% (imgScaled.height() - this->width);
+    int x = QRandomGenerator::global()->bounded(imgScaled.width() - this->width);
+    int y = QRandomGenerator::global()->bounded(imgScaled.height() - this->height);
 
     //应用图像
     this->background = imgScaled.copy(x, y, this->width, this->height);

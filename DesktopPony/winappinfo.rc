@@ -1,10 +1,10 @@
 #include <windows.h>
 
-IDI_ICON1	ICON	DISCARDABLE	"\\img\\icon.ico"
+IDI_ICON1	ICON	DISCARDABLE	"/img/icon.ico"
 
 VS_VERSION_INFO VERSIONINFO
-        FILEVERSION 0,1,1,0
-        PRODUCTVERSION 0,1,1,0
+        FILEVERSION 0,0,0,1
+        PRODUCTVERSION 0,0,0,0
 	FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
 	FILEFLAGS VS_FF_DEBUG
@@ -20,11 +20,11 @@ VS_VERSION_INFO VERSIONINFO
 			BLOCK "000404b0"
 			BEGIN
 				VALUE "FileDescription", "A Pony-themed Desktop Pet\0"
-                VALUE "FileVersion", "0.0.0.0\0"
-                VALUE "LegalCopyright", "Copyright (c) 2019-2020 WisteFinch\0"
+                VALUE "FileVersion", "0.0.0.1\0"
+                VALUE "LegalCopyright", "Copyright (c) 2019-2021 WisteFinch\0"
 				VALUE "OriginalFilename", "DesktopPony.exe\0"
 				VALUE "ProductName", "DesktopPony\0"
-                VALUE "ProductVersion", "0.0.0.0\0"
+                VALUE "ProductVersion", "0.0.0.1\0"
 			END
 		END
 		BLOCK "VarFileInfo"
@@ -32,5 +32,3 @@ VS_VERSION_INFO VERSIONINFO
 			VALUE "Translation", 0x0004, 1200
 		END
 	END
-/* End of Version info */
-

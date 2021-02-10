@@ -6,7 +6,7 @@
  * @date 2020.10.3
  *
  * MIT License
- * Copyright (c) 2019-2020 WisteFinch
+ * Copyright (c) 2019-2021 WisteFinch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(false);
-    DesktopPony *pony = new DesktopPony;
-    pony->start();
+    DesktopPony *d = new DesktopPony;
+    d->start();
     return a.exec();
 }

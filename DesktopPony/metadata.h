@@ -5,7 +5,7 @@
  * @date 2020.11.29
  *
  * MIT License
- * Copyright (c) 2019-2020 WisteFinch
+ * Copyright (c) 2019-2021 WisteFinch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,11 +33,11 @@
 
 const QString STR_VERSION = "build-xxxx.xx.xx";
 
-const QString STR_DEFAULT_CONFIG_PATH = ":\\data\\default_config.ini";///<标准配置文件路径
-const QString STR_CHARACTER_ROOT_PATH = ".\\character";///< 角色主地址
-const QString STR_ACCESSORIES_ROOT_PATH = ".\\data\\accessories";///< 配件主地址
-const QString STR_RULES_USER_ROOT_PATH = ".\\data\\rules\\";///< 规则（用户）主地址
-const QString STR_RULES_SYSTEM_ROOT_PATH = ":\\data\\rules\\";///< 规则（系统）主地址
+const QString STR_DEFAULT_CONFIG_PATH = ":/data/default_config.ini";///<标准配置文件路径
+const QString STR_CHARACTER_ROOT_PATH = "./character/";///< 角色主地址
+const QString STR_ACCESSORIES_ROOT_PATH = "./data/accessories/";///< 配件主地址
+const QString STR_RULES_USER_ROOT_PATH = "./data/rules/";///< 规则（用户）主地址
+const QString STR_RULES_SYSTEM_ROOT_PATH = ":/data/rules/";///< 规则（系统）主地址
 
 
 

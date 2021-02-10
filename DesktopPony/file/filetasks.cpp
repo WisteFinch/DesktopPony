@@ -64,8 +64,8 @@ void FileTasks::read(QString standard)
     }
 
     //读取文件夹
-    QDir systemDir(STR_RULES_SYSTEM_ROOT_PATH + standard + "\\tasks");
-    QDir userDir(STR_RULES_USER_ROOT_PATH + standard + "\\tasks");
+    QDir systemDir(STR_RULES_SYSTEM_ROOT_PATH + standard + "/tasks/");
+    QDir userDir(STR_RULES_USER_ROOT_PATH + standard + "/tasks/");
     systemDir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     systemDir.setSorting(QDir::Name);
     userDir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);

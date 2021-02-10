@@ -8,13 +8,13 @@ Accessories::Accessories(QString ID, QString name, QString rootPath, QMap<QStrin
     this->m_str_accessoriesID = ID;
     this->m_str_name = name;
     this->m_str_root_path = rootPath;
-    this->m_str_index_path = rootPath + "\\" + this->m_str_accessoriesID;//获取地址
+    this->m_str_index_path = rootPath + "/" + this->m_str_accessoriesID;//获取地址
 
     //读取配件索引
-    if(!QFileInfo(m_str_index_path + "\\index.json").isFile())
+    if(!QFileInfo(m_str_index_path + "/index.json").isFile())
         initAccessoriesIndex(this->m_str_index_path, this->m_str_accessoriesID);
     this->m_str_path = readAccessoriesIndex(this->m_str_index_path, this->m_str_name);
-    if(this->m_str_path == nullptr || !QFileInfo(m_str_path+"\\metadata.json").exists()){
+    if(this->m_str_path == nullptr || !QFileInfo(m_str_path+"/metadata.json").exists()){
         initAccessoriesIndex(this->m_str_index_path, this->m_str_accessoriesID);
         this->m_str_path = readAccessoriesIndex(this->m_str_index_path, this->m_str_name);
     }
@@ -47,7 +47,7 @@ void Accessories::doReadConfig()
 {
     //读取文件
     QFile *loadFile = new QFile;
-    loadFile->setFileName(this->m_str_path + "\\metadata.json");
+    loadFile->setFileName(this->m_str_path + "/metadata.json");
     loadFile->open(QIODevice::ReadOnly);
     QByteArray allData = loadFile->readAll();
     loadFile->close();
@@ -111,7 +111,7 @@ void Accessories::__doReadImage(QString layer, QString actionID, QString path)
         rootSVG->originalImage->load(QString(rootImagePath + QString().number(i) +".svg"));//读取原图像
 
         //替换颜色
-        QFile imageFile(QString(rootImagePath + "\\" + QString().number(i) +".svg"));
+        QFile imageFile(QString(rootImagePath + "/" + QString().number(i) +".svg"));
         imageFile.open(QIODevice::ReadOnly);
         QString imageData = imageFile.readAll();
         QMapIterator<QString, ImageStruct::ScolorReplace*> iterator(*this->m_p_map_characterdata_color_replace);
@@ -169,7 +169,7 @@ QString Accessories::toHex(QColor color) const
 QString Accessories::readAccessoriesIndex(QString index, QString name) const
 {
     QFile *loadFile = new QFile;
-    loadFile->setFileName(index + "\\index.json");
+    loadFile->setFileName(index + "/index.json");
     if(!loadFile->open(QIODevice::ReadOnly))
         {
             return nullptr;
@@ -202,7 +202,7 @@ QString Accessories::readAccessoriesIndex(QString index, QString name) const
 
 void Accessories::initAccessoriesIndex(QString index, QString ID)
 {
-    QFile file(index + "\\index.json");
+    QFile file(index + "/index.json");
     if(file.exists())
         file.remove();
     QJsonObject indexJson;

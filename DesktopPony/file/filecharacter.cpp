@@ -10,7 +10,7 @@ void FileCharacter::initCharacterIndex(QString index)
     if(index.isNull())
         index = STR_CHARACTER_ROOT_PATH;
 
-    QFile file(index+"\\index.json");
+    QFile file(index+"/index.json");
     if(file.exists())
         file.remove();
     QJsonObject indexJson;
@@ -66,7 +66,7 @@ QString FileCharacter::getCharacterIndex(QString name, QString index) const
 
     QString p;
     QFile *loadFile = new QFile;
-    loadFile->setFileName(index + "\\index.json");
+    loadFile->setFileName(index + "/index.json");
     if(!loadFile->open(QIODevice::ReadOnly))
     {
         return nullptr;
@@ -104,7 +104,7 @@ QJsonObject FileCharacter::getCharacterIndexJsonObject(QString index) const
 
     QString p;
     QFile *loadFile = new QFile;
-    loadFile->setFileName(index + "\\index.json");
+    loadFile->setFileName(index + "/index.json");
     if(loadFile->open(QIODevice::ReadOnly))
     {
         QByteArray allData = loadFile->readAll();
