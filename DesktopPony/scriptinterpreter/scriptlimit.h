@@ -185,7 +185,7 @@ struct SYNDebugInfo {
     }
 };
 
-const QStringList g_syn_key_word_str = {"if", "else", "do", "while", "for", "int", "float", "string", "char, " "bool", "break", "continue", "return", "false", "true"}; ///< 关键字列表
+const QStringList g_syn_key_word_str = {"if", "else", "do", "while", "for", "int", "float", "string", "char", "bool", "break", "continue", "return", "false", "true"}; ///< 关键字列表
 const SYN g_syn_key_word_syn[15] = {syn_if, syn_else, syn_do, syn_while, syn_for, syn_int, syn_float, syn_string, syn_char, syn_bool, syn_break, syn_continue, syn_return, syn_const_bool, syn_const_bool}; ///< 关键字列表
 
 enum PARSER {
@@ -304,7 +304,9 @@ enum VALUE_TYPE {
     type_empty, ///< 无数据
     type_var,   ///< 变量指针
     type_id,    ///< 标识符
-    type_void,   ///< 缺省
+    type_void,  ///< 缺省
+    type_continue,///< 继续
+    type_break, ///< 中断
     type_error  ///< 错误
 };
 

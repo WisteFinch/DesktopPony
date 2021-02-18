@@ -77,6 +77,7 @@ public:
      */
     void set(ScriptLexer *l, MODE m);
 
+private:
 
     /**
      * @brief 取词块
@@ -130,6 +131,7 @@ public:
     void pMultiplicativeExpression(ScriptParserNode *node); ///< 乘法表达式
     void pUnaryExpression(ScriptParserNode *node); ///< 一元表达式
     void pPostfixExpression(ScriptParserNode *node); ///< 后缀表达式
+    void pPostfixExpressionAdditive(ScriptParserNode *node); ///< 后缀表达式附加
     void pPrimaryExpression(ScriptParserNode *node); ///< 基本表达式
     void pConstant(ScriptParserNode *node); ///< 常量
     void pStringLiteral(ScriptParserNode *node); ///< 字符串常量

@@ -10,19 +10,32 @@ ScriptParserNode::~ScriptParserNode()
     delete m_p_right_child;
 }
 
-void ScriptParserNode::set(QString d, PARSER p, ScriptParserNode *l, ScriptParserNode *r)
+void ScriptParserNode::set(TokenData d, PARSER p, ScriptParserNode *l, ScriptParserNode *r, TokenData t)
 {
     this->m_p_left_child = l;
     this->m_p_right_child = r;
     this->m_d = d;
     this->m_p = p;
+    this->m_t = t;
 }
 
-void ScriptParserNode::set(QString d, PARSER p, ScriptParserNode *l, ScriptParserNode *r, TokenData t)
+void ScriptParserNode::set(PARSER p, ScriptParserNode *l, ScriptParserNode *r, TokenData t)
 {
     this->m_p_left_child = l;
     this->m_p_right_child = r;
+    this->m_p = p;
+    this->m_t = t;
+}
+
+void ScriptParserNode::set(TokenData d, PARSER p, TokenData t)
+{
     this->m_d = d;
+    this->m_p = p;
+    this->m_t = t;
+}
+
+void ScriptParserNode::set(PARSER p, TokenData t)
+{
     this->m_p = p;
     this->m_t = t;
 }
@@ -43,6 +56,7 @@ void ScriptParserDebugNode::set(ScriptParserNode *n)
 {
     ParserDebugInfo *s = new ParserDebugInfo;
     _set(n, nullptr, s);
+    AbridgeParserName(nullptr, nullptr);
     delete s;
 }
 
@@ -64,17 +78,24 @@ void ScriptParserDebugNode::_set(ScriptParserNode *n, QString parserName, Parser
     }
 
     // 更新节点信息
-    this->m_parser_name = parserName.left(parserName.size() - 1);
-    this->m_abridged_parser_name = getAbridgedparserName(this->m_parser_name);
-    if(n->m_t.syn!= syn_null || (l->m_is_node && r->m_is_node)) {
-        if(l->m_is_node)
+    this->m_intact_parser_name = parserName.left(parserName.size() - 1);
+    int last = this->m_intact_parser_name.lastIndexOf('>');
+    if(last == -1) {
+        this->m_parser_name = this->m_intact_parser_name;
+    } else {
+        this->m_parser_name = this->m_intact_parser_name.right(this->m_intact_parser_name.size() - last - 1);
+    }
+    if(n->m_d.syn != syn_null || (l->m_is_node && r->m_is_node)) {
+        if(l->m_is_node) {
             this->m_p_left_child = l;
-        else
+        } else {
             delete l;
-        if(r->m_is_node)
+        }
+        if(r->m_is_node) {
             this->m_p_right_child = r;
-        else
+        } else {
             delete r;
+        }
         this->m_is_node = true;
     } else if(l->m_is_node) {
         moveNode(l);
@@ -90,16 +111,19 @@ void ScriptParserDebugNode::_set(ScriptParserNode *n, QString parserName, Parser
     r = nullptr;
 }
 
-QString ScriptParserDebugNode::getAbridgedparserName(QString s)
+QString ScriptParserDebugNode::getAbridgedParserName(QString s)
 {
-    if(s.right(1) == '>')
+    if(s.right(1) == '>') {
         s = s.left(s.size() - 1);
+    }
     int first = s.indexOf('>');
-    if(first == -1)
+    if(first == -1) {
         return s;
+    }
     int last = s.lastIndexOf('>');
-    if(first == last)
+    if(first == last) {
         return s;
+    }
     return s.left(first) + ">...>" + s.right(s.size() - last - 1);
 }
 
@@ -125,9 +149,20 @@ void ScriptParserDebugNode::breakLink()
 QString ScriptParserDebugNode::print()
 {
     QString info = ergodicNode(nullptr, nullptr);
-    qDebug().noquote()<<info;
+    qDebug().noquote() << info;
 
     return info;
+}
+
+void ScriptParserDebugNode::AbridgeParserName(QString parentName, QString parentIntactName)
+{
+    this->m_abridged_parser_name = getAbridgedParserName(this->m_intact_parser_name.right(this->m_intact_parser_name.size() + parentName.size() - parentIntactName.size()));
+    if(this->m_p_left_child != nullptr) {
+        this->m_p_left_child->AbridgeParserName(this->m_parser_name, this->m_intact_parser_name);
+    }
+    if(this->m_p_right_child != nullptr) {
+        this->m_p_right_child->AbridgeParserName(this->m_parser_name, this->m_intact_parser_name);
+    }
 }
 
 QString ScriptParserDebugNode::ergodicNode(QString head, QString attached)
@@ -135,7 +170,7 @@ QString ScriptParserDebugNode::ergodicNode(QString head, QString attached)
     QString info;
     QString mhead = head + "  ";
     mhead.replace("├", "│").replace("└", " ");
-    QString l,r;
+    QString l, r;
     if(this->m_p_right_child != nullptr) {
         r = this->m_p_right_child->ergodicNode(mhead + "└", "R:");
     }
@@ -144,7 +179,7 @@ QString ScriptParserDebugNode::ergodicNode(QString head, QString attached)
     }
     QString lr = l + r;
     info += head + " " + attached + this->m_abridged_parser_name + " \n";
-    info += mhead + (lr.isEmpty() ? "└" : "├") + " S:" + (this->m_link_node->m_t.str.isEmpty() ? "NULL" : this->m_link_node->m_t.str) + " \n";
+    info += mhead + (lr.isEmpty() ? "└" : "├") + " S:" + (this->m_link_node->m_d.str.isEmpty() ? "NULL" : this->m_link_node->m_d.str) + " \n";
     info += lr;
     return info;
 }

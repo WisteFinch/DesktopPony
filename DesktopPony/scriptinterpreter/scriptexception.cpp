@@ -1,8 +1,9 @@
 #include "scriptexception.h"
 
-ScriptException::ScriptException(EXCEPTION_TYPE e)
+ScriptException::ScriptException(EXCEPTION_TYPE e, QVector<TokenData> t)
 {
     this->m_exception_data.e = e;
+    this->m_exception_data.token = t;
 }
 
 ScriptException::ScriptException(EXCEPTION_TYPE e, QVector<TokenData> t, QVector<Value> v)

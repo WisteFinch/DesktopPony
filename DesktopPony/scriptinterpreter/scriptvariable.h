@@ -136,11 +136,24 @@ public:
     Value getValuePointer();
 
     /**
+     * @brief 获取元素指针
+     * @return 元素指针
+     */
+    Value *getElementPointer();
+
+    /**
      * @brief 获取数组值指针
      * @param 下标
      * @return 值指针
      */
     Value getValuePointer(QVector<int> *subscripte);
+
+    /**
+     * @brief 获取数组元素指针
+     * @param 下标
+     * @return 元素指针
+     */
+    Value *getElementPointer(QVector<int> *subscripte);
 
     /**
      * @brief 获取维度大小
