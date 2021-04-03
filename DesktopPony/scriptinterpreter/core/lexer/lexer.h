@@ -1,8 +1,8 @@
 /**
- * @file file/localisation.h
- * @brief 文件-本地化
+ * @file scriptinterpreter/core/lexer/lexer.h
+ * @brief 脚本-词法划分器-主类
  * @author WisteFinch
- * @date 2020.11.29
+ * @date 2020.10.29
  *
  * MIT License
  * Copyright (c) 2019-2021 WisteFinch
@@ -26,36 +26,38 @@
  * SOFTWARE.
  */
 
-#ifndef LOCALISATION_H
-#define LOCALISATION_H
-#include <QMap>
-#include <QJsonDocument>
-#include <QJsonParseError>
-#include <QFile>
-#include <QJsonObject>
-#include <QDebug>
-#include <QJsonArray>
-#include <QDir>
+#ifndef LEXER_H
+#define LEXER_H
+#include "../scriptlimit.h"
+#include <QString>
+#include <QChar>
+#include <QPair>
+#include <QVector>
 
-class Localisation
+class ScriptLexer
 {
 public:
-    /**
-     * @brief Localisation
-     */
-    Localisation();
+    ScriptLexer();
 
-    QMap<QString, QString> m_map_localisation; ///<本地化文本
-    QString m_str_defaultLang = "zh-cn";///<默认语言
+    QVector<TokenData> *m_tokens; ///< 词列表
 
     /**
-     * @brief 读取本地化文本
-     * @param 语言
-     * @return
+     * @brief 划分词块
+     * @param 脚本文本
      */
-    bool readLocalisation(QString lang);
+    QVector<TokenData> *divToken(QString str);
 
-    const QString get(QString txt);
+private:
+    QChar m_ch; ///< 当前字符
+    QString m_token_num; ///< 当前词块文本
+    QString m_str; ///< 脚本文本
+    int m_point; ///< 位置
+    int m_line; ///< 行
+    int m_row; ///< 列
+
+    SYN judge(); ///< 判断词类型
+    inline QChar getNext(); ///< 获取下一个词
+    inline QChar get(int n); ///< 获取词
 };
 
-#endif // LOCALISATION_H
+#endif // LEXER_H

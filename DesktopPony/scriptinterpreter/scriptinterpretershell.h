@@ -1,8 +1,8 @@
 /**
- * @file file/localisation.h
- * @brief 文件-本地化
+ * @file scriptinterpreter/scriptexceptionshell.h
+ * @brief 脚本-外壳
  * @author WisteFinch
- * @date 2020.11.29
+ * @date 2021.4.3
  *
  * MIT License
  * Copyright (c) 2019-2021 WisteFinch
@@ -26,36 +26,39 @@
  * SOFTWARE.
  */
 
-#ifndef LOCALISATION_H
-#define LOCALISATION_H
-#include <QMap>
-#include <QJsonDocument>
-#include <QJsonParseError>
-#include <QFile>
-#include <QJsonObject>
-#include <QDebug>
-#include <QJsonArray>
-#include <QDir>
+#ifndef SCRIPTINTERPRETERSHELL_H
+#define SCRIPTINTERPRETERSHELL_H
+#include "core/scriptinterpreter.h"
+#include "file/localisation.h"
+#include <QVector>
 
-class Localisation
+class ScriptInterpreterShell
 {
 public:
-    /**
-     * @brief Localisation
-     */
-    Localisation();
-
-    QMap<QString, QString> m_map_localisation; ///<本地化文本
-    QString m_str_defaultLang = "zh-cn";///<默认语言
+    ScriptInterpreterShell();
 
     /**
-     * @brief 读取本地化文本
-     * @param 语言
-     * @return
+     * @brief 初始化
+     * @param 本地化
      */
-    bool readLocalisation(QString lang);
+    void init(Localisation *l);
 
-    const QString get(QString txt);
+    /**
+     * @brief 运行
+     * @param 命令
+     * @return 运行结果
+     */
+    QStringList run(QString str);
+
+    QVector<ScriptException> m_exception_data; ///< 异常信息
+private:
+    /**
+     * @brief 异常处理
+     * @param 异常信息
+     */
+    void exceptionHandle(ScriptExceptionData &se);
+    ScriptInterpreter *m_p_interpreter = nullptr; ///< 解释器内核
+    Localisation *m_p_localisation = nullptr; ///< 本地化
 };
 
-#endif // LOCALISATION_H
+#endif // SCRIPTINTERPRETERSHELL_H
