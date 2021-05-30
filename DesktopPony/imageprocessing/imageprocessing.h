@@ -35,7 +35,7 @@
 #include "file/fileevent.h"
 #include "file/config.h"
 #include "file/filecharacter.h"
-#include "scriptinterpreter/scriptinterpreter.h"
+#include "scriptinterpreter/scriptinterpretershell.h"
 #include "metadata.h"
 #include <QObject>
 #include <QString>
@@ -96,15 +96,14 @@ private:
     /**
      * @brief 角色数据结构体
      */
-    struct Scharacterdata{
+    struct Scharacterdata {
         /**
          * @brief 配件数据结构体
          */
-        struct Saccessoriesdata
-        {
+        struct Saccessoriesdata {
             QString name;///< 配件名
-            QMap<QString, QMap<int, QImage*>*> image;///< 图像数据
-            QMap<QString, ImageStruct::ScolorReplace*> *colorReplace = new QMap<QString, ImageStruct::ScolorReplace*>;///< 颜色数据
+            QMap<QString, QMap<int, QImage *>*> image; ///< 图像数据
+            QMap<QString, ImageStruct::ScolorReplace *> *colorReplace = new QMap<QString, ImageStruct::ScolorReplace *>; ///< 颜色数据
             bool isWrong = false;
         };
 
@@ -112,14 +111,14 @@ private:
         QString path;///< 地址
         QString author;///< 作者
         QString desc;///< 介绍
-        QMap<QString, Saccessoriesdata*> accessories;///< 配件数据
+        QMap<QString, Saccessoriesdata *> accessories; ///< 配件数据
         QString standard;///< 标准
     };
 
     /**
      * @brief 图像数据结构体
      */
-    struct SimageReplace{
+    struct SimageReplace {
         QSvgRenderer *originalImage = new QSvgRenderer();///< 原图像
         QSvgRenderer *replacedImage = new QSvgRenderer();///< 替换后图像
     };
@@ -131,10 +130,10 @@ private:
     //变量
     Scharacterdata m_struct_characterdata;///< 角色数据
     QStringList *m_p_strl_layer_order = new QStringList();///< 图层顺序
-    QMap<QString, QStringList*> *m_p_map_layer_comb = new QMap<QString, QStringList*>;///< 图层组合
-    QMap<QString, Accessories*> m_map_accessoriesdata;///< 配件数据
-    QMap<QString, ImageStruct::Sactiondata*> *m_p_map_actiondata = new QMap<QString, ImageStruct::Sactiondata*>;///< 动作数据
-    QMap<QString, FileTasks::STaskdata*> *m_p_map_taskdata;///< 任务数据
+    QMap<QString, QStringList *> *m_p_map_layer_comb = new QMap<QString, QStringList *>; ///< 图层组合
+    QMap<QString, Accessories *> m_map_accessoriesdata; ///< 配件数据
+    QMap<QString, ImageStruct::Sactiondata *> *m_p_map_actiondata = new QMap<QString, ImageStruct::Sactiondata *>; ///< 动作数据
+    QMap<QString, FileTasks::STaskdata *> *m_p_map_taskdata; ///< 任务数据
     ScriptInterpreter *m_p_script = new ScriptInterpreter();///< 数据池
 
     QMap<QString, ImageStruct::Scombdata> *tmp_p_layer_pos;///< 暂时储存图层位置

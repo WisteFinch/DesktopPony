@@ -1,70 +1,69 @@
 #include "scriptvariable.h"
 
-// Class Variable begin
-void Variable::init(QString id, Value *v)
+void Variable::init(QString id, ValueData *v)
 {
     this->m_id = id;
-    this->m_p_value = new Value;
+    this->m_p_value = new ValueData;
     *this->m_p_value = *v;
-    this->m_p_value->_id = m_id;
+    this->m_p_value->_id = m_id.toStdString();
     this->m_type = v->type;
 }
 
 void Variable::init(QString id, VALUE_TYPE t)
 {
     this->m_id = id;
-    this->m_p_value = new Value;
+    this->m_p_value = new ValueData;
     this->m_p_value->type = t;
-    this->m_p_value->_id = m_id;
+    this->m_p_value->_id = m_id.toStdString();
     this->m_type = t;
 }
 
-void Variable::init(QString id, QVector<int> *size, VALUE_TYPE t)
+void Variable::init(QString id, std::vector<int> size, VALUE_TYPE t)
 {
     this->m_id = id;
     this->m_type = t;
     this->m_is_array = true;
-    this->m_dimension_size = *size;
-    this->m_dimension_amount = size->size();
-    this->m_p_array = new VariableDimension;
+    this->m_dimension_size = size;
+    this->m_dimension_amount = size.size();
+    this->m_p_array = new VariableDimensionData;
     this->m_p_array->init(&this->m_dimension_size, 0);
 }
 
-void Variable::setValue(Value *v)
+void Variable::setValue(ValueData *v)
 {
     if(this->m_p_value == nullptr) {
-        this->m_p_value = new Value;
+        this->m_p_value = new ValueData;
     }
     *this->m_p_value = *v;
-    v->_id = this->m_id;
+    v->_id = this->m_id.toStdString();
 }
 
-void Variable::setValue(QVector<int> *subscripte, Value *v)
+void Variable::setValue(std::vector<int> subscripte, ValueData *v)
 {
-    v->_id = this->m_id;
-    if(subscripte->size() > this->m_dimension_amount) {
+    v->_id = this->m_id.toStdString();
+    if(subscripte.size() > static_cast<uint>(this->m_dimension_amount)) {
         //==================ERROR I012===================
     }
     try {
-        this->m_p_array->setValue(subscripte, v);
+        this->m_p_array->setValue(&subscripte, v);
     } catch (ScriptException &se) {
         throw se;
     }
 }
 
-Value Variable::getValue()
+ValueData Variable::getValue()
 {
     return *this->m_p_value;
 }
 
-Value Variable::getValue(QVector<int> *subscripte)
+ValueData Variable::getValue(std::vector<int> subscripte)
 {
-    if(subscripte->size() > this->m_dimension_amount) {
+    if(subscripte.size() > static_cast<uint>(this->m_dimension_amount)) {
         //==================ERROR I012===================
     }
-    Value v;
+    ValueData v;
     try {
-        v = *this->m_p_array->getValue(subscripte);
+        v = *this->m_p_array->getValue(&subscripte);
     } catch (ScriptException &se) {
         throw se;
     }
@@ -74,57 +73,57 @@ Value Variable::getValue(QVector<int> *subscripte)
     return v;
 }
 
-Value Variable::getValuePointer()
+ValueData Variable::getValuePointer()
 {
     if(this->m_is_array) {
         //==================ERROR I008===================
     }
-    Value *var;
+    ValueData *var;
     try {
         var = getElementPointer();
     }  catch(ScriptException &se) {
         throw se;
     }
-    Value v;
+    ValueData v;
     v.set(var);
-    v._id = this->m_id;
+    v._id = this->m_id.toStdString();
     return v;
 }
 
-Value *Variable::getElementPointer()
+ValueData *Variable::getElementPointer()
 {
     return this->m_p_value;
 }
 
-Value Variable::getValuePointer(QVector<int> *subscripte)
+ValueData Variable::getValuePointer(std::vector<int> subscripte)
 {
-    Value v;
+    ValueData v;
     try {
         v.set(getElementPointer(subscripte));
     } catch(ScriptException &se) {
         throw se;
     }
-    v._id = this->m_id;
+    v._id = this->m_id.toStdString();
     return v;
 }
 
-Value *Variable::getElementPointer(QVector<int> *subscripte)
+ValueData *Variable::getElementPointer(std::vector<int> subscripte)
 {
     if(!this->m_is_array) {
         //==================ERROR I012===================
     }
-    if(subscripte->size() > this->m_dimension_amount) {
+    if(subscripte.size() > static_cast<uint>(this->m_dimension_amount)) {
         //==================ERROR I012===================
     }
-    Value *var;
+    ValueData *var;
     try {
-        var = this->m_p_array->getValue(subscripte);
+        var = this->m_p_array->getValue(&subscripte);
     } catch (ScriptException &se) {
         throw se;
     }
     if(var->type != this->m_type) {
         var->type = this->m_type;
-        var->_id = this->m_id;
+        var->_id = this->m_id.toStdString();
     }
     return var;
 }
@@ -142,75 +141,5 @@ Variable::~Variable()
         if(this->m_p_value != nullptr) {
             delete this->m_p_value;
         }
-    }
-}
-// Class Variable end
-
-// Class VariableDimension begin
-void VariableDimension::init(QVector<int> *dimensionSize, int subscripte)
-{
-    //维度数大于等于当前维度序号
-    if(dimensionSize->size() > subscripte) {
-        //初始化当前维度
-        this->m_current_dimension = subscripte;
-        this->m_dimension_size = dimensionSize->at(subscripte);
-        //初始化子维度
-        this->m_p_child = new QVector<VariableDimension *>;
-        for(int i = 0; i < this->m_dimension_size; i++) {
-            VariableDimension *v = new VariableDimension;
-            v->init(dimensionSize, subscripte + 1);
-            this->m_p_child->push_back(v);
-        }
-    } else {
-        this->m_current_dimension = -1; //维度序号为-1：存储值
-    }
-}
-
-void VariableDimension::setValue(QVector<int> *subscripte, Value *v)
-{
-    if(this->m_current_dimension != -1) {
-        if(subscripte->at(this->m_current_dimension) > this->m_dimension_size) {
-            //==================ERROR I011===================
-        }
-        try {
-            this->m_p_child->at(subscripte->at(this->m_current_dimension))->setValue(subscripte, v);
-        } catch (ScriptException &se) {
-            throw se;
-        }
-    } else {
-        if(!this->m_is_value_inited) { //值未初始化
-            this->m_p_value = new Value;
-            this->m_is_value_inited = true;
-        }
-        *this->m_p_value = *v;
-    }
-}
-
-Value *VariableDimension::getValue(QVector<int> *subscripte)
-{
-    if(this->m_current_dimension != -1) {
-        if(subscripte->at(this->m_current_dimension) > this->m_dimension_size) {
-            //==================ERROR I011===================
-        }
-        try {
-            return this->m_p_child->at(subscripte->at(this->m_current_dimension))->getValue(subscripte);
-        } catch (ScriptException &se) {
-            throw se;
-        }
-    } else {
-        if(this->m_p_value == nullptr) {
-            this->m_p_value = new Value;
-            this->m_is_value_inited = true;
-        }
-        return this->m_p_value;
-    }
-}
-
-VariableDimension::~VariableDimension()
-{
-    if(this->m_current_dimension == -1) {
-        delete this->m_p_value;
-    } else {
-        delete this->m_p_child;
     }
 }

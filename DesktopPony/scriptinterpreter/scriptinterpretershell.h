@@ -57,6 +57,9 @@ private:
      * @param 异常信息
      */
     void exceptionHandle(ScriptExceptionData &se);
+
+    ValueData extraFunctions(QString functionName, QVector<ValueData> parameters, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 额外函数
+
     ScriptInterpreter *m_p_interpreter = nullptr; ///< 解释器内核
     Localisation *m_p_localisation = nullptr; ///< 本地化
 };

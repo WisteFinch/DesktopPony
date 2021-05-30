@@ -50,18 +50,24 @@ SOURCES += \
     file/config.cpp \
     file/filecharacter.cpp \
     file/fileqss.cpp \
-	file/localisation.cpp \
+    file/localisation.cpp \
     file/filetasks.cpp \
     imageprocessing/accessories.cpp \
     imageprocessing/imageprocessing.cpp \
     main.cpp \
     desktoppony.cpp \
     limit.cpp \
-    scriptinterpreter/scriptexception.cpp \
-    scriptinterpreter/scriptinterpreter.cpp \
-    scriptinterpreter/scriptlimit.cpp \
-    scriptinterpreter/scriptvariable.cpp \
-    ui/uicharacter/uicharacter.cpp \
+    scriptinterpreter/core/lexer/lexer.cpp \
+    scriptinterpreter/core/parser/parser.cpp \
+    scriptinterpreter/core/parser/parsernode.cpp \
+    scriptinterpreter/core/public/scriptexceptiondata.cpp \
+    scriptinterpreter/core/public/scriptvariabledata.cpp \
+    scriptinterpreter/core/scriptexception.cpp \
+    scriptinterpreter/core/scriptinterpreter.cpp \
+    scriptinterpreter/core/scriptlimit.cpp \
+    scriptinterpreter/core/scriptvariable.cpp \
+    scriptinterpreter/scriptinterpretershell.cpp \
+    ui/uicharacter/uicharacter.cpp\
     ui/uicharacter/uicharacterlistcard.cpp \
     ui/uipony.cpp \
     ui/uisettings.cpp \
@@ -69,10 +75,7 @@ SOURCES += \
     ui/uitasks/uitaskseventcard.cpp \
     ui/uitasks/uitasksinfo.cpp \
     ui/uitasks/uitaskslistcard.cpp \
-    ui/uitasks/uitasksstandardlistcard.cpp \
-    scriptinterpreter/lexer/lexer.cpp \
-    scriptinterpreter/parser/parser.cpp \
-    scriptinterpreter/parser/parsernode.cpp
+    ui/uitasks/uitasksstandardlistcard.cpp
 
 HEADERS += \
     desktoppony.h \
@@ -80,16 +83,23 @@ HEADERS += \
     file/filecharacter.h \
     file/fileevent.h \
     file/fileqss.h \
-	file/localisation.h \
+    file/localisation.h \
     imageprocessing/accessories.h \
     imageprocessing/imageprocessing.h \
     imageprocessing/imagestruct.h \
     limit.h \
     metadata.h \
-    scriptinterpreter/scriptexception.h \
-    scriptinterpreter/scriptinterpreter.h \
-    scriptinterpreter/scriptlimit.h \
-    scriptinterpreter/scriptvariable.h \
+    scriptinterpreter/core/lexer/lexer.h \
+    scriptinterpreter/core/parser/parser.h \
+    scriptinterpreter/core/parser/parsernode.h \
+    scriptinterpreter/core/public/scriptexceptiondata.h \
+    scriptinterpreter/core/public/scriptvariabledata.h \
+    scriptinterpreter/core/public/sharedefinition.h \
+    scriptinterpreter/core/scriptexception.h \
+    scriptinterpreter/core/scriptinterpreter.h \
+    scriptinterpreter/core/scriptlimit.h \
+    scriptinterpreter/core/scriptvariable.h \
+    scriptinterpreter/scriptinterpretershell.h \
     ui/uicharacter/uicharacter.h \
     ui/uicharacter/uicharacterlistcard.h \
     ui/uipony.h \
@@ -98,10 +108,7 @@ HEADERS += \
     ui/uitasks/uitaskseventcard.h \
     ui/uitasks/uitasksinfo.h \
     ui/uitasks/uitaskslistcard.h \
-    ui/uitasks/uitasksstandardlistcard.h \
-    scriptinterpreter/lexer/lexer.h \
-    scriptinterpreter/parser/parser.h \
-    scriptinterpreter/parser/parsernode.h
+    ui/uitasks/uitasksstandardlistcard.h
 
 FORMS += \
     ui/uicharacter/uicharacter.ui \

@@ -179,7 +179,7 @@ QString ScriptParserDebugNode::ergodicNode(QString head, QString attached)
     }
     QString lr = l + r;
     info += head + " " + attached + this->m_abridged_parser_name + " \n";
-    info += mhead + (lr.isEmpty() ? "└" : "├") + " S:" + (this->m_link_node->m_d.str.isEmpty() ? "NULL" : this->m_link_node->m_d.str) + " \n";
+    info += mhead + (lr.isEmpty() ? "└" : "├") + " S:" + ((this->m_link_node->m_d.str.size() == 0 ? true : false) ? "NULL" : QString::fromStdString(this->m_link_node->m_d.str)) + " \n";
     info += lr;
     return info;
 }

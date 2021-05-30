@@ -45,7 +45,7 @@ void ScriptParser::set(ScriptLexer *l, MODE m)
 
 void ScriptParser::eat(QString s)
 {
-    if(m_p_lexer->m_tokens->at(m_index).str == s) {
+    if(m_p_lexer->m_tokens->at(m_index).str == s.toStdString()) {
         m_index++;
     } else {
         errorExit();
@@ -809,7 +809,7 @@ void ScriptParser::pPrimaryExpression(ScriptParserNode *node)
     //文法：PRIMEXP ->  ( EXP )
     else if(token.syn == syn_front_bracket) {
         eat(syn_front_bracket);
-        if(lookAhead().str != syn_back_bracket) {
+        if(lookAhead().syn != syn_back_bracket) {
             pExpression(node->m_p_left_child);
         }
         eat(syn_back_bracket);

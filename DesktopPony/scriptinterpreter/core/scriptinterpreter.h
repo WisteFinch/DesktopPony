@@ -31,8 +31,8 @@
 
 #include "scriptlimit.h"
 #include "parser/parser.h"
-#include "scriptexception.h"
 #include "scriptvariable.h"
+#include "scriptexception.h"
 #include <QMap>
 #include <QVector>
 #include <QString>
@@ -42,43 +42,43 @@ class ScriptInterpreter
 public:
     ScriptInterpreter();
 
-    QMap<QString, Value> m_global_data;
+    QMap<QString, ValueData> m_global_data;
 
     /**
      * @brief 运行
      * @details 解释运行脚本
      * @param 语法树
      */
-    QVector<Value> run(ScriptParserNode *node);
+    QVector<ValueData> run(ScriptParserNode *node);
 
     /**
      * @brief 运行
      * @details 解释运行脚本
      * @param 脚本文本
      */
-    QVector<Value> run(QString str);
+    QVector<ValueData> run(QString str);
 
 private:
-    Value setVariable(QString id, QMap<QString, QVector<QPair<int, Variable *> > *> *data);
-    Value getVariable(QString id, QMap<QString, QVector<QPair<int, Variable *> > *> *data); ///< 获取局部变量
-    Value getVariable(QString id, QVector<int> subscripte, QMap<QString, QVector<QPair<int, Variable *> > *> *data); ///< 从数组获取局部变量
-    Value getVariablePointer(QString id, QMap<QString, QVector<QPair<int, Variable *> > *> *data); ///< 获取局部变量指针
-    Value getVariablePointer(QString id, QVector<int> subscripte, QMap<QString, QVector<QPair<int, Variable *> > *> *data); ///< 从数组获取局部变量指针
+    ValueData setVariable(QString id, QMap<QString, QVector<QPair<int, Variable *> > *> *data);
+    ValueData getVariable(QString id, QMap<QString, QVector<QPair<int, Variable *> > *> *data); ///< 获取局部变量
+    ValueData getVariable(QString id, QVector<int> subscripte, QMap<QString, QVector<QPair<int, Variable *> > *> *data); ///< 从数组获取局部变量
+    ValueData getVariablePointer(QString id, QMap<QString, QVector<QPair<int, Variable *> > *> *data); ///< 获取局部变量指针
+    ValueData getVariablePointer(QString id, QVector<int> subscripte, QMap<QString, QVector<QPair<int, Variable *> > *> *data); ///< 从数组获取局部变量指针
     Variable *insertVariable(QString id, TokenData type, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 插入局部变量
     Variable *insertVariable(QString id, QVector<int> size, TokenData type, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 插入局部变量数组
     void clearVariable(QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 清除局部变量
-    Value operation(Value left, Value right, TokenData t);
-    Value operation(Value var, TokenData t);
-    Value _operation(Value left, Value right, TokenData t);
+    ValueData operation(ValueData left, ValueData right, TokenData t);
+    ValueData operation(ValueData var, TokenData t);
+    ValueData _operation(ValueData left, ValueData right, TokenData t);
 
     TokenData iStatementList(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 语句列表
     TokenData iStatement(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 语句
     TokenData iCompoundStatement(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 复合语句
     TokenData iJumpStatement(ScriptParserNode *node);
-    Value iExpressionStatement(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 表达式语句
-    Value iFunction(Value id, ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 函数
+    ValueData iExpressionStatement(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 表达式语句
+    ValueData iFunction(ValueData id, ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 函数
     TokenData iIf(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< if
-    TokenData iIfBody(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer, Value flag); ///< if主体
+    TokenData iIfBody(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer, ValueData flag); ///< if主体
     void iWhile(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< while
     void iDeclaration(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 声明
     void iInitDeclaratorList(TokenData type, ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 初始化声明列表
@@ -87,28 +87,28 @@ private:
     QVector<int> iDeclaratorSize(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 声明数组大小
     void iInitializer(Variable *var, QVector<int> subscripte, ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 初始化
     void iInitializerList(Variable *var, QVector<int> subscripte, ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 初始化列表
-    void iInitializerInitElement(Value *var, Value value); ///< 初始化变量-初始化元素
+    void iInitializerInitElement(ValueData *left, ValueData right); ///< 初始化变量-初始化元素
     TokenData iDeclarationTypeSpecifier(ScriptParserNode *node); ///< 类型说明符
-    Value iId(ScriptParserNode *node); ///< id
-    QVector<Value> iExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 表达式
-    Value iAssignmentExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 赋值表达式
-    Value iConditionalHeadExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 条件表达式
-    Value iConditionalBodyExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer, bool flag); ///< 条件表达式
-    Value iLogicalOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 逻辑或表达式
-    Value iLogicalAndExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 逻辑与表达式
-    Value iInclusiveOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 或运算表达式
-    Value iExclusiveOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 异或表达式
-    Value iAndExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 与表达式
-    Value iEqualityExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 相等表达式
-    Value iRelationalExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 关系表达式
-    Value iShiftExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 替换表达式
-    Value iAdditiveExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 加法表达式
-    Value iMultiplicativeExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 乘法表达式
-    Value iUnaryExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 一元表达式
-    Value iPostfixExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 后缀表达式
-    Value iPrimaryExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 基本表达式
-    Value iConstant(ScriptParserNode *node); ///< 常量
-    Value iStringLiteral(ScriptParserNode *node); ///< 字符串常量
+    ValueData iId(ScriptParserNode *node); ///< id
+    QVector<ValueData> iExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 表达式
+    ValueData iAssignmentExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 赋值表达式
+    ValueData iConditionalHeadExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 条件表达式
+    ValueData iConditionalBodyExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer, bool flag); ///< 条件表达式
+    ValueData iLogicalOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 逻辑或表达式
+    ValueData iLogicalAndExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 逻辑与表达式
+    ValueData iInclusiveOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 或运算表达式
+    ValueData iExclusiveOrExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 异或表达式
+    ValueData iAndExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 与表达式
+    ValueData iEqualityExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 相等表达式
+    ValueData iRelationalExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 关系表达式
+    ValueData iShiftExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 替换表达式
+    ValueData iAdditiveExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 加法表达式
+    ValueData iMultiplicativeExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 乘法表达式
+    ValueData iUnaryExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 一元表达式
+    ValueData iPostfixExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 后缀表达式
+    ValueData iPrimaryExpression(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 基本表达式
+    ValueData iConstant(ScriptParserNode *node); ///< 常量
+    ValueData iStringLiteral(ScriptParserNode *node); ///< 字符串常量
     QVector<int> iVariableSubscripte(ScriptParserNode *node, QMap<QString, QVector<QPair<int, Variable *> > *> *data, QVector<QVector<QString> *> *record, int layer); ///< 变量下标
 };
 

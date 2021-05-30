@@ -16,11 +16,11 @@ UIPony::~UIPony()
 
 void UIPony::mousePressEvent(QMouseEvent *event)
 {
-    if(event->button()==Qt::LeftButton){
+    if(event->button() == Qt::LeftButton) {
         //左键拖动窗体
-        relativePos = this->pos()- event->globalPos();
+        relativePos = this->pos() - event->globalPos();
     }
-    if(event->button()==Qt::RightButton){
+    if(event->button() == Qt::RightButton) {
         //右键打开菜单
         menuPony->exec(QCursor::pos());
     }
@@ -106,7 +106,7 @@ void UIPony::initThis(Config *tempConfig, Limit *tempLimit, QSS *tempQSS, Locali
     tempImageProcessing = nullptr;
 
 //设置窗体
-    this->setWindowTitle(localisation->localisation["uiSettingsTitle"]);
+    this->setWindowTitle(localisation->get("uiSettingsTitle"));
     this->setFixedSize(this->width, this->height);
 //设置布局
     setItemsLayout();

@@ -16,7 +16,7 @@ QVector<TokenData> *ScriptLexer::divToken(QString str)
         SYN syn = judge();
         TokenData token;
         token.syn = syn;
-        token.str = this->m_token_num;
+        token.str = this->m_token_num.toStdString();
         token.line = this->m_line;
         token.row = m_row;
         m_tokens->push_back(token);
@@ -35,9 +35,9 @@ SYN ScriptLexer::judge()
         m_ch = getNext();
     }
 
-    if((m_ch>='a' && m_ch <= 'z') || (m_ch >= 'A' &&m_ch <= 'Z') || m_ch == '_') {
+    if((m_ch >= 'a' && m_ch <= 'z') || (m_ch >= 'A' && m_ch <= 'Z') || m_ch == '_') {
         //为标识符或者变量名
-        while((m_ch>='a' && m_ch <= 'z') || (m_ch >= 'A' &&m_ch <= 'Z') || (m_ch >= '0' && m_ch <= '9') || m_ch == '_') {
+        while((m_ch >= 'a' && m_ch <= 'z') || (m_ch >= 'A' && m_ch <= 'Z') || (m_ch >= '0' && m_ch <= '9') || m_ch == '_') {
             m_token_num += m_ch;
             m_ch = getNext();
         }
@@ -54,9 +54,10 @@ SYN ScriptLexer::judge()
     } else if(m_ch >= '0' && m_ch <= '9') {
         //为数字
         int point = 0;
-        while((m_ch >= '0'&& m_ch <= '9') || m_ch == '.') {
-            if(m_ch == '.')
+        while((m_ch >= '0' && m_ch <= '9') || m_ch == '.') {
+            if(m_ch == '.') {
                 point++;
+            }
             m_token_num += m_ch;
             m_ch = getNext();
         }
@@ -91,19 +92,21 @@ SYN ScriptLexer::judge()
         case '.':
             if(get(1) == '.') {
                 if(get(2) == '.') {
-                    m_point+=2;
-                    m_row+=2;
+                    m_point += 2;
+                    m_row += 2;
                     m_token_num += "..";
                     return syn_ellipsis;
-                } else
+                } else {
                     return syn_error;
-            } else
+                }
+            } else {
                 return syn_node;
+            }
         case '>':
             if(get(1) == '>') {
                 if(get(2) == '=') {
-                    m_point+=2;
-                    m_row+=2;
+                    m_point += 2;
+                    m_row += 2;
                     m_token_num += ">=";
                     return syn_right_assign;
                 } else {
@@ -117,13 +120,14 @@ SYN ScriptLexer::judge()
                 m_row++;
                 m_token_num += "=";
                 return syn_ge_op;
-            } else
+            } else {
                 return syn_right;
+            }
         case '<':
             if(get(1) == '<') {
                 if(get(2) == '=') {
-                    m_point+=2;
-                    m_row+=2;
+                    m_point += 2;
+                    m_row += 2;
                     m_token_num += "<=";
                     return syn_left_assign;
                 } else {
@@ -147,8 +151,9 @@ SYN ScriptLexer::judge()
                 m_row++;
                 m_token_num += ":";
                 return syn_front_array;
-            } else
+            } else {
                 return syn_left;
+            }
         case '+':
             if(get(1) == '=') {
                 m_point++;
@@ -160,8 +165,9 @@ SYN ScriptLexer::judge()
                 m_row++;
                 m_token_num += "+";
                 return syn_inc_op;
-            } else
+            } else {
                 return syn_add;
+            }
         case '-':
             if(get(1) == '=') {
                 m_point++;
@@ -178,16 +184,18 @@ SYN ScriptLexer::judge()
                 m_row++;
                 m_token_num += ">";
                 return syn_ptr_op;
-            } else
+            } else {
                 return syn_sub;
+            }
         case '*':
             if(get(1) == '=') {
                 m_point++;
                 m_row++;
                 m_token_num += "=";
                 return syn_mul_assign;
-            } else
+            } else {
                 return syn_mul;
+            }
         case '/':
             if(get(1) == '=') {
                 m_point++;
@@ -198,19 +206,21 @@ SYN ScriptLexer::judge()
                 m_ch = getNext();
                 m_token_num += m_ch;
                 while(!(get(1) == '*' && get(2) == '/')) {
-                    if(m_point >= m_str.size())
+                    if(m_point >= m_str.size()) {
                         return syn_error;
+                    }
                     m_ch = getNext();
                     m_token_num += m_ch;
                 }
                 m_ch = getNext();
 
-                m_point+=2;
-                m_row+=2;
-                m_token_num +="*/";
+                m_point += 2;
+                m_row += 2;
+                m_token_num += "*/";
                 return syn_comment;
-            } else
+            } else {
                 return syn_div;
+            }
         case '%':
             if(get(1) == '=') {
                 m_point++;
@@ -222,8 +232,9 @@ SYN ScriptLexer::judge()
                 m_row++;
                 m_token_num += ">";
                 return syn_back_body;
-            } else
+            } else {
                 return syn_mod;
+            }
         case '&':
             if(get(1) == '=') {
                 m_point++;
@@ -242,8 +253,9 @@ SYN ScriptLexer::judge()
                 m_row++;
                 m_token_num += "=";
                 return syn_xor_assign;
-            } else
+            } else {
                 return syn_bitxor;
+            }
         case '|':
             if(get(1) == '=') {
                 m_point++;
@@ -255,47 +267,52 @@ SYN ScriptLexer::judge()
                 m_row++;
                 m_token_num += "|";
                 return syn_or_op;
-            } else
+            } else {
                 return syn_bitor;
+            }
         case '=':
             if(get(1) == '=') {
                 m_point++;
                 m_row++;
                 m_token_num += "=";
                 return syn_eq_op;
-            } else
+            } else {
                 return syn_equal;
+            }
         case '!':
             if(get(1) == '=') {
                 m_point++;
                 m_row++;
                 m_token_num += "=";
                 return syn_ne_op;
-            } else
+            } else {
                 return syn_not;
+            }
         case '\"':
             while(!(get(1) == '\"')) {
-                if(m_point >= m_str.size())
+                if(m_point >= m_str.size()) {
                     return syn_error;
+                }
                 m_ch = getNext();
                 m_token_num += m_ch;
             }
             m_ch = getNext();
             m_point++;
             m_row++;
-            m_token_num +="\"";
+            m_token_num += "\"";
             return syn_str_lit;
         case '\'':
             while(!(get(1) == '\'')) {
-                if(m_point >= m_str.size())
+                if(m_point >= m_str.size()) {
                     return syn_error;
+                }
                 m_ch = getNext();
                 m_token_num += m_ch;
             }
             m_ch = getNext();
             m_point++;
             m_row++;
-            m_token_num +="\"";
+            m_token_num += "\"";
             return syn_const_char;
         case ':':
             if(get(1) == '>') {
@@ -303,13 +320,15 @@ SYN ScriptLexer::judge()
                 m_row++;
                 m_token_num += ">";
                 return syn_back_array;
-            } else
+            } else {
                 return syn_colon;
+            }
         case '$':
             if(m_point == m_str.size()) {
                 return syn_end;
-            } else
+            } else {
                 return syn_error;
+            }
         default:
             return syn_error;
         }
@@ -324,6 +343,6 @@ inline QChar ScriptLexer::getNext()
 
 inline QChar ScriptLexer::get(int n)
 {
-    QChar c = m_point+n >= m_str.size() ? QChar('$') : m_str[m_point+n];
+    QChar c = m_point + n >= m_str.size() ? QChar('$') : m_str[m_point + n];
     return c;
 }

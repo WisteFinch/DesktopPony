@@ -32,78 +32,7 @@
 #include <QStringList>
 #include <QVector>
 #include <QMap>
-
-enum SYN {
-    syn_null = -2,  ///< 标记 空
-    syn_error = -1, ///< 标记 错误
-    syn_end = 0,    ///< 标记 结尾
-    syn_const_int,  ///< 类型 整型
-    syn_const_float,///< 类型 浮点型
-    syn_const_bool, ///< 类型 布尔型
-    syn_const_char, ///< 类型 字符
-    syn_str_lit,    ///< 类型 字符串
-    syn_id,         ///< 类型 标识符
-    syn_if,         ///< 关键字 "if"
-    syn_else,       ///< 关键字 "else"
-    syn_do,         ///< 关键字 "for"
-    syn_while,      ///< 关键字 "while"
-    syn_for,        ///< 关键字 "for"
-    syn_break,      ///< 关键字 "break"
-    syn_continue,   ///< 关键字 "continue"
-    syn_return,     ///< 关键字 "return"
-    syn_int,        ///< 关键字 "int"
-    syn_float,      ///< 关键字 "float"
-    syn_string,     ///< 关键字 "string"
-    syn_char,     ///< 关键字 "char"
-    syn_bool,       ///< 关键字 "bool"
-    syn_ellipsis,   ///< 关键字 "..."
-    syn_left_assign,///< 符号 "<<="
-    syn_right_assign,///< 符号 ">>="
-    syn_add_assign, ///< 符号 "+="
-    syn_sub_assign, ///< 符号 "-="
-    syn_mul_assign, ///< 符号 "*="
-    syn_div_assign, ///< 符号 "/="
-    syn_mod_assign, ///< 符号 "%="
-    syn_and_assign, ///< 符号 "&="
-    syn_xor_assign, ///< 符号 "^="
-    syn_or_assign,  ///< 符号 "|="
-    syn_right_op,   ///< 符号 ">>"
-    syn_left_op,    ///< 符号 "<<"
-    syn_inc_op,     ///< 符号 "++"
-    syn_dec_op,     ///< 符号 "--"
-    syn_ptr_op,     ///< 符号 "->"
-    syn_and_op,     ///< 符号 "&&"
-    syn_or_op,      ///< 符号 "||"
-    syn_le_op,      ///< 符号 "<="
-    syn_ge_op,      ///< 符号 ">="
-    syn_eq_op,      ///< 符号 "=="
-    syn_ne_op,      ///< 符号 "!="
-    syn_semi,       ///< 符号 ";"
-    syn_front_body, ///< 符号 "{"
-    syn_back_body,  ///< 符号 "}"
-    syn_comma,      ///< 符号 ","
-    syn_colon,      ///< 符号 ":"
-    syn_equal,      ///< 符号 "="
-    syn_front_bracket,///< 符号 "("
-    syn_back_bracket,///< 符号 ")"
-    syn_front_array,///< 符号 "["
-    syn_back_array,///< 符号 "]"
-    syn_node,       ///< 符号 "."
-    syn_bitand,     ///< 符号 "&"
-    syn_not,        ///< 符号 "!"
-    syn_bitnot,     ///< 符号 "~"
-    syn_sub,        ///< 符号 "-"
-    syn_add,        ///< 符号 "+"
-    syn_mul,        ///< 符号 "*"
-    syn_div,        ///< 符号 "/"
-    syn_mod,        ///< 符号 "%"
-    syn_left,       ///< 符号 "<"
-    syn_right,      ///< 符号 ">"
-    syn_bitxor,     ///< 符号 "^"
-    syn_bitor,      ///< 符号 "|"
-    syn_query,      ///< 符号 "?"
-    syn_comment,    ///< 符号 "/*...*/"
-};
+#include "public/sharedefinition.h"
 
 struct SYNName {
     QMap<SYN, QString> m_names;
@@ -287,29 +216,5 @@ struct ParserName {
         return this->m_names.value(p);
     }
 };
-
-struct TokenData {
-    SYN syn = syn_null;
-    QString str = nullptr;
-    int line = 0;
-    int row = 0;
-};
-
-enum VALUE_TYPE {
-    type_int,   ///< 整型
-    type_float, ///< 浮点型
-    type_bool,  ///< 布尔型
-    type_str,   ///< 字符串型
-    //type_null,  ///< 空
-    type_empty, ///< 无数据
-    type_var,   ///< 变量指针
-    type_id,    ///< 标识符
-    type_void,  ///< 缺省
-    type_continue,///< 继续
-    type_break, ///< 中断
-    type_error  ///< 错误
-};
-
-
 
 #endif // SCRIPTLIMIT_H

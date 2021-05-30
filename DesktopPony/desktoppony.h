@@ -41,10 +41,6 @@
 #include "file/localisation.h"
 #include <QObject>
 
-//=============-=====test========================
-#include "scriptinterpreter/scriptinterpreter.h"
-//===============================================
-
 class DesktopPony : QObject
 {
     Q_OBJECT

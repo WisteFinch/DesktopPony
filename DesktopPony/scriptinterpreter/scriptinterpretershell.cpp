@@ -18,7 +18,7 @@ QStringList ScriptInterpreterShell::run(QString str)
     this->m_exception_data.clear();
 
     QStringList list;
-    QVector<Value> v;
+    QVector<ValueData> v;
 
     try {
         //运行命令
@@ -27,8 +27,8 @@ QStringList ScriptInterpreterShell::run(QString str)
         //处理异常
         exceptionHandle(se);
     }
-    for (int i = 0; i < v.size() ; i++ ) {
-        list.append(v[i].toData());
+    for (int i = 0; i < v.size() ; i++) {
+        list.append(QString::fromStdString(v[i].toInfo()));
     }
     return list;
 }
@@ -39,4 +39,9 @@ void ScriptInterpreterShell::exceptionHandle(ScriptExceptionData &se)
     e.init(se, this->m_p_localisation);
     e.initInfo();
     this->m_exception_data.append(e);
+}
+
+ValueData ScriptInterpreterShell::extraFunctions(QString functionName, QVector<ValueData> parameters, QMap<QString, QVector<QPair<int, Variable *>> *> *data, QVector<QVector<QString> *> *record, int layer)
+{
+
 }
