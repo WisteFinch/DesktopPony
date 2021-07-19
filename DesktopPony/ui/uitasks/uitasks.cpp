@@ -22,8 +22,8 @@ UITasks::UITasks(QWidget *parent) :
     this->m_widget_standards = new QWidget();
     this->m_layout_standards = new QVBoxLayout();
 
-    this->m_list_card = new QList<UITasksListCard*>;
-    this->m_list_standard_card = new QList<UITasksStandardListCard*>;
+    this->m_list_card = new QList<UITasksListCard *>;
+    this->m_list_standard_card = new QList<UITasksStandardListCard *>;
 
     setAttribute(Qt::WA_ShowModal, true);    //设置模态
 }
@@ -68,13 +68,13 @@ void UITasks::init(Localisation *tmpLocalisation, Config *tmpConfig, FileTasks *
     this->background = bg;
     //=========================test============================
 
-        QFile *a = new QFile;
-        a->setFileName(":/css/default.css");
-        a->open(QFile::ReadOnly);
-        QString s = a->readAll();
-        this->setStyleSheet(s);
-        a->close();
-        delete a;
+    QFile *a = new QFile;
+    a->setFileName(":/resources/css/default.css");
+    a->open(QFile::ReadOnly);
+    QString s = a->readAll();
+    this->setStyleSheet(s);
+    a->close();
+    delete a;
 
     //=======================test end=========================
 
@@ -175,8 +175,7 @@ void UITasks::doLoadStandardList()
 {
     doClearStandardList();
     QStringList keys = this->m_p_tasks->data->keys();
-    for(int i = 0; i < keys.size(); i++)
-    {
+    for(int i = 0; i < keys.size(); i++) {
         UITasksStandardListCard *card = new UITasksStandardListCard;
         card->init(keys.at(i));
         this->m_list_standard_card->push_back(card);
@@ -185,8 +184,9 @@ void UITasks::doLoadStandardList()
     }
     this->m_layout_standards->addStretch();
 
-    if(this->m_list_standard_card->size() != 0)
+    if(this->m_list_standard_card->size() != 0) {
         this->slotStandardListSelected(this->m_list_standard_card->at(0)->m_str_name);
+    }
 }
 
 void UITasks::doLoadList()
@@ -194,67 +194,61 @@ void UITasks::doLoadList()
     doClearList();
 
     QStringList keys = this->m_p_tasks->data->value(this->m_str_selected_standard)->keys();
-    QMap<QString, FileTasks::STaskdata*> *p = this->m_p_tasks->data->value(this->m_str_selected_standard);
-    for(int i = 0; i < keys.size(); i++)
-    {
+    QMap<QString, FileTasks::STaskdata *> *p = this->m_p_tasks->data->value(this->m_str_selected_standard);
+    for(int i = 0; i < keys.size(); i++) {
         UITasksListCard *card = new UITasksListCard;
         card->init(p->value(keys.at(i)));
         this->m_list_card->push_back(card);
         this->m_layout_tasks->addWidget(card);
-        connect(card, SIGNAL(clicked(FileTasks::STaskdata*)), this, SLOT(slotListSelected(FileTasks::STaskdata*)));
+        connect(card, SIGNAL(clicked(FileTasks::STaskdata *)), this, SLOT(slotListSelected(FileTasks::STaskdata *)));
     }
     this->m_layout_tasks->addStretch();
 
-    if(keys.size() != 0)
+    if(keys.size() != 0) {
         this->slotListSelected(p->value(keys.at(0)));
+    }
 }
 
 void UITasks::doClearList()
 {
     QLayoutItem *c;
-    while ((c = this->m_layout_tasks->takeAt(0)) != nullptr)
-    {
-           //setParent为NULL，防止删除之后界面不消失
-           if(c->widget())
-           {
-               c->widget()->setParent(nullptr);
-           }
+    while ((c = this->m_layout_tasks->takeAt(0)) != nullptr) {
+        //setParent为NULL，防止删除之后界面不消失
+        if(c->widget()) {
+            c->widget()->setParent(nullptr);
+        }
 
-           delete c;
-   }
-    for(int i = 0; i < this->m_list_card->size(); i++)
-    {
-        disconnect(this->m_list_card->at(i), SIGNAL(clicked(FileTasks::STaskdata*)), this, SLOT(slotListSelected(FileTasks::STaskdata*)));
+        delete c;
+    }
+    for(int i = 0; i < this->m_list_card->size(); i++) {
+        disconnect(this->m_list_card->at(i), SIGNAL(clicked(FileTasks::STaskdata *)), this, SLOT(slotListSelected(FileTasks::STaskdata *)));
         this->m_list_card->at(i)->setParent(nullptr);
         this->m_layout_tasks->removeWidget(this->m_list_card->at(i));
         delete this->m_list_card->at(i);
     }
     delete this->m_list_card;
-    this->m_list_card = new QList<UITasksListCard*>;
+    this->m_list_card = new QList<UITasksListCard *>;
 }
 
 void UITasks::doClearStandardList()
 {
     QLayoutItem *c;
-    while ((c = this->m_layout_standards->takeAt(0)) != nullptr)
-    {
-           //setParent为NULL，防止删除之后界面不消失
-           if(c->widget())
-           {
-               c->widget()->setParent(nullptr);
-           }
+    while ((c = this->m_layout_standards->takeAt(0)) != nullptr) {
+        //setParent为NULL，防止删除之后界面不消失
+        if(c->widget()) {
+            c->widget()->setParent(nullptr);
+        }
 
-           delete c;
-   }
-    for(int i = 0; i < this->m_list_standard_card->size(); i++)
-    {
+        delete c;
+    }
+    for(int i = 0; i < this->m_list_standard_card->size(); i++) {
         disconnect(this->m_list_standard_card->at(i), SIGNAL(clicked(QString)), this, SLOT(slotStandardListSelected(QString)));
         this->m_list_standard_card->at(i)->setParent(nullptr);
         this->m_layout_standards->removeWidget(this->m_list_standard_card->at(i));
         delete this->m_list_standard_card->at(i);
     }
     delete this->m_list_standard_card;
-    this->m_list_standard_card = new QList<UITasksStandardListCard*>;
+    this->m_list_standard_card = new QList<UITasksStandardListCard *>;
 }
 
 
@@ -277,15 +271,13 @@ void UITasks::slotRefreshList()
 void UITasks::slotListSelected(FileTasks::STaskdata *p)
 {
     this->m_p_selected_task = p;
-    for(int i = 0; i < this->m_list_card->size(); i++)
-    {
-        if(this->m_list_card->at(i)->m_p_taskdata->groupName == p->groupName)
-        {
+    for(int i = 0; i < this->m_list_card->size(); i++) {
+        if(this->m_list_card->at(i)->m_p_taskdata->groupName == p->groupName) {
             this->m_list_card->at(i)->setStatus(UITasksListCard::SELECTED);
-        }else
-        {
-            if(this->m_list_card->at(i)->m_e_status == UITasksListCard::SELECTED)
+        } else {
+            if(this->m_list_card->at(i)->m_e_status == UITasksListCard::SELECTED) {
                 this->m_list_card->at(i)->setStatus(UITasksListCard::NORMAL);
+            }
         }
     }
 }
@@ -294,15 +286,13 @@ void UITasks::slotListSelected(FileTasks::STaskdata *p)
 void UITasks::slotStandardListSelected(QString str)
 {
     this->m_str_selected_standard = str;
-    for(int i = 0; i < this->m_list_standard_card->size(); i++)
-    {
-        if(this->m_list_standard_card->at(i)->m_str_name == str)
-        {
+    for(int i = 0; i < this->m_list_standard_card->size(); i++) {
+        if(this->m_list_standard_card->at(i)->m_str_name == str) {
             this->m_list_standard_card->at(i)->setStatus(UITasksStandardListCard::SELECTED);
-        }else
-        {
-            if(this->m_list_standard_card->at(i)->m_e_status == UITasksStandardListCard::SELECTED)
+        } else {
+            if(this->m_list_standard_card->at(i)->m_e_status == UITasksStandardListCard::SELECTED) {
                 this->m_list_standard_card->at(i)->setStatus(UITasksStandardListCard::NORMAL);
+            }
         }
     }
 

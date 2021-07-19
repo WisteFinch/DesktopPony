@@ -1,8 +1,8 @@
 /**
- * @file limit.h
- * @brief 限制
+ * @file plugin/pluginmanager.h
+ * @brief 插件-管理
  * @author WisteFinch
- * @date 2020.11.29
+ * @date 2021.6.8
  *
  * MIT License
  * Copyright (c) 2019-2021 WisteFinch
@@ -26,19 +26,49 @@
  * SOFTWARE.
  */
 
-#ifndef LIMIT_H
-#define LIMIT_H
+#ifndef PLUGINMANAGER_H
+#define PLUGINMANAGER_H
 
-#include <QString>
-#include <QDesktopWidget>
-#include <QApplication>
+#include "metadata.h"
+#include "pluginsharedefinition.h"
+#include "pluginobject.h"
+#include <QVector>
+#include <QFile>
+#include <QDir>
+#include <QJsonObject>
 
-class Limit
+class PluginManager
 {
 public:
-    Limit();
-    void getScreenSize();
-    int screenSizeX,screenSizeY;
+    PluginManager();
+    ~PluginManager();
+
+    /**
+     * @brief 刷新插件对象列表
+     */
+    void refreshList();
+
+    /**
+     * @brief 清理对象列表
+     */
+    void clearObjectList();
+
+    /**
+     * @brief 创建索引
+     */
+    void creatIndex();
+
+    /**
+     * @brief 获取元素组合列表
+     * @param 元素类型
+     * @return 元素组合列表
+     */
+    ELEMENT_PAIR_LIST *getElementPairList(PLUGIN_ELEMENT_TYPE type);
+
+    OBJECT_LIST *m_p_plugin_obj_list = nullptr;  ///< 插件对象列表
+    OBJECT_UUID_INDEX *m_p_plugin_obj_uuid_index = nullptr;   ///< 对象uuid索引
+    OBJECT_TYPE_INDEX *m_p_plugin_obj_type_index = nullptr;///< 对象包含的元素类型索引
+    ELEMENT_TYPE_INDEX *m_p_plugin_element_type_index = nullptr;  ///< 元素类型索引
 };
 
-#endif // LIMIT_H
+#endif // PLUGINMANAGER_H

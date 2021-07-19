@@ -33,11 +33,15 @@
 
 const QString STR_VERSION = "build-xxxx.xx.xx";
 
-const QString STR_DEFAULT_CONFIG_PATH = ":/data/default_config.ini";///<标准配置文件路径
+const QString STR_DEFAULT_CONFIG_PATH = ":resources/data/default_config.ini";///<标准配置文件路径
+const QString STR_PLUGIN_PATH = "./plugins/"; /// 插件路径
+const QString STR_SYSTEM_PLUGIN_PATH = ":resources/plugins/"; /// 系统插件路径
+const QString STR_PLUGIN_HEAD_PATH = "plugin.json"; /// 插件对象头文件名称
+const QString STR_PLUGIN_ELEMENT_HEAD_PATH = "element.json"; /// 插件元素头文件名称
 const QString STR_CHARACTER_ROOT_PATH = "./character/";///< 角色主地址
 const QString STR_ACCESSORIES_ROOT_PATH = "./data/accessories/";///< 配件主地址
 const QString STR_RULES_USER_ROOT_PATH = "./data/rules/";///< 规则（用户）主地址
-const QString STR_RULES_SYSTEM_ROOT_PATH = ":/data/rules/";///< 规则（系统）主地址
+const QString STR_RULES_SYSTEM_ROOT_PATH = ":resources/data/rules/";///< 规则（系统）主地址
 
 
 

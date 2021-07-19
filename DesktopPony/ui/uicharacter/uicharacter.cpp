@@ -19,12 +19,12 @@ UICharacter::UICharacter(QWidget *parent) :
     this->m_button_delete = new QPushButton();
     this->m_button_refresh = new QPushButton();
     this->m_button_confirm = new QPushButton();
-    this->m_button_cancel= new QPushButton();
+    this->m_button_cancel = new QPushButton();
 
     this->m_scrollarea_character = new QScrollArea();
     this->m_widget_character = new QWidget();
     this->m_layout_character = new QVBoxLayout();
-    this->m_list_card = new QList<UICharacterListCard*>;
+    this->m_list_card = new QList<UICharacterListCard *>;
 
     setAttribute(Qt::WA_ShowModal, true);    //设置模态
 }
@@ -70,13 +70,13 @@ void UICharacter::init(Localisation *tmpLocalisation, Config *tmpConfig, FileCha
     this->background = bg;
     //=========================test============================
 
-        QFile *a = new QFile;
-        a->setFileName(":/css/default.css");
-        a->open(QFile::ReadOnly);
-        QString s = a->readAll();
-        this->setStyleSheet(s);
-        a->close();
-        delete a;
+    QFile *a = new QFile;
+    a->setFileName(":/resources/css/default.css");
+    a->open(QFile::ReadOnly);
+    QString s = a->readAll();
+    this->setStyleSheet(s);
+    a->close();
+    delete a;
 
     //=======================test end=========================
 
@@ -180,25 +180,22 @@ void UICharacter::setBackGround()
 void UICharacter::doClearList()
 {
     QLayoutItem *c;
-    while ((c = this->m_layout_character->takeAt(0)) != nullptr)
-    {
-           //setParent为NULL，防止删除之后界面不消失
-           if(c->widget())
-           {
-               c->widget()->setParent(nullptr);
-           }
+    while ((c = this->m_layout_character->takeAt(0)) != nullptr) {
+        //setParent为NULL，防止删除之后界面不消失
+        if(c->widget()) {
+            c->widget()->setParent(nullptr);
+        }
 
-           delete c;
-   }
-    for(int i = 0; i < this->m_list_card->size(); i++)
-    {
+        delete c;
+    }
+    for(int i = 0; i < this->m_list_card->size(); i++) {
         disconnect(this->m_list_card->at(i), SIGNAL(clicked(QString)), this, SLOT(slotListSelected(QString)));
         this->m_list_card->at(i)->setParent(nullptr);
         this->m_layout_character->removeWidget(this->m_list_card->at(i));
         delete this->m_list_card->at(i);
     }
     delete this->m_list_card;
-    this->m_list_card = new QList<UICharacterListCard*>;
+    this->m_list_card = new QList<UICharacterListCard *>;
 }
 
 void UICharacter::doLoadList()
@@ -207,8 +204,7 @@ void UICharacter::doLoadList()
 
     QFile *loadFile = new QFile;
     loadFile->setFileName(STR_CHARACTER_ROOT_PATH + "/index.json");
-    if(!loadFile->open(QIODevice::ReadOnly))
-    {
+    if(!loadFile->open(QIODevice::ReadOnly)) {
         return;
     }
 
@@ -220,16 +216,14 @@ void UICharacter::doLoadList()
     QJsonParseError json_error;
     QJsonDocument jsonDoc(QJsonDocument::fromJson(allData, &json_error));
 
-    if(json_error.error != QJsonParseError::NoError)
-    {
+    if(json_error.error != QJsonParseError::NoError) {
         return;
     }
 
     QJsonObject obj = jsonDoc.object();
     QStringList keys = obj.keys();
 
-    if(obj.contains(this->m_p_config->characterName))
-    {
+    if(obj.contains(this->m_p_config->characterName)) {
         UICharacterListCard *card = new UICharacterListCard;
         card->init(this->m_p_config->characterName, obj.value(this->m_p_config->characterName).toString());
         this->m_list_card->push_back(card);
@@ -237,10 +231,8 @@ void UICharacter::doLoadList()
         connect(card, SIGNAL(clicked(QString)), this, SLOT(slotListSelected(QString)));
         slotListSelected(this->m_p_config->characterName);
     }
-    for(int i = 0; i < keys.size(); i++)
-    {
-        if(this->m_p_config->characterName != keys.at(i))
-        {
+    for(int i = 0; i < keys.size(); i++) {
+        if(this->m_p_config->characterName != keys.at(i)) {
             UICharacterListCard *card = new UICharacterListCard;
             card->init(keys.at(i), obj.value(keys.at(i)).toString());
             this->m_list_card->push_back(card);
@@ -255,17 +247,14 @@ void UICharacter::doLoadList()
 QString UICharacter::addSerial(QString str)
 {
     int x = str.lastIndexOf('_');
-    if(x == -1)
-    {
+    if(x == -1) {
         return str + "_1";
     }
     QString n = str.right(str.size() - x - 1);
 
-    if(isNum(n))
-    {
+    if(isNum(n)) {
         return str.left(x + 1) + QString::number(n.toInt() + 1);
-    }else
-    {
+    } else {
         return str + "_1";
     }
 }
@@ -273,8 +262,9 @@ QString UICharacter::addSerial(QString str)
 bool UICharacter::isNum(QString str)
 {
     for(int i = 0; i < str.size(); i++)
-        if(!str[i].isNumber())
+        if(!str[i].isNumber()) {
             return false;
+        }
     return true;
 }
 
@@ -291,26 +281,21 @@ void UICharacter::slotAddCharacter()
                                      2,
                                      2);
 
-    if(flag == 0)
-    {
+    if(flag == 0) {
 
-    }
-    else if (flag == 1)
-    {
+    } else if (flag == 1) {
         QStringList list = QFileDialog::getOpenFileNames(this,
-                                      this->m_p_localisation->get("uicharacter_msgbox_addnew_files_title"),
-                                      ".",
-                                      "JSON(*.json);;ALL(*.*)");
+                           this->m_p_localisation->get("uicharacter_msgbox_addnew_files_title"),
+                           ".",
+                           "JSON(*.json);;ALL(*.*)");
 
         QJsonObject indexObj = this->m_p_file_character->getCharacterIndexJsonObject();
 
-        for(int i = 0; i < list.size(); i++)
-        {
+        for(int i = 0; i < list.size(); i++) {
             QFileInfo copyFileInfo(list.at(i));
             QString copyFileBaseName = copyFileInfo.baseName();
             QString copyFileSuffix = copyFileInfo.suffix();
-            while(QFile::exists(STR_CHARACTER_ROOT_PATH + "/" + copyFileBaseName + '.' + copyFileSuffix))
-            {
+            while(QFile::exists(STR_CHARACTER_ROOT_PATH + "/" + copyFileBaseName + '.' + copyFileSuffix)) {
                 copyFileBaseName = addSerial(copyFileBaseName);
             }
             QString copyFilePath = STR_CHARACTER_ROOT_PATH + "/" + copyFileBaseName + '.' + copyFileSuffix;
@@ -318,23 +303,19 @@ void UICharacter::slotAddCharacter()
 
             QJsonObject copyObj;
             QFile copyFile(copyFilePath);
-            if(copyFile.open(QIODevice::ReadOnly))
-            {
+            if(copyFile.open(QIODevice::ReadOnly)) {
                 QByteArray copyData = copyFile.readAll();
                 copyFile.close();
                 QJsonParseError json_error;
                 QJsonDocument jsonDoc(QJsonDocument::fromJson(copyData, &json_error));
-                if(json_error.error == QJsonParseError::NoError)
-                {
+                if(json_error.error == QJsonParseError::NoError) {
                     copyObj = jsonDoc.object();
                     QJsonObject metadata = copyObj.value("metadata").toObject();
-                    if(!metadata.contains("name"))
-                    {
+                    if(!metadata.contains("name")) {
                         copyFile.remove();
                         continue;
                     }
-                    while(indexObj.contains(metadata.value("name").toString()))
-                    {
+                    while(indexObj.contains(metadata.value("name").toString())) {
                         metadata.insert("name", addSerial(metadata.value("name").toString()));
                         copyObj.insert("metadata", metadata);
 
@@ -369,12 +350,10 @@ void UICharacter::slotDeleteCharacter()
                                     1,
                                     1);
 
-    if(flag == 0)
-    {
+    if(flag == 0) {
         QFile *loadFile = new QFile;
         loadFile->setFileName(STR_CHARACTER_ROOT_PATH + "/index.json");
-        if(!loadFile->open(QIODevice::ReadOnly))
-        {
+        if(!loadFile->open(QIODevice::ReadOnly)) {
             return;
         }
 
@@ -386,8 +365,7 @@ void UICharacter::slotDeleteCharacter()
         QJsonParseError json_error;
         QJsonDocument jsonDoc(QJsonDocument::fromJson(allData, &json_error));
 
-        if(json_error.error != QJsonParseError::NoError)
-        {
+        if(json_error.error != QJsonParseError::NoError) {
             return;
         }
 
@@ -417,8 +395,7 @@ void UICharacter::slotListChange(QString path)
 {
     QFile *loadFile = new QFile;
     loadFile->setFileName(path);
-    if(!loadFile->open(QIODevice::ReadOnly))
-    {
+    if(!loadFile->open(QIODevice::ReadOnly)) {
         //return;
     }
 
@@ -430,8 +407,7 @@ void UICharacter::slotListChange(QString path)
     QJsonParseError json_error;
     QJsonDocument jsonDoc(QJsonDocument::fromJson(allData, &json_error));
 
-    if(json_error.error != QJsonParseError::NoError)
-    {
+    if(json_error.error != QJsonParseError::NoError) {
         //return;
     }
 
@@ -446,19 +422,18 @@ void UICharacter::slotListChange(QString path)
 void UICharacter::slotListSelected(QString name)
 {
     this->m_str_selected_character = name;
-    for(int i = 0; i < this->m_list_card->size(); i++)
-    {
-        if(this->m_list_card->at(i)->m_str_name == name)
-        {
+    for(int i = 0; i < this->m_list_card->size(); i++) {
+        if(this->m_list_card->at(i)->m_str_name == name) {
             this->m_list_card->at(i)->setStatus(UICharacterListCard::SELECTED);
-        }else
-        {
-            if(this->m_list_card->at(i)->m_e_status == UICharacterListCard::SELECTED)
+        } else {
+            if(this->m_list_card->at(i)->m_e_status == UICharacterListCard::SELECTED) {
                 this->m_list_card->at(i)->setStatus(UICharacterListCard::NORMAL);
+            }
         }
     }
 
     for(int i = 0; i < this->m_list_card->size(); i++)
-        if(this->m_list_card->at(i)->m_str_name == name)
+        if(this->m_list_card->at(i)->m_str_name == name) {
             slotListChange(this->m_list_card->at(i)->m_str_path);
+        }
 }

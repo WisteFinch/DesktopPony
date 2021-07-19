@@ -47,16 +47,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    data/localisation.cpp \
     file/config.cpp \
     file/filecharacter.cpp \
     file/fileqss.cpp \
-    file/localisation.cpp \
     file/filetasks.cpp \
+    plugin/element/pluginelementlocalisation.cpp \
+    plugin/element/pluginelement.cpp \
+    plugin/element/pluginelementmodel.cpp \
+    plugin/pluginmanager.cpp \
+    plugin/pluginobject.cpp \
     imageprocessing/accessories.cpp \
     imageprocessing/imageprocessing.cpp \
     main.cpp \
     desktoppony.cpp \
-    limit.cpp \
+    plugin/pluginsharedefinition.cpp \
     scriptinterpreter/core/lexer/lexer.cpp \
     scriptinterpreter/core/parser/parser.cpp \
     scriptinterpreter/core/parser/parsernode.cpp \
@@ -67,6 +72,7 @@ SOURCES += \
     scriptinterpreter/core/scriptlimit.cpp \
     scriptinterpreter/core/scriptvariable.cpp \
     scriptinterpreter/scriptinterpretershell.cpp \
+    tools.cpp \
     ui/uicharacter/uicharacter.cpp\
     ui/uicharacter/uicharacterlistcard.cpp \
     ui/uipony.cpp \
@@ -78,17 +84,22 @@ SOURCES += \
     ui/uitasks/uitasksstandardlistcard.cpp
 
 HEADERS += \
+    data/localisation.h \
     desktoppony.h \
     file/config.h \
     file/filecharacter.h \
     file/fileevent.h \
     file/fileqss.h \
-    file/localisation.h \
+    plugin/element/pluginelementlocalisation.h \
+    plugin/element/pluginelement.h \
+    plugin/element/pluginelementmodel.h \
+    plugin/pluginmanager.h \
+    plugin/pluginobject.h \
     imageprocessing/accessories.h \
     imageprocessing/imageprocessing.h \
     imageprocessing/imagestruct.h \
-    limit.h \
     metadata.h \
+    plugin/pluginsharedefinition.h \
     scriptinterpreter/core/lexer/lexer.h \
     scriptinterpreter/core/parser/parser.h \
     scriptinterpreter/core/parser/parsernode.h \
@@ -100,6 +111,7 @@ HEADERS += \
     scriptinterpreter/core/scriptlimit.h \
     scriptinterpreter/core/scriptvariable.h \
     scriptinterpreter/scriptinterpretershell.h \
+    tools.h \
     ui/uicharacter/uicharacter.h \
     ui/uicharacter/uicharacterlistcard.h \
     ui/uipony.h \
@@ -121,7 +133,8 @@ RESOURCES += \
     css.qrc \
     image.qrc \
     localisation.qrc \
-    data.qrc
+    data.qrc \
+    plugin.qrc
 
 VERSION = 0.0.0.1
 RC_ICONS = img/icon.ico

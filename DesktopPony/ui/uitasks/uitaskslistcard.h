@@ -14,7 +14,7 @@ public:
     explicit UITasksListCard(QWidget *parent = nullptr);
     ~UITasksListCard();
 
-    enum Status{NORMAL, HOVER, PRESS, SELECTED};
+    enum Status {NORMAL, HOVER, PRESS, SELECTED};
 
     void init(FileTasks::STaskdata *p);
     void setStatus(Status flag);
@@ -29,7 +29,7 @@ public:
     bool m_b_mouse_press;
 
 signals:
-    void clicked(FileTasks::STaskdata*);
+    void clicked(FileTasks::STaskdata *);
 
 protected:
     void enterEvent(QEvent *);

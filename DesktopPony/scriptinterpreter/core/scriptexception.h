@@ -30,7 +30,7 @@
 #define SCRIPTEXCEPTION_H
 
 #include "public/scriptexceptiondata.h"
-#include "file/localisation.h"
+#include "data/localisation.h"
 #include <QString>
 #include <QVector>
 #include <QRegularExpression>

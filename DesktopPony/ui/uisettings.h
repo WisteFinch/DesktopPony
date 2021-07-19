@@ -29,7 +29,7 @@
 #ifndef UISETTINGS_H
 #define UISETTINGS_H
 
-#include "file/localisation.h"
+#include "data/localisation.h"
 #include "file/config.h"
 #include "file/filecharacter.h"
 #include "file/fileevent.h"
@@ -51,7 +51,8 @@
 #include <QPainter>
 #include <QProxyStyle>
 
-namespace Ui {
+namespace Ui
+{
 class UISettings;
 }
 
@@ -113,7 +114,7 @@ public:
      * @param parent
      * @return 水平线
      */
-    QFrame *horizontalLine(QString objectName = "horzontal_line", QWidget *parent=nullptr);
+    QFrame *horizontalLine(QString objectName = "horzontal_line", QWidget *parent = nullptr);
 
     /**
      * @brief 设置背景

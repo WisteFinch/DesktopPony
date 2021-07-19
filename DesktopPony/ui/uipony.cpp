@@ -92,15 +92,15 @@ void UIPony::display()
     this->show();
 }
 
-void UIPony::initThis(Config *tempConfig, Limit *tempLimit, QSS *tempQSS, Localisation *tempLocalisation, ImageProcessing *tempImageProcessing)
+void UIPony::initThis(Config *tempConfig, Tools *tempTools, QSS *tempQSS, Localisation *tempLocalisation, ImageProcessing *tempImageProcessing)
 {
     config = tempConfig;
-    limit = tempLimit;
+    tools = tempTools;
     qss = tempQSS;
     localisation = tempLocalisation;
     imageProcessing = tempImageProcessing;
     tempConfig = nullptr;
-    tempLimit = nullptr;
+    tempTools = nullptr;
     tempQSS = nullptr;
     tempLocalisation = nullptr;
     tempImageProcessing = nullptr;

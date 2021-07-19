@@ -1,8 +1,8 @@
 /**
- * @file desktoppony.h
- * @brief 桌面小马主类
+ * @file plugin/element/pluginelementlocalisation.h
+ * @brief 插件-元素-本地化
  * @author WisteFinch
- * @date 2020.11.29
+ * @date 2021.6.9
  *
  * MIT License
  * Copyright (c) 2019-2021 WisteFinch
@@ -26,44 +26,22 @@
  * SOFTWARE.
  */
 
-#ifndef DESKTOPPONY_H
-#define DESKTOPPONY_H
+#ifndef PLUGINELEMENTLOCALISATION_H
+#define PLUGINELEMENTLOCALISATION_H
 
-#include "tools.h"
-#include "imageprocessing/imageprocessing.h"
-#include "ui/uisettings.h"
-#include "file/config.h"
-#include "file/fileevent.h"
-#include "metadata.h"
-#include "file/filecharacter.h"
-#include "file/fileqss.h"
-#include "ui/uipony.h"
-#include "data/localisation.h"
-#include "plugin/pluginmanager.h"
-#include <QObject>
+#include "pluginelement.h"
 
-class DesktopPony : QObject
+class PluginElementLocalisation : public PluginElement
 {
-    Q_OBJECT
 public:
-    DesktopPony();
-    void start();
-    void initConnect();
+    PluginElementLocalisation();
+    ~PluginElementLocalisation();
 
-private:
-    FileTasks *fileTasks = nullptr;
-    Config *config = nullptr;
-    Localisation *m_p_localisation = nullptr;
-    FileCharacter *fileCharacter = nullptr;
-    Tools *m_p_tools = nullptr;
-    QSS *qss = nullptr;
-    UISettings *uiSettings = nullptr;
-    UIPony *uiPony = nullptr;
-    ImageProcessing *imageProcessing = nullptr;
-    PluginManager *m_p_plugin_manager = nullptr;
+    void read(QJsonObject obj);
 
-private slots:
-    void slotSettings(int);
+    PluginElementLocalisationData::LANG readLang(QJsonArray array);
+
+    PluginElementLocalisationData *m_p_data = nullptr;
 };
 
-#endif // DESKTOPPONY_H
+#endif // PLUGINELEMENTLOCALISATION_H

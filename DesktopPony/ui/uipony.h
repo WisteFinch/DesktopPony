@@ -30,9 +30,9 @@
 #define UIPONY_H
 
 #include "imageprocessing/imageprocessing.h"
-#include "limit.h"
+#include "tools.h"
 #include "file/fileqss.h"
-#include "file/localisation.h"
+#include "data/localisation.h"
 #include "file/config.h"
 #include <QWidget>
 #include <QMouseEvent>
@@ -47,7 +47,8 @@
 #include <QSystemTrayIcon>
 #include <QPointer>
 
-namespace Ui {
+namespace Ui
+{
 class UIPony;
 }
 
@@ -58,7 +59,7 @@ class UIPony : public QWidget
 public:
     explicit UIPony(QWidget *parent = nullptr);
     ~UIPony();
-    void initThis(Config *tempConfig, Limit *tempLimit, QSS *tempQSS, Localisation *tempLocalisation, ImageProcessing *tempImageProcessing);
+    void initThis(Config *tempConfig, Tools *tempTools, QSS *tempQSS, Localisation *tempLocalisation, ImageProcessing *tempImageProcessing);
     //组件初始化
     void initItems();
     //应用布局
@@ -78,7 +79,7 @@ public:
     int eventID;
     int eventIDOld;
     int spareTime;
-    int posX,posY;
+    int posX, posY;
 
 private slots:
     void slotImagesChange();
@@ -111,14 +112,14 @@ private:
     QLabel *debugLabel = new QLabel;
 
     Config *config;
-    Limit *limit;
+    Tools *tools;
     QSS *qss;
     Localisation *localisation;
     ImageProcessing *imageProcessing;
 
 protected:
     QPoint relativePos;
- //   void paintEvent(QPaintEvent*);
+//   void paintEvent(QPaintEvent*);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 };

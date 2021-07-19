@@ -1,0 +1,14 @@
+{
+    "metadata": {
+        "id": "system_plugin",
+        "caption": "§[loc_l:sys_plugin_c]",
+        "description": "§[loc_l:sys_plugin_d]",
+        "author": "WisteFinch",
+        "version": "0.0.0" 
+    },
+    "elements": [
+        {
+            "path": "localisation.json"
+        }
+    ]
+}

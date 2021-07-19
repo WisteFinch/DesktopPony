@@ -1,0 +1,356 @@
+{
+    "metadata": {
+        "id": "loc",
+        "caption": "§[loc_l:sys_plugin_loc_c]",
+        "description": "§[loc_l:sys_plugin_loc_d]",
+        "type": "localisation"
+    },
+    "content": {
+        "global": [
+            {
+                "lang": "zh-hans",
+                "table": [
+                    {
+                        "key": "uisettings_widget",
+                        "value": "设置"
+                    },
+                    {
+                        "key": "uisettings_button_tab_character",
+                        "value": "角色"
+                    },
+                    {
+                        "key": "uisettings_label_character_switch_title",
+                        "value": "当前角色："
+                    },
+                    {
+                        "key": "uisettings_label_character_switch_content",
+                        "value": "选择/编辑您的角色"
+                    },
+                    {
+                        "key": "uisettings_button_character_switch_tooltip",
+                        "value": "选择/编辑角色"
+                    },
+                    {
+                        "key": "uisettings_label_tasks_title",
+                        "value": "任务"
+                    },
+                    {
+                        "key": "uisettings_label_tasks_content",
+                        "value": "添加/编辑任务"
+                    },
+                    {
+                        "key": "uisettings_button_tasks_tooltip",
+                        "value": "添加/编辑任务"
+                    },
+                    {
+                        "key": "uisettings_button_tab_general",
+                        "value": "常规"
+                    },
+                    {
+                        "key": "uisettings_label_general_option_character_size_title",
+                        "value": "角色大小"
+                    },
+                    {
+                        "key": "uisettings_label_general_option_character_size_content",
+                        "value": "单位：像素\n默认300，范围50-1000"
+                    },
+                    {
+                        "key": "uisettings_label_general_constant_gravitational_acceleration_title",
+                        "value": "重力加速度"
+                    },
+                    {
+                        "key": "uisettings_label_general_constant_gravitational_acceleration_content",
+                        "value": "单位：像素/秒平方"
+                    },
+                    {
+                        "key": "uisettings_label_general_constant_obstruction_title",
+                        "value": "阻力"
+                    },
+                    {
+                        "key": "uisettings_label_general_constant_obstruction_content",
+                        "value": "单位：像素/秒平方"
+                    },
+                    {
+                        "key": "uisettings_button_tab_info",
+                        "value": "信息"
+                    },
+                    {
+                        "key": "uisettings_label_info_desc_title",
+                        "value": "桌面小马"
+                    },
+                    {
+                        "key": "uisettings_label_info_desc_content",
+                        "value": "目前只支持简体中文。 用C++/QT编写。 没有提供插件api。"
+                    },
+                    {
+                        "key": "uisettings_button_info_desc_tooltip",
+                        "value": "详细信息"
+                    },
+                    {
+                        "key": "uisettings_label_info_version_title",
+                        "value": "软件版本"
+                    },
+                    {
+                        "key": "uisettings_button_info_update_tooltip",
+                        "value": "检查更新"
+                    },
+                    {
+                        "key": "uisettings_label_info_doc_title",
+                        "value": "DesktopPony文档"
+                    },
+                    {
+                        "key": "uisettings_label_info_doc_content",
+                        "value": "可查阅开发帮助文档"
+                    },
+                    {
+                        "key": "uisettings_button_info_doc_tooltip",
+                        "value": "查看文档"
+                    },
+                    {
+                        "key": "uisettings_label_info_log_title",
+                        "value": "日志"
+                    },
+                    {
+                        "key": "uisettings_label_info_log_content",
+                        "value": "查看运行日志"
+                    },
+                    {
+                        "key": "uisettings_button_info_log_tooltip",
+                        "value": "查看运行日志"
+                    },
+                    {
+                        "key": "uicharacter_widget",
+                        "value": "角色"
+                    },
+                    {
+                        "key": "uicharacter_label_metadata_name",
+                        "value": "名称：\n"
+                    },
+                    {
+                        "key": "uicharacter_label_metadata_author",
+                        "value": "作者：\n"
+                    },
+                    {
+                        "key": "uicharacter_label_metadata_desc",
+                        "value": "介绍：\n"
+                    },
+                    {
+                        "key": "uicharacter_label_metadata_standard",
+                        "value": "标准：\n"
+                    },
+                    {
+                        "key": "uicharacter_button_addnew",
+                        "value": "添加"
+                    },
+                    {
+                        "key": "uicharacter_button_edit",
+                        "value": "编辑"
+                    },
+                    {
+                        "key": "uicharacter_button_delete",
+                        "value": "删除"
+                    },
+                    {
+                        "key": "uicharacter_button_refresh",
+                        "value": "刷新"
+                    },
+                    {
+                        "key": "uicharacter_button_confirm",
+                        "value": "确认"
+                    },
+                    {
+                        "key": "uicharacter_button_cancel",
+                        "value": "取消"
+                    },
+                    {
+                        "key": "uicharacter_msgbox_addnew_title",
+                        "value": "新建角色"
+                    },
+                    {
+                        "key": "uicharacter_msgbox_addnew_content",
+                        "value": "如何建立角色？"
+                    },
+                    {
+                        "key": "uicharacter_msgbox_addnew_blank",
+                        "value": "空白"
+                    },
+                    {
+                        "key": "uicharacter_msgbox_addnew_files",
+                        "value": "文件导入"
+                    },
+                    {
+                        "key": "uicharacter_msgbox_addnew_files_title",
+                        "value": "选择文件"
+                    },
+                    {
+                        "key": "uicharacter_msgbox_addnew_cancel",
+                        "value": "取消"
+                    },
+                    {
+                        "key": "uicharacter_msgbox_delete_title",
+                        "value": "警告"
+                    },
+                    {
+                        "key": "uicharacter_msgbox_delete_content_1",
+                        "value": "<h2>确认删除角色\""
+                    },
+                    {
+                        "key": "uicharacter_msgbox_delete_content_2",
+                        "value": "\"吗？</h2><p>此操作不可撤销</p>"
+                    },
+                    {
+                        "key": "uicharacter_msgbox_delete_confirm",
+                        "value": "确认"
+                    },
+                    {
+                        "key": "uicharacter_msgbox_delete_cancel",
+                        "value": "取消"
+                    },
+                    {
+                        "key": "uitasks_widget",
+                        "value": "任务"
+                    },
+                    {
+                        "key": "uitasks_button_info",
+                        "value": "详细信息"
+                    },
+                    {
+                        "key": "uitasks_button_switch",
+                        "value": "启用/禁用"
+                    },
+                    {
+                        "key": "uitasks_button_refresh",
+                        "value": "刷新"
+                    },
+                    {
+                        "key": "uitasks_button_exit",
+                        "value": "返回"
+                    },
+                    {
+                        "key": "uitasksinfo_widget",
+                        "value": "详细信息"
+                    },
+                    {
+                        "key": "uitasksinfo_label_group_name",
+                        "value": "组名称"
+                    },
+                    {
+                        "key": "uitasksinfo_label_group_path",
+                        "value": "组路径"
+                    },
+                    {
+                        "key": "uitasksinfo_label_author",
+                        "value": "作者"
+                    },
+                    {
+                        "key": "uitasksinfo_label_desc",
+                        "value": "介绍"
+                    },
+                    {
+                        "key": "uitasksinfo_label_standard",
+                        "value": "标准"
+                    },
+                    {
+                        "key": "uitasksinfo_label_group_trigger",
+                        "value": "组触发"
+                    },
+                    {
+                        "key": "uitasksinfo_label_group_option",
+                        "value": "组选项"
+                    },
+                    {
+                        "key": "uitasksinfo_label_events",
+                        "value": "事件"
+                    },
+                    {
+                        "key": "EXCEPTION_I001",
+                        "value": "参数数量错误，需要§[num:0]个，但提供了§[num:1]个"
+                    },
+                    {
+                        "key": "EXCEPTION_I002",
+                        "value": "无效的运算('§[value_type:0]'和'§[value_type:1]')"
+                    },
+                    {
+                        "key": "EXCEPTION_I003",
+                        "value": "数组的大小为非整数类型'§[value_type:0]'"
+                    },
+                    {
+                        "key": "EXCEPTION_I004",
+                        "value": ""
+                    },
+                    {
+                        "key": "EXCEPTION_I005",
+                        "value": "数组的下标为非整数类型'§[value_type:0]'"
+                    },
+                    {
+                        "key": "EXCEPTION_I006",
+                        "value": "无法增加指定类型'§[value_type:0]'的值"
+                    },
+                    {
+                        "key": "EXCEPTION_I007",
+                        "value": "无法减少指定类型'§[value_type:0]'的值"
+                    },
+                    {
+                        "key": "EXCEPTION_I008",
+                        "value": "表达式不可赋值"
+                    },
+                    {
+                        "key": "EXCEPTION_I009",
+                        "value": "无法用'§[value_type:1]'类型的值初始化'§[value_type:0]'类型的变量"
+                    },
+                    {
+                        "key": "EXCEPTION_I010",
+                        "value": "重复定义'§[str:0]'"
+                    },
+                    {
+                        "key": "EXCEPTION_I011",
+                        "value": "数组索引§[num:0]超过了数组的结尾（包含§[num:1]个元素）"
+                    },
+                    {
+                        "key": "EXCEPTION_I012",
+                        "value": "下标值不是一个数组"
+                    },
+                    {
+                        "key": "EXCEPTION_I013",
+                        "value": "数组初始值必须是初始值列表"
+                    },
+                    {
+                        "key": "EXCEPTION_I014",
+                        "value": "设定初始值时元素多余"
+                    },
+                    {
+                        "key": "EXCEPTION_I015",
+                        "value": "'continue'语句不在循环语句内"
+                    },
+                    {
+                        "key": "EXCEPTION_I016",
+                        "value": "'break'语句不在循环语句内"
+                    }
+                ]
+            }
+        ],
+        "local": [
+            {
+                "lang": "zh-hans",
+                "table": [
+                    {
+                        "key": "sys_plugin_c",
+                        "value": "系统插件"
+                    },
+                    {
+                        "key": "sys_plugin_d",
+                        "value": "包含软件基础功能"
+                    },
+                    {
+                        "key": "sys_plugin_loc_c",
+                        "value": "本地化"
+                    },
+                    {
+                        "key": "sys_plugin_loc_d",
+                        "value": "支持：简体中文"
+                    }
+                ]
+            }
+        ]
+    }
+}

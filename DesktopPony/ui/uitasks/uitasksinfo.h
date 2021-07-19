@@ -1,7 +1,7 @@
 #ifndef UITASKSINFO_H
 #define UITASKSINFO_H
 
-#include "file/localisation.h"
+#include "data/localisation.h"
 #include "file/fileevent.h"
 #include <QWidget>
 #include <QVBoxLayout>
@@ -10,7 +10,8 @@
 #include <QTextEdit>
 #include <QScrollArea>
 
-namespace Ui {
+namespace Ui
+{
 class UITasksInfo;
 }
 

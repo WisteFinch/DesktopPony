@@ -1,8 +1,8 @@
 /**
- * @file desktoppony.h
- * @brief 桌面小马主类
+ * @file plugin/element/pluginelement.h
+ * @brief 插件-元素
  * @author WisteFinch
- * @date 2020.11.29
+ * @date 2021.6.8
  *
  * MIT License
  * Copyright (c) 2019-2021 WisteFinch
@@ -26,44 +26,45 @@
  * SOFTWARE.
  */
 
-#ifndef DESKTOPPONY_H
-#define DESKTOPPONY_H
+#ifndef PLUGINELEMENT_H
+#define PLUGINELEMENT_H
 
+#include "../pluginsharedefinition.h"
 #include "tools.h"
-#include "imageprocessing/imageprocessing.h"
-#include "ui/uisettings.h"
-#include "file/config.h"
-#include "file/fileevent.h"
-#include "metadata.h"
-#include "file/filecharacter.h"
-#include "file/fileqss.h"
-#include "ui/uipony.h"
-#include "data/localisation.h"
-#include "plugin/pluginmanager.h"
-#include <QObject>
+#include <QJsonObject>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QFile>
 
-class DesktopPony : QObject
+class PluginElement
 {
-    Q_OBJECT
 public:
-    DesktopPony();
-    void start();
-    void initConnect();
+    PluginElement();
+    virtual ~PluginElement() {};
 
-private:
-    FileTasks *fileTasks = nullptr;
-    Config *config = nullptr;
-    Localisation *m_p_localisation = nullptr;
-    FileCharacter *fileCharacter = nullptr;
-    Tools *m_p_tools = nullptr;
-    QSS *qss = nullptr;
-    UISettings *uiSettings = nullptr;
-    UIPony *uiPony = nullptr;
-    ImageProcessing *imageProcessing = nullptr;
-    PluginManager *m_p_plugin_manager = nullptr;
+    /**
+     * @brief 读取元素
+     * @param 元素JSON对象
+     */
+    virtual void read(QJsonObject obj) = 0;
+    /**
+     * @brief 读取元素
+     * @param 元素头文件路径
+     */
+    void read(QString path);
 
-private slots:
-    void slotSettings(int);
+    /**
+     * @brief 读取元数据
+     * @param JSON对象
+     * @return 插件元素元数据
+     */
+    void readMetadata(QJsonObject metadataObj);
+
+    QString m_head_path; ///< 元素头文件路径
+    PluginElementMetadata m_metadata;   ///< 插件元素元数据
+
 };
 
-#endif // DESKTOPPONY_H
+#endif // PLUGINELEMENT_H

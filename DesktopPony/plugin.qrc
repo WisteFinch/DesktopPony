@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/plugins/system/localisation.json</file>
+        <file>resources/plugins/system/plugin.json</file>
+    </qresource>
+</RCC>

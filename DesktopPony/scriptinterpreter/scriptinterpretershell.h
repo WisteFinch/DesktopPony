@@ -29,7 +29,7 @@
 #ifndef SCRIPTINTERPRETERSHELL_H
 #define SCRIPTINTERPRETERSHELL_H
 #include "core/scriptinterpreter.h"
-#include "file/localisation.h"
+#include "data/localisation.h"
 #include <QVector>
 
 class ScriptInterpreterShell

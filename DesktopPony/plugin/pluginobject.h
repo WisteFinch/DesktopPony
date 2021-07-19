@@ -1,8 +1,8 @@
 /**
- * @file file/localisation.h
- * @brief 文件-本地化
+ * @file plugin/pluginobject.h
+ * @brief 插件-对象
  * @author WisteFinch
- * @date 2020.11.29
+ * @date 2021.6.8
  *
  * MIT License
  * Copyright (c) 2019-2021 WisteFinch
@@ -26,36 +26,57 @@
  * SOFTWARE.
  */
 
-#ifndef LOCALISATION_H
-#define LOCALISATION_H
-#include <QMap>
-#include <QJsonDocument>
-#include <QJsonParseError>
-#include <QFile>
-#include <QJsonObject>
-#include <QDebug>
-#include <QJsonArray>
-#include <QDir>
+#ifndef PLUGINOBJECT_H
+#define PLUGINOBJECT_H
 
-class Localisation
+#include "pluginsharedefinition.h"
+#include "metadata.h"
+#include "element/pluginelementlocalisation.h"
+#include "element/pluginelementmodel.h"
+#include "tools.h"
+#include <QFile>
+#include <QDir>
+#include <QString>
+#include <QVector>
+#include <QJsonObject>
+#include <QJsonParseError>
+#include <QJsonArray>
+
+class PluginObject
 {
 public:
-    /**
-     * @brief Localisation
-     */
-    Localisation();
-
-    QMap<QString, QString> m_map_localisation; ///<本地化文本
-    QString m_str_defaultLang = "zh-cn";///<默认语言
+    PluginObject();
+    ~PluginObject();
 
     /**
-     * @brief 读取本地化文本
-     * @param 语言
-     * @return
+     * @brief 读取头文件 >>>>>>>>>>>进行中<<<<<<<<<<<<
+     * @param 路径
+     * @return 错误信息
      */
-    bool readLocalisation(QString lang);
+    QVector<PLUGIN_ERROR> readHead(QString path, bool isSystem);
 
-    const QString get(QString txt);
+    /**
+     * @brief 元数据检查
+     */
+    void metadataCheck();
+
+    /**
+     * @brief 读取元素
+     * @param 元素头文件路径
+     * @return 元素
+     */
+    PluginElement *readElement(QString path);
+
+    /**
+     * @brief 清理元素列表 >>>>>>>>>>>未完成<<<<<<<<<<<<<<
+     */
+    void clearElementList();
+
+    QVector<PLUGIN_ERROR> *m_p_error = nullptr;   ///< 错误信息
+    PluginObjectMetadata *m_p_metadata = nullptr; ///< 元数据
+    PLUGIN_ELEMENT_LIST *m_p_element_list = nullptr; ///< 元素列表
+private:
+    PluginElementTypeName m_plugin_type_name;
 };
 
-#endif // LOCALISATION_H
+#endif // PLUGINOBJECT_H

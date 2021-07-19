@@ -29,7 +29,7 @@
 #ifndef UITASKS_H
 #define UITASKS_H
 
-#include "file/localisation.h"
+#include "data/localisation.h"
 #include "imageprocessing/imageprocessing.h"
 #include "file/config.h"
 #include "file/fileevent.h"
@@ -48,7 +48,8 @@
 #include <QListWidget>
 #include <QFileDialog>
 
-namespace Ui {
+namespace Ui
+{
 class UITasks;
 }
 
@@ -153,8 +154,8 @@ private:
     QScrollArea *m_scrollarea_standards;///< 标准列表
     QWidget *m_widget_standards;///< 标准列表-界面
     QVBoxLayout *m_layout_standards;///< 标准列表-布局
-    QList<UITasksListCard*> *m_list_card;///< 任务列表-卡片
-    QList<UITasksStandardListCard*> *m_list_standard_card;///< 标准列表-卡片
+    QList<UITasksListCard *> *m_list_card; ///< 任务列表-卡片
+    QList<UITasksStandardListCard *> *m_list_standard_card; ///< 标准列表-卡片
 
     QPushButton *m_button_info;///<  详细信息按钮
     QPushButton *m_button_switch;///<  开关按钮

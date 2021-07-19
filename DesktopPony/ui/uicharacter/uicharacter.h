@@ -29,7 +29,7 @@
 #ifndef UICHARACTER_H
 #define UICHARACTER_H
 
-#include "file/localisation.h"
+#include "data/localisation.h"
 #include "imageprocessing/imageprocessing.h"
 #include "file/config.h"
 #include "file/filecharacter.h"
@@ -46,7 +46,8 @@
 #include <QListWidget>
 #include <QFileDialog>
 
-namespace Ui {
+namespace Ui
+{
 class UICharacter;
 }
 
@@ -163,7 +164,7 @@ private:
     QScrollArea *m_scrollarea_character;///<角色列表
     QWidget *m_widget_character;///<角色列表-界面
     QVBoxLayout *m_layout_character;///<角色列表-布局
-    QList<UICharacterListCard*> *m_list_card;///<角色列表-卡片
+    QList<UICharacterListCard *> *m_list_card; ///<角色列表-卡片
 
     QLabel *m_label_metadata_name;///<“元数据-名称”标签
     QLabel *m_label_metadata_author;///<“元数据-作者”标签

@@ -1,6 +1,6 @@
 /**
- * @file desktoppony.h
- * @brief 桌面小马主类
+ * @file tools.h
+ * @brief 工具
  * @author WisteFinch
  * @date 2020.11.29
  *
@@ -26,44 +26,33 @@
  * SOFTWARE.
  */
 
-#ifndef DESKTOPPONY_H
-#define DESKTOPPONY_H
+#ifndef TOOLS_H
+#define TOOLS_H
 
-#include "tools.h"
-#include "imageprocessing/imageprocessing.h"
-#include "ui/uisettings.h"
-#include "file/config.h"
-#include "file/fileevent.h"
-#include "metadata.h"
-#include "file/filecharacter.h"
-#include "file/fileqss.h"
-#include "ui/uipony.h"
-#include "data/localisation.h"
-#include "plugin/pluginmanager.h"
-#include <QObject>
+#include <QString>
+#include <QDesktopWidget>
+#include <QApplication>
+#include <QUuid>
 
-class DesktopPony : QObject
+class Tools
 {
-    Q_OBJECT
 public:
-    DesktopPony();
-    void start();
-    void initConnect();
+    Tools();
 
-private:
-    FileTasks *fileTasks = nullptr;
-    Config *config = nullptr;
-    Localisation *m_p_localisation = nullptr;
-    FileCharacter *fileCharacter = nullptr;
-    Tools *m_p_tools = nullptr;
-    QSS *qss = nullptr;
-    UISettings *uiSettings = nullptr;
-    UIPony *uiPony = nullptr;
-    ImageProcessing *imageProcessing = nullptr;
-    PluginManager *m_p_plugin_manager = nullptr;
+    /**
+     * @brief 创建uuid
+     * @return uuid
+     */
+    static QString creatUuid();
 
-private slots:
-    void slotSettings(int);
+    /**
+     * @brief 创建16位uuid
+     * @return 16位uuid
+     */
+    static QString creatUuid16();
+
+    void getScreenSize();
+    int screenSizeX, screenSizeY;
 };
 
-#endif // DESKTOPPONY_H
+#endif // TOOLS_H

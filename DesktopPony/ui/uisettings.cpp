@@ -104,7 +104,7 @@ void UISettings::init(Localisation *tmpLocalisation, Config *tmpConfig, FileChar
 //=========================test============================
 
     QFile *a = new QFile;
-    a->setFileName(":/css/default.css");
+    a->setFileName(":resources/css/default.css");
     a->open(QFile::ReadOnly);
     QString s = a->readAll();
     this->setStyleSheet(s);
@@ -256,11 +256,11 @@ void UISettings::initText()
     this->m_label_character_switch_title->setText(this->m_p_localisation->get(this->m_label_character_switch_title->objectName()) + this->m_p_config->characterName); //“选择角色”
     this->m_label_character_switch_content->setText(this->m_p_localisation->get(this->m_label_character_switch_content->objectName()));
     this->m_button_character_switch->setIcon(QIcon(QPixmap(":/img/next.png")));
-    this->m_button_character_switch->setToolTip(this->m_p_localisation->get(this->m_button_character_switch->objectName()+"_tooltip"));
+    this->m_button_character_switch->setToolTip(this->m_p_localisation->get(this->m_button_character_switch->objectName() + "_tooltip"));
     this->m_label_tasks_title->setText(this->m_p_localisation->get(this->m_label_tasks_title->objectName())); //“任务”
     this->m_label_tasks_content->setText(this->m_p_localisation->get(this->m_label_tasks_content->objectName()));
     this->m_button_tasks->setIcon(QIcon(QPixmap(":/img/next.png")));
-    this->m_button_tasks->setToolTip(this->m_p_localisation->get(this->m_button_tasks->objectName()+"_tooltip"));
+    this->m_button_tasks->setToolTip(this->m_p_localisation->get(this->m_button_tasks->objectName() + "_tooltip"));
     //第二页：常规
     this->m_button_tab_general->setText(this->m_p_localisation->get(this->m_button_tab_general->objectName()));
     this->m_label_general_option_character_size_title->setText(this->m_p_localisation->get(this->m_label_general_option_character_size_title->objectName())); //“选项-角色大小”
@@ -276,19 +276,19 @@ void UISettings::initText()
     this->m_label_info_desc_content->setWordWrap(true);
     this->m_label_info_desc_content->setText(this->m_p_localisation->get(this->m_label_info_desc_content->objectName()));
     this->m_button_info_desc->setIcon(QIcon(QPixmap(":/img/linkout.png")));
-    this->m_button_info_desc->setToolTip(this->m_p_localisation->get(this->m_button_info_desc->objectName()+"_tooltip"));
+    this->m_button_info_desc->setToolTip(this->m_p_localisation->get(this->m_button_info_desc->objectName() + "_tooltip"));
     this->m_label_info_version_title->setText(this->m_p_localisation->get(this->m_label_info_version_title->objectName()));
     this->m_label_info_version_content->setText(this->m_p_config->version);
     this->m_button_info_update->setIcon(QIcon(QPixmap(":/img/refresh.png")));
-    this->m_button_info_update->setToolTip(this->m_p_localisation->get(this->m_button_info_update->objectName()+"_tooltip"));
+    this->m_button_info_update->setToolTip(this->m_p_localisation->get(this->m_button_info_update->objectName() + "_tooltip"));
     this->m_label_info_doc_title->setText(this->m_p_localisation->get(this->m_label_info_doc_title->objectName()));
     this->m_label_info_doc_content->setText(this->m_p_localisation->get(this->m_label_info_doc_content->objectName()));
     this->m_button_info_doc->setIcon(QIcon(QPixmap(":/img/linkout.png")));
-    this->m_button_info_doc->setToolTip(this->m_p_localisation->get(this->m_button_info_doc->objectName()+"_tooltip"));
+    this->m_button_info_doc->setToolTip(this->m_p_localisation->get(this->m_button_info_doc->objectName() + "_tooltip"));
     this->m_button_info_log->setIcon(QIcon(QPixmap(":/img/next.png")));
     this->m_label_info_log_title->setText(this->m_p_localisation->get(this->m_label_info_log_title->objectName()));
     this->m_label_info_log_content->setText(this->m_p_localisation->get(this->m_label_info_log_content->objectName()));
-    this->m_button_info_log->setToolTip(this->m_p_localisation->get(this->m_button_info_log->objectName()+"_tooltip"));
+    this->m_button_info_log->setToolTip(this->m_p_localisation->get(this->m_button_info_log->objectName() + "_tooltip"));
     this->m_label_info_copyright->setText("copyright");
 }
 
@@ -362,7 +362,8 @@ void UISettings::initObjectName()
 }
 
 
-void UISettings::initConnect(){
+void UISettings::initConnect()
+{
     connect(this->m_button_tab_character, SIGNAL(clicked()), this, SLOT(slotChangeTabCharacter()));
     connect(this->m_button_tab_general, SIGNAL(clicked()), this, SLOT(slotChangeTabGeneral()));
     connect(this->m_button_tab_info, SIGNAL(clicked()), this, SLOT(slotChangeTabInfo()));
@@ -410,41 +411,36 @@ void UISettings::setBackGround()
     QFileInfoList rootList = rootDir.entryInfoList();
     QFileInfoList userList = userDir.entryInfoList();
     QFileInfoList imgList;
-    for(int i = 0; i < rootList.size(); i++)
-    {
+    for(int i = 0; i < rootList.size(); i++) {
         imgList.push_back(rootList.at(i));
     }
-    for(int i = 0; i < userList.size(); i++)
-    {
+    for(int i = 0; i < userList.size(); i++) {
         QFileInfo file(userList.at(i));
         QString suffix = file.suffix().toLower();
-        if(suffix == "png" || suffix == "jpg" || suffix == "jpeg" || suffix == "gif" || suffix == "bmp")
+        if(suffix == "png" || suffix == "jpg" || suffix == "jpeg" || suffix == "gif" || suffix == "bmp") {
             imgList.push_back(userList.at(i));
+        }
     }
 
     //获取图像
     QImage img;
-    if(imgList.size() == 0)
-    {
+    if(imgList.size() == 0) {
         QPixmap pixmap(this->size());
         pixmap.fill(Qt::transparent);
         img = pixmap.toImage();
-    }else
-    {
+    } else {
         img.load(imgList.at(QRandomGenerator::global()->bounded(imgList.size())).filePath());
     }
 
     //缩放图像
     int w = img.width();
     int h = img.height();
-    int sw = w , sh = h;
+    int sw = w, sh = h;
     int scale = this->height * 1.5;
-    if(w >= h)
-    {
+    if(w >= h) {
         sh = scale;
         sw = w * scale / h;
-    }else
-    {
+    } else {
         sw = scale;
         sh = h * scale / w;
     }
@@ -475,8 +471,7 @@ void UISettings::slotShowUICharacter()
 void UISettings::slotUICharacterBack(QString name)
 {
     this->m_p_uicharacter->hide();
-    if(name!=nullptr)
-    {
+    if(name != nullptr) {
         this->m_p_config->characterName = name;
         this->m_p_config->save();
         this->m_label_character_switch_title->setText(this->m_p_localisation->get(this->m_label_character_switch_title->objectName()) + name);
@@ -497,8 +492,7 @@ void UISettings::slotShowUITasks()
 void UISettings::slotUITasksBack(QString name)
 {
     this->m_p_uitasks->hide();
-    if(name==nullptr)
-    {
+    if(name == nullptr) {
 
     }
     disconnect(this->m_p_uitasks, SIGNAL(signalBack(QString)), this, SLOT(slotUITasksBack(QString)));
