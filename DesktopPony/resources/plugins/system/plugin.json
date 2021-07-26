@@ -9,6 +9,12 @@
     "elements": [
         {
             "path": "localisation.json"
+        },
+        {
+            "path": "style.json"
+        },
+        {
+            "path": "config.json"
         }
     ]
 }

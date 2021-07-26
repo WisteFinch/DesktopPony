@@ -54,11 +54,6 @@ public:
     void clearObjectList();
 
     /**
-     * @brief 创建索引
-     */
-    void creatIndex();
-
-    /**
      * @brief 获取元素组合列表
      * @param 元素类型
      * @return 元素组合列表
@@ -69,6 +64,8 @@ public:
     OBJECT_UUID_INDEX *m_p_plugin_obj_uuid_index = nullptr;   ///< 对象uuid索引
     OBJECT_TYPE_INDEX *m_p_plugin_obj_type_index = nullptr;///< 对象包含的元素类型索引
     ELEMENT_TYPE_INDEX *m_p_plugin_element_type_index = nullptr;  ///< 元素类型索引
+
+    PLUGIN_EXC_LIST *m_p_plugin_exc_list = nullptr; ///< 插件异常列表
 };
 
 #endif // PLUGINMANAGER_H

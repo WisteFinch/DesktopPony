@@ -90,28 +90,21 @@ void UISettings::closeEvent(QCloseEvent *event)
 
 }
 
-void UISettings::init(Localisation *tmpLocalisation, Config *tmpConfig, FileCharacter *tmpFileCharacter, FileTasks *tmpFileTasks)
+void UISettings::init(Localisation *tmpLocalisation, Style *tmpStyle, Config *tmpConfig, FileCharacter *tmpFileCharacter, FileTasks *tmpFileTasks)
 {
     this->m_p_localisation = tmpLocalisation;
+    this->m_p_style = tmpStyle;
     this->m_p_config = tmpConfig;
     this->m_p_file_character = tmpFileCharacter;
     this->m_p_file_tasks = tmpFileTasks;
     tmpLocalisation = nullptr;
+    tmpStyle = nullptr;
     tmpConfig = nullptr;
     tmpFileCharacter = nullptr;
     tmpFileTasks = nullptr;
 
-//=========================test============================
-
-    QFile *a = new QFile;
-    a->setFileName(":resources/css/default.css");
-    a->open(QFile::ReadOnly);
-    QString s = a->readAll();
-    this->setStyleSheet(s);
-    a->close();
-    delete a;
-
-//=======================test end=========================
+    // 设置样式
+    this->setStyleSheet(this->m_p_style->getQSS());
 
     this->setFixedSize(this->width, this->height);
     setBackGround();

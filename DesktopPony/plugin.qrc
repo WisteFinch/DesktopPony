@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>resources/plugins/system/localisation.json</file>
         <file>resources/plugins/system/plugin.json</file>
+        <file>resources/plugins/system/style.json</file>
+        <file>resources/plugins/system/style.qss</file>
+        <file>resources/plugins/system/config.json</file>
     </qresource>
 </RCC>

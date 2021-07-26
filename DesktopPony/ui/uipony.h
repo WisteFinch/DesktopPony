@@ -29,10 +29,10 @@
 #ifndef UIPONY_H
 #define UIPONY_H
 
+#include "data/localisation.h"
+#include "data/style.h"
 #include "imageprocessing/imageprocessing.h"
 #include "tools.h"
-#include "file/fileqss.h"
-#include "data/localisation.h"
 #include "file/config.h"
 #include <QWidget>
 #include <QMouseEvent>
@@ -59,7 +59,7 @@ class UIPony : public QWidget
 public:
     explicit UIPony(QWidget *parent = nullptr);
     ~UIPony();
-    void initThis(Config *tempConfig, Tools *tempTools, QSS *tempQSS, Localisation *tempLocalisation, ImageProcessing *tempImageProcessing);
+    void init(Localisation *tempLocalisation, Style *tmpStyle, Config *tempConfig, Tools *tempTools, ImageProcessing *tempImageProcessing);
     //组件初始化
     void initItems();
     //应用布局
@@ -113,9 +113,10 @@ private:
 
     Config *config;
     Tools *tools;
-    QSS *qss;
-    Localisation *localisation;
     ImageProcessing *imageProcessing;
+
+    Style *m_p_style = nullptr;
+    Localisation *m_p_localisation = nullptr;
 
 protected:
     QPoint relativePos;

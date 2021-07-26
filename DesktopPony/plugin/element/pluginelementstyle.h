@@ -1,8 +1,8 @@
 /**
- * @file plugin/element/pluginelementmodel.h
- * @brief 插件-元素-模型
+ * @file plugin/element/pluginelementstyle.h
+ * @brief 插件-元素-样式
  * @author WisteFinch
- * @date 2021.7.10
+ * @date 2021.7.22
  *
  * MIT License
  * Copyright (c) 2019-2021 WisteFinch
@@ -26,16 +26,16 @@
  * SOFTWARE.
  */
 
-#ifndef PLUGINELEMENTMODEL_H
-#define PLUGINELEMENTMODEL_H
+#ifndef PLUGINELEMENTSTYLE_H
+#define PLUGINELEMENTSTYLE_H
 
 #include "pluginelement.h"
 
-class PluginElementModel : public PluginElement
+class PluginElementStyle : public PluginElement
 {
 public:
-    PluginElementModel();
-    ~PluginElementModel();
+    PluginElementStyle();
+    ~PluginElementStyle();
 
     /**
      * @brief 读取元素
@@ -46,7 +46,7 @@ public:
      */
     PLUGIN_EXC_LIST *read(QJsonObject obj, QString path, bool flag = true);
 
-    PluginElementModelData *m_p_data = nullptr; ///< 模型数据
+    PluginElementStyleData *m_p_data = nullptr;  ///< 样式数据
 };
 
-#endif // PLUGINELEMENTMODEL_H
+#endif // PLUGINELEMENTSTYLE_H

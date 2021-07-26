@@ -37,23 +37,32 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QFile>
+#include <QFileInfo>
+#include <QDir>
 
 class PluginElement
 {
 public:
     PluginElement();
-    virtual ~PluginElement() {};
+    virtual ~PluginElement();
 
     /**
      * @brief 读取元素
      * @param 元素JSON对象
+     * @param 文件地址
+     * @param 是否进行清理
+     * @return 异常列表
      */
-    virtual void read(QJsonObject obj) = 0;
+    virtual PLUGIN_EXC_LIST *read(QJsonObject, QString, bool)
+    {
+        return nullptr;
+    };
     /**
      * @brief 读取元素
      * @param 元素头文件路径
+     * @return 异常列表
      */
-    void read(QString path);
+    PLUGIN_EXC_LIST *read(QString path);
 
     /**
      * @brief 读取元数据
@@ -62,9 +71,9 @@ public:
      */
     void readMetadata(QJsonObject metadataObj);
 
-    QString m_head_path; ///< 元素头文件路径
-    PluginElementMetadata m_metadata;   ///< 插件元素元数据
-
+    QString m_head_path = nullptr; ///< 元素头文件路径
+    PluginElementMetadata *m_p_metadata = nullptr;   ///< 插件元素元数据
+    PLUGIN_EXC_LIST *m_p_exc_list = nullptr; ///< 异常列表
 };
 
 #endif // PLUGINELEMENT_H

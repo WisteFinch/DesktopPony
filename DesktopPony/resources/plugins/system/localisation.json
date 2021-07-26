@@ -1,12 +1,12 @@
 {
     "metadata": {
-        "id": "loc",
-        "caption": "§[loc_l:sys_plugin_loc_c]",
-        "description": "§[loc_l:sys_plugin_loc_d]",
+        "id": "localisation",
+        "caption": "§[loc_priv:sys_plugin_loc_c]",
+        "description": "§[loc_priv:sys_plugin_loc_d]",
         "type": "localisation"
     },
     "content": {
-        "global": [
+        "public": [
             {
                 "lang": "zh-hans",
                 "table": [
@@ -329,7 +329,7 @@
                 ]
             }
         ],
-        "local": [
+        "private": [
             {
                 "lang": "zh-hans",
                 "table": [
@@ -348,6 +348,34 @@
                     {
                         "key": "sys_plugin_loc_d",
                         "value": "支持：简体中文"
+                    },
+                    {
+                        "key": "sys_plugin_style_c",
+                        "value": "样式"
+                    },
+                    {
+                        "key": "sys_plugin_style_d",
+                        "value": "默认样式"
+                    },
+                    {
+                        "key": "_plugin_style_name_default",
+                        "value": "默认"
+                    },
+                    {
+                        "key": "sys_plugin_conf_c",
+                        "value": "配置"
+                    },
+                    {
+                        "key": "sys_plugin_conf_d",
+                        "value": "配置"
+                    },
+                    {
+                        "key": "sys_plugin_conf_grav_c",
+                        "value": "配置"
+                    },
+                    {
+                        "key": "sys_plugin_conf_grav_d",
+                        "value": "单位：%缩放因子/秒平方"
                     }
                 ]
             }

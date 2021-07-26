@@ -10,13 +10,14 @@ PluginObject::~PluginObject()
     clearElementList();
 }
 
-QVector<PLUGIN_ERROR> PluginObject::readHead(QString path, bool isSystem)
+PLUGIN_EXC_LIST *PluginObject::readHead(QString path, bool isSystem)
 {
     // 清理
     clearElementList();
     this->m_p_element_list = new PLUGIN_ELEMENT_LIST;
-    this->m_p_error = new QVector<PLUGIN_ERROR>;
+    this->m_p_exc_list = new PLUGIN_EXC_LIST;
     this->m_p_metadata = new PluginObjectMetadata;
+    this->m_p_element_uuid_index = new QMap<QString, uint>;
 
     this->m_p_metadata->is_system = isSystem;
 
@@ -29,8 +30,13 @@ QVector<PLUGIN_ERROR> PluginObject::readHead(QString path, bool isSystem)
         QJsonParseError json_error;
         QJsonDocument jsonDoc(QJsonDocument::fromJson(allData, &json_error));
         if(json_error.error != QJsonParseError::NoError) {
-            this->m_p_error->append(ERROR_002);
-            return *this->m_p_error;
+            // 异常：错误002-插件对象头文件JSON无法读取
+            this->m_p_metadata->uuid = Tools::creatUuid();
+            PluginExceptionData d;
+            d.e = PLUGIN_EXC_ERR_002;
+            d.object_uuid = this->m_p_metadata->uuid;
+            this->m_p_exc_list->append(d);
+            return this->m_p_exc_list;
         }
 
         QJsonObject rootObj = jsonDoc.object();
@@ -38,27 +44,27 @@ QVector<PLUGIN_ERROR> PluginObject::readHead(QString path, bool isSystem)
         // 读取元数据
         if(rootObj.contains("metadata")) {  // 元数据是否存在:是
             QJsonObject metadataObj = rootObj.value("metadata").toObject();
-            this->m_p_metadata->id = metadataObj.value("id").toString();
-            if(this->m_p_metadata->id.isEmpty()) {
-                this->m_p_error->append(ERROR_004);
-                return *this->m_p_error;
-            }
             this->m_p_metadata->uuid = metadataObj.value("uuid").toString();
-            if(this->m_p_metadata->uuid.isEmpty()) {
-                this->m_p_metadata->uuid = Tools::creatUuid();
-            }
+            this->m_p_metadata->orig_uuid = metadataObj.value("uuid").toString();
+            this->m_p_metadata->id = metadataObj.value("id").toString();
             this->m_p_metadata->caption = metadataObj.value("caption").toString();
             this->m_p_metadata->description = metadataObj.value("description").toString();
+            this->m_p_metadata->icon = metadataObj.value("icon").toString();
             this->m_p_metadata->author =  metadataObj.value("author").toString();
             this->m_p_metadata->version =  metadataObj.value("version").toString();
             this->m_p_metadata->remote_url =  metadataObj.value("remote_url").toString();
+            this->m_p_metadata->file_path = QDir(path).filePath(STR_PLUGIN_HEAD_PATH);
             if(!this->m_p_metadata->remote_url.isEmpty()) {
                 this->m_p_metadata->is_remote = true;
             }
-            metadataCheck();//元数据检查
-        } else {    // 元数据是否存在:是
-            this->m_p_error->append(ERROR_003);
-            return *this->m_p_error;
+            //元数据检查
+            metadataCheck();
+        } else {// 元数据是否存在:否
+            this->m_p_metadata->uuid = Tools::creatUuid();
+            PluginExceptionData d;
+            d.e = PLUGIN_EXC_ERR_003;
+            d.object_uuid = this->m_p_metadata->uuid;
+            this->m_p_exc_list->append(d);
         }
 
         // 读取元素
@@ -73,45 +79,94 @@ QVector<PLUGIN_ERROR> PluginObject::readHead(QString path, bool isSystem)
                 }
                 PluginElement *e = readElement(p);  // 读取元素
 
-                //==========================读取错误信息BEGIN=============================
-                if(e == nullptr) {
-
+                // 元素uuid去重
+                if(this->m_p_element_uuid_index->contains(e->m_p_metadata->uuid16)) {
+                    // 生成新uuid
+                    do {
+                        e->m_p_metadata->uuid16 = Tools::creatUuid16();
+                    } while(this->m_p_element_uuid_index->contains(e->m_p_metadata->uuid16));
+                    if(!e->m_p_metadata->orig_uuid16.isEmpty()) {
+                        // 异常：警告007-uuid冲突
+                        PluginExceptionData d;
+                        d.e = PLUGIN_EXC_ERR_007;
+                        d.element_uuid = e->m_p_metadata->uuid16;
+                        this->m_p_exc_list->append(d);
+                    }
                 }
-                //==========================读取错误信息END=============================
+
+                //加入索引
+                this->m_p_element_uuid_index->insert(e->m_p_metadata->uuid16, i);
 
                 this->m_p_element_list->append(e);
             }
         }
     } else {// 文件是否打开:否
-        this->m_p_error->append(ERROR_001);
-        return *this->m_p_error;
+        // 异常：错误001-插件对象头文件无法读取
+        this->m_p_metadata->uuid = Tools::creatUuid();
+        PluginExceptionData d;
+        d.e = PLUGIN_EXC_ERR_001;
+        d.object_uuid = this->m_p_metadata->uuid;
+        this->m_p_exc_list->append(d);
+        return this->m_p_exc_list;
     }
-    return *this->m_p_error;
+
+    PLUGIN_EXC_LIST::iterator iter;
+    for(iter = this->m_p_exc_list->begin(); iter != this->m_p_exc_list->end(); iter++) {
+        iter->object_uuid = this->m_p_metadata->uuid;
+    }
+    return this->m_p_exc_list;
 }
 
 void PluginObject::metadataCheck()
 {
     if(this->m_p_metadata->id.isEmpty()) {
-        this->m_p_error->append(ERROR_004);
+        // 异常：错误004-插件对象头文件元数据缺少标识符
+        PluginExceptionData d;
+        d.e = PLUGIN_EXC_ERR_004;
+        d.object_uuid = this->m_p_metadata->uuid;
+        this->m_p_exc_list->append(d);
     }
     if(this->m_p_metadata->caption.isEmpty()) {
-        this->m_p_error->append(WARN_001);
+        // 异常：警告001-插件对象头文件元数据缺少名称
+        PluginExceptionData d;
+        d.e = PLUGIN_EXC_WARN_001;
+        d.object_uuid = this->m_p_metadata->uuid;
+        this->m_p_exc_list->append(d);
     }
     if(this->m_p_metadata->description.isEmpty()) {
-        this->m_p_error->append(WARN_002);
+        // 异常：警告002-插件对象头文件元数据缺少介绍
+        PluginExceptionData d;
+        d.e = PLUGIN_EXC_WARN_002;
+        d.object_uuid = this->m_p_metadata->uuid;
+        this->m_p_exc_list->append(d);
     }
     if(this->m_p_metadata->author.isEmpty()) {
-        this->m_p_error->append(WARN_003);
+        // 异常：警告003-插件对象头文件元数据缺少作者
+        PluginExceptionData d;
+        d.e = PLUGIN_EXC_WARN_003;
+        d.object_uuid = this->m_p_metadata->uuid;
+        this->m_p_exc_list->append(d);
     }
     if(this->m_p_metadata->version.isEmpty()) {
-        this->m_p_error->append(WARN_004);
+        // 异常：警告004-插件对象头文件元数据缺少版本
+        PluginExceptionData d;
+        d.e = PLUGIN_EXC_WARN_004;
+        d.object_uuid = this->m_p_metadata->uuid;
+        this->m_p_exc_list->append(d);
+    }
+    if(this->m_p_metadata->uuid.isEmpty()) {
+        // 创建uuid
+        this->m_p_metadata->uuid = Tools::creatUuid();
+        // 异常：警告005-插件对象头文件元数据缺少uuid
+        PluginExceptionData d;
+        d.e = PLUGIN_EXC_WARN_005;
+        d.object_uuid = this->m_p_metadata->uuid;
+        this->m_p_exc_list->append(d);
     }
 }
 
 PluginElement *PluginObject::readElement(QString path)
 {
-    PluginElement *e = nullptr;
-
     // 读取元素头文件并转换为jsonObj
     QFile head(path);
     if(head.open(QIODevice::ReadOnly)) {// 文件是否打开:是
@@ -121,30 +176,81 @@ PluginElement *PluginObject::readElement(QString path)
         QJsonParseError json_error;
         QJsonDocument jsonDoc(QJsonDocument::fromJson(allData, &json_error));
         if(json_error.error != QJsonParseError::NoError) {
-            //>>>>>>>>>>>>>错误:JSON<<<<<<<<<<<<<
+            // 异常：错误006-插件元素头文件JSON无法读取
+            PluginElement *e = new PluginElement();
+            e->m_p_metadata = new PluginElementMetadata;
+            e->m_p_metadata->type = element_type_null;
+            e->m_p_metadata->uuid16 = Tools::creatUuid16();
+            PluginExceptionData d;
+            d.e = PLUGIN_EXC_ERR_006;
+            d.element_uuid = e->m_p_metadata->uuid16;
+            this->m_p_exc_list->append(d);
+            return e;
         }
 
         // 获取元素头文件元数据
         QJsonObject rootObj = jsonDoc.object();
+        if(!rootObj.contains("metadata")) {
+            // 异常：错误007-插件元素头文件缺少元数据
+            PluginElement *e = new PluginElement();
+            e->m_p_metadata = new PluginElementMetadata;
+            e->m_p_metadata->type = element_type_null;
+            e->m_p_metadata->uuid16 = Tools::creatUuid16();
+            PluginExceptionData d;
+            d.e = PLUGIN_EXC_ERR_007;
+            d.element_uuid = e->m_p_metadata->uuid16;
+            this->m_p_exc_list->append(d);
+            return e;
+        }
         QJsonObject metadataObj = rootObj.value("metadata").toObject();
-        //>>>>>>>>>>>>错误:元数据不存在<<<<<<<<<<<<<<<<<
+
         // 获取元素类型
         PLUGIN_ELEMENT_TYPE type = this->m_plugin_type_name.getType(metadataObj.value("type").toString());
-
         // 元素类型为本地化
-        if(type == type_localisation) {
-            e = new PluginElementLocalisation();
-            e->read(rootObj);
+        if(type == element_type_localisation) {
+            PluginElement *e = new PluginElementLocalisation();
+            this->m_p_exc_list->append(*e->read(rootObj, path, true));
+            return e;
         }
-        // 元素为模型
-        else if(type == type_model) {
-            e = new PluginElementModel();
-            e->read(rootObj);
-        } else {    // 文件是否打开:否
-            //>>>>>>>>>>错误:文件无法打开<<<<<<<<<<<<<<
+        // 元素为样式
+        else if(type == element_type_style) {
+            PluginElement *e = new PluginElementStyle();
+            this->m_p_exc_list->append(*e->read(rootObj, path, true));
+            return e;
+        }// 元素为配置
+        else if(type == element_type_config) {
+            PluginElement *e = new PluginElementConfig();
+            this->m_p_exc_list->append(*e->read(rootObj, path, true));
+            return e;
+        }// 元素为模型
+        else if(type == element_type_model) {
+            PluginElement *e = new PluginElementModel();
+            this->m_p_exc_list->append(*e->read(rootObj, path, true));
+            return e;
+        } else {
+            // 异常：错误009-插件元素类型不存在
+            PluginElement *e = new PluginElement();
+            e->m_p_metadata = new PluginElementMetadata;
+            e->m_p_metadata->type = element_type_null;
+            e->m_p_metadata->uuid16 = Tools::creatUuid16();
+            PluginExceptionData d;
+            d.e = PLUGIN_EXC_ERR_009;
+            d.element_uuid = e->m_p_metadata->uuid16;
+            this->m_p_exc_list->append(d);
+            return e;
         }
+    } else {// 文件是否打开:否
+        // 异常：错误005-插件元素头文件无法读取
+        PluginElement *e = new PluginElement();
+        e->m_p_metadata = new PluginElementMetadata;
+        e->m_p_metadata->type = element_type_null;
+        e->m_p_metadata->uuid16 = Tools::creatUuid16();
+        PluginExceptionData d;
+        d.e = PLUGIN_EXC_ERR_005;
+        d.element_uuid = e->m_p_metadata->uuid16;
+        this->m_p_exc_list->append(d);
+        return e;
     }
-    return e;
 }
 void PluginObject::clearElementList()
 {
@@ -155,6 +261,7 @@ void PluginObject::clearElementList()
         }
     }
     delete this->m_p_element_list;
-    delete this->m_p_error;
+    delete this->m_p_exc_list;
     delete this->m_p_metadata;
+    delete this->m_p_element_uuid_index;
 }

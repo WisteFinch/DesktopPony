@@ -1,0 +1,12 @@
+{
+    "metadata": {
+        "id": "style",
+        "caption": "§[loc_priv:sys_plugin_style_c]",
+        "description": "§[loc_priv:sys_plugin_style_d]",
+        "type": "style"
+    },
+    "content": {
+        "style_name": "default",
+        "qss_path" : "style.qss"
+    }
+}

@@ -35,6 +35,7 @@
 #include <QMap>
 #include <QJsonObject>
 #include <functional>
+#include <QVariant>
 
 class PluginManager;
 class PluginObject;
@@ -44,13 +45,14 @@ class PluginElement;
  * @brief 插件元素类型
  */
 enum PLUGIN_ELEMENT_TYPE {
-    type_null,
-    type_localisation,
-    type_css,
-    type_event,
-    type_action,
-    type_accessories,
-    type_model
+    element_type_null,
+    element_type_localisation,
+    element_type_style,
+    element_type_event,
+    element_type_action,
+    element_type_accessories,
+    element_type_model,
+    element_type_config
 };
 
 /**
@@ -61,13 +63,14 @@ struct PluginElementTypeName {
     QVector<QPair<PLUGIN_ELEMENT_TYPE, QString>> m_d;
     PluginElementTypeName()
     {
-        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(type_null, "null"));
-        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(type_localisation, "localisation"));
-        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(type_css, "css"));
-        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(type_event, "event"));
-        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(type_action, "action"));
-        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(type_accessories, "accessories"));
-        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(type_model, "model"));
+        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_null, "null"));
+        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_localisation, "localisation"));
+        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_style, "style"));
+        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_event, "event"));
+        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_action, "action"));
+        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_accessories, "accessories"));
+        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_model, "model"));
+        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_config, "config"));
     }
     PLUGIN_ELEMENT_TYPE getType(QString s)
     {
@@ -77,7 +80,7 @@ struct PluginElementTypeName {
                 return this->m_d.at(i).first;
             }
         }
-        return type_null;
+        return element_type_null;
     }
     QString getName(PLUGIN_ELEMENT_TYPE t)
     {
@@ -91,19 +94,51 @@ struct PluginElementTypeName {
 };
 
 /**
- * @brief 插件错误
+ * @brief 插件异常代号
  */
-enum PLUGIN_ERROR {
-    ERROR_001,  ///< 插件头文件无法读取
-    ERROR_002,  ///< 插件头文件JSON无法读取
-    ERROR_003,  ///< 插件头文件缺少元数据
-    ERROR_004,  ///< 插件头文件缺少标识符
+enum PLUGIN_EXCEPTION {
+    PLUGIN_EXC_NULL,    ///< 无
+    PLUGIN_EXC_ERR_001, ///< 插件对象头文件无法读取
+    PLUGIN_EXC_ERR_002, ///< 插件对象头文件JSON无法读取
+    PLUGIN_EXC_ERR_003, ///< 插件对象头文件缺少元数据
+    PLUGIN_EXC_ERR_004, ///< 插件对象头文件元数据缺少标识符
+    PLUGIN_EXC_ERR_005, ///< 插件元素头文件无法读取
+    PLUGIN_EXC_ERR_006, ///< 插件元素头文件JSON无法读取
+    PLUGIN_EXC_ERR_007, ///< 插件元素头文件缺少元数据
+    PLUGIN_EXC_ERR_008, ///< 插件元素头文件元数据缺少标识符
+    PLUGIN_EXC_ERR_009, ///< 插件元素类型不存在
+    PLUGIN_EXC_ERR_100, ///< 本地化元素：项缺少键
+    PLUGIN_EXC_ERR_101, ///< 本地化元素：缺少语种名称
+    PLUGIN_EXC_ERR_200, ///< 样式元素：缺少样式名称
+    PLUGIN_EXC_ERR_201, ///< 样式元素：qss文件无法读取
+    PLUGIN_EXC_ERR_700, ///< 配置元素：组缺少标识符
+    PLUGIN_EXC_ERR_701, ///< 配置元素：组少项类型
+    PLUGIN_EXC_ERR_702, ///< 配置元素：下拉项缺少标识符
 
-    WARN_001,   ///< 插件头文件元数据缺少名称
-    WARN_002,   ///< 插件头文件元数据缺少介绍
-    WARN_003,   ///< 插件头文件元数据缺少作者
-    WARN_004,   ///< 插件头文件元数据缺少版本
+    PLUGIN_EXC_WARN_001,///< 插件对象头文件元数据缺少名称
+    PLUGIN_EXC_WARN_002,///< 插件对象头文件元数据缺少介绍
+    PLUGIN_EXC_WARN_003,///< 插件对象头文件元数据缺少作者
+    PLUGIN_EXC_WARN_004,///< 插件对象头文件元数据缺少版本
+    PLUGIN_EXC_WARN_005,///< 插件对象头文件元数据缺少uuid
+    PLUGIN_EXC_WARN_006,///< 插件元素头文件元数据缺少uuid
+    PLUGIN_EXC_WARN_007,///< uuid冲突
+    PLUGIN_EXC_WARN_600,///< 模型元素：缺少图层
+    PLUGIN_EXC_WARN_601,///< 模型元素：缺少图像类别
+    PLUGIN_EXC_WARN_602,///< 模型元素：缺少部件
 };
+
+/**
+ * @brief 插件异常数据
+ */
+struct PluginExceptionData {
+    PLUGIN_EXCEPTION e; ///< 异常代号
+    QString object_uuid;///< 插件uuid
+    QString element_uuid;   ///< 元素uuid
+    QString group_uuid; ///< 组uuid
+    QString item_uuid;  ///< 项uuid
+};
+
+typedef QVector<PluginExceptionData> PLUGIN_EXC_LIST;   ///< 类型定义：插件异常列表
 
 /**
  * @brief 插件对象元数据
@@ -111,11 +146,14 @@ enum PLUGIN_ERROR {
 struct PluginObjectMetadata {
     QString id; ///< ID
     QString uuid;   ///< 唯一标识符
+    QString orig_uuid;  ///< 原唯一标识符
     QString caption; ///< 名称
     QString description; ///< 介绍
+    QString icon;   ///< 图标地址
     QString author; ///< 作者
     QString version; /// < 版本
     QString remote_url; ///< 网络地址
+    QString file_path;  ///< 文件地址
     bool is_remote = false; ///< 是否来自网络
     bool is_system = false; ///< 是否为系统插件
 };
@@ -125,20 +163,13 @@ struct PluginObjectMetadata {
  */
 struct PluginElementMetadata {
     QString id; ///< 标识符
-    QString uuid16;   ///< 16位唯一标识符
+    QString uuid16; ///< 16位唯一标识符
+    QString orig_uuid16;///< 原16位唯一标识符
     QString caption;///< 名称
     QString description;///< 介绍
-    PLUGIN_ELEMENT_TYPE type = type_null;   ///< 元素类型
-};
-
-/**
- * @brief 插件元素-本地化数据
- */
-struct PluginElementLocalisationData {
-    typedef QMap<QString, QPair<QString, int>> TABLE;   ///< 类型定义：本地化对照表
-    typedef QMap<QString, TABLE> LANG;  ///< 类型定义：语种
-    LANG global; ///< 全局
-    LANG local;  ///< 局部
+    QString icon;   ///< 图标地址
+    QString file_path;  ///< 文件地址
+    PLUGIN_ELEMENT_TYPE type = element_type_null;   ///< 元素类型
 };
 
 struct PluginElementModelData {
@@ -154,6 +185,13 @@ struct PluginElementModelData {
     LAYERS layers;  ///< 图层列表
     IMG_CATEGORIES img_categories;   ///< 图像类别
     Units units;///< 部件列表
+};
+
+struct PluginElementStyleData {
+    QString style_name; ///< 样式名称
+    QString qss_path;   ///< qss地址
+    QByteArray qss;  ///< qss数据
+    bool isErr = false; ///< 存在错误
 };
 
 typedef QVector<PluginElement *> PLUGIN_ELEMENT_LIST; ///< 类型定义：插件元素列表

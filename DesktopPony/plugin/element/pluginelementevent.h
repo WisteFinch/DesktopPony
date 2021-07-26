@@ -1,8 +1,8 @@
 /**
- * @file plugin/element/pluginelementmodel.h
- * @brief 插件-元素-模型
+ * @file plugin/element/pluginelementevent.h
+ * @brief 插件-元素-事件
  * @author WisteFinch
- * @date 2021.7.10
+ * @date 2021.7.22
  *
  * MIT License
  * Copyright (c) 2019-2021 WisteFinch
@@ -26,27 +26,15 @@
  * SOFTWARE.
  */
 
-#ifndef PLUGINELEMENTMODEL_H
-#define PLUGINELEMENTMODEL_H
+#ifndef PLUGINELEMENTEVENT_H
+#define PLUGINELEMENTEVENT_H
 
 #include "pluginelement.h"
 
-class PluginElementModel : public PluginElement
+class PluginElementEvent : public PluginElement
 {
 public:
-    PluginElementModel();
-    ~PluginElementModel();
-
-    /**
-     * @brief 读取元素
-     * @param 元素JSON对象
-     * @param 文件地址
-     * @param 是否进行清理
-     * @return 异常列表
-     */
-    PLUGIN_EXC_LIST *read(QJsonObject obj, QString path, bool flag = true);
-
-    PluginElementModelData *m_p_data = nullptr; ///< 模型数据
+    PluginElementEvent();
 };
 
-#endif // PLUGINELEMENTMODEL_H
+#endif // PLUGINELEMENTEVENT_H

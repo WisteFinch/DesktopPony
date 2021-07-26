@@ -30,6 +30,7 @@
 #define UISETTINGS_H
 
 #include "data/localisation.h"
+#include "data/style.h"
 #include "file/config.h"
 #include "file/filecharacter.h"
 #include "file/fileevent.h"
@@ -81,7 +82,7 @@ public:
      * @param 本地化指针
      * @param 配置文件指针
      */
-    void init(Localisation *tmpLocalisation, Config *tmpConfig, FileCharacter *tmpFileCharacter, FileTasks *tmpFileTasks);
+    void init(Localisation *tmpLocalisation, Style *tmpStyle, Config *tmpConfig, FileCharacter *tmpFileCharacter, FileTasks *tmpFileTasks);
 
     /**
      * @brief 初始化文本
@@ -245,6 +246,8 @@ private:
     FileTasks *m_p_file_tasks;
     UICharacter *m_p_uicharacter = nullptr;
     UITasks *m_p_uitasks = nullptr;
+
+    Style *m_p_style = nullptr;
 
 };
 

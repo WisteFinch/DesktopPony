@@ -1,0 +1,20 @@
+{
+    "metadata": {
+        "id": "config",
+        "caption": "§[loc_priv:sys_plugin_conf_c]",
+        "description": "§[loc_priv:sys_plugin_conf_d]",
+        "type": "config"
+    },
+    "content": [
+        {
+            "id" : "gravitational_acceleration",
+            "caption": "§[loc_priv:sys_plugin_conf_grav_c]",
+            "description": "§[loc_priv:sys_plugin_conf_grav_d]",
+            "type": "real",
+            "hidden": false,
+            "default": 1,
+            "range_from": "0",
+            "range_to": "100"
+        }
+    ]
+}

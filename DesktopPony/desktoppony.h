@@ -36,9 +36,9 @@
 #include "file/fileevent.h"
 #include "metadata.h"
 #include "file/filecharacter.h"
-#include "file/fileqss.h"
 #include "ui/uipony.h"
 #include "data/localisation.h"
+#include "data/style.h"
 #include "plugin/pluginmanager.h"
 #include <QObject>
 
@@ -53,14 +53,15 @@ public:
 private:
     FileTasks *fileTasks = nullptr;
     Config *config = nullptr;
-    Localisation *m_p_localisation = nullptr;
     FileCharacter *fileCharacter = nullptr;
     Tools *m_p_tools = nullptr;
-    QSS *qss = nullptr;
     UISettings *uiSettings = nullptr;
     UIPony *uiPony = nullptr;
     ImageProcessing *imageProcessing = nullptr;
     PluginManager *m_p_plugin_manager = nullptr;
+
+    Localisation *m_p_localisation = nullptr;
+    Style *m_p_style = nullptr;
 
 private slots:
     void slotSettings(int);

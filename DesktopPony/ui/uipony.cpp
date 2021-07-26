@@ -92,21 +92,21 @@ void UIPony::display()
     this->show();
 }
 
-void UIPony::initThis(Config *tempConfig, Tools *tempTools, QSS *tempQSS, Localisation *tempLocalisation, ImageProcessing *tempImageProcessing)
+void UIPony::init(Localisation *tempLocalisation, Style *tmpStyle, Config *tempConfig, Tools *tempTools, ImageProcessing *tempImageProcessing)
 {
+    this->m_p_localisation = tempLocalisation;
+    this->m_p_style = tmpStyle;
     config = tempConfig;
     tools = tempTools;
-    qss = tempQSS;
-    localisation = tempLocalisation;
     imageProcessing = tempImageProcessing;
+    this->m_p_localisation = nullptr;
+    this->m_p_style = nullptr;
     tempConfig = nullptr;
     tempTools = nullptr;
-    tempQSS = nullptr;
-    tempLocalisation = nullptr;
     tempImageProcessing = nullptr;
 
 //设置窗体
-    this->setWindowTitle(localisation->get("uiSettingsTitle"));
+    this->setWindowTitle(this->m_p_localisation->get("uiSettingsTitle"));
     this->setFixedSize(this->width, this->height);
 //设置布局
     setItemsLayout();

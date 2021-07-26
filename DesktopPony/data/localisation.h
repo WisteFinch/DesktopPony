@@ -43,7 +43,7 @@ public:
     Localisation();
 
     struct Element {
-        QString s;  ///< 本地化文本
+        QString str;  ///< 本地化文本
         QString uuid_plugin;///< 插件uuid
         QString uuid_element;   ///< 插件元素uuid
         uint index; ///< 索引
@@ -103,8 +103,8 @@ private:
      */
     void clear();
 
-    TABLE *m_p_global = nullptr;///< 全局文本
-    QMap<QString, TABLE *> *m_p_local = nullptr;   ///< 局部文本 <插件uuid, 局部本地化>
+    TABLE *m_p_public = nullptr;///< 公有文本
+    QMap<QString, TABLE *> *m_p_private = nullptr;   ///< 私有文本 <插件uuid, 局部本地化>
     PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfun_get_element_pair_list = nullptr;
 
     QString m_s_language = "zh-hans";

@@ -1,8 +1,8 @@
 /**
- * @file file/qss.h
- * @brief 文件-样式表
+ * @file data/style.h
+ * @brief 数据-样式
  * @author WisteFinch
- * @date 2020.11.29
+ * @date 2021.7.22
  *
  * MIT License
  * Copyright (c) 2019-2021 WisteFinch
@@ -26,22 +26,47 @@
  * SOFTWARE.
  */
 
-#ifndef QSS_H
-#define QSS_H
+#ifndef STYLE_H
+#define STYLE_H
 
+#include "plugin/pluginsharedefinition.h"
+#include "plugin/element/pluginelementstyle.h"
 #include <QString>
-#include <QFile>
-#include <QTextStream>
-class QSS
+#include <QMap>
+
+class Style
 {
 public:
-    QSS();
-    void setQSS();
+    Style();
 
-    QString UISettings;
+    /**
+     * @brief 初始化
+     * @param "插件元素组合列表"函数指针
+     */
+    void init(PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfunc);
+
+    /**
+     * @brief 获取全局文本
+     * @param 键
+     * @return 值
+     */
+    QString getQSS();
+
+    /**
+     * @brief 设置样式名称
+     * @param n
+     */
+    void setStyleName(QString n);
+
+    /**
+     * @brief 刷新样式数据
+     */
+    void refreshStyle();
+
 private:
-    QString readQSS(QString path);
-    const QString pathUISettings = ":/css/default.css";
+    PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfun_get_element_pair_list = nullptr;
+    QString qss;
+    QString m_s_style_name = "default";
 };
 
 #endif // QSS_H

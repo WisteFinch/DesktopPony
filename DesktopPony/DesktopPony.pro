@@ -48,13 +48,18 @@ CONFIG += c++11
 
 SOURCES += \
     data/localisation.cpp \
+    data/style.cpp \
     file/config.cpp \
     file/filecharacter.cpp \
-    file/fileqss.cpp \
     file/filetasks.cpp \
+    plugin/data/pluginelementconfigdata.cpp \
+    plugin/data/pluginelementlocalisationdata.cpp \
+    plugin/element/pluginelementconfig.cpp \
+    plugin/element/pluginelementevent.cpp \
     plugin/element/pluginelementlocalisation.cpp \
     plugin/element/pluginelement.cpp \
     plugin/element/pluginelementmodel.cpp \
+    plugin/element/pluginelementstyle.cpp \
     plugin/pluginmanager.cpp \
     plugin/pluginobject.cpp \
     imageprocessing/accessories.cpp \
@@ -85,14 +90,19 @@ SOURCES += \
 
 HEADERS += \
     data/localisation.h \
+    data/style.h \
     desktoppony.h \
     file/config.h \
     file/filecharacter.h \
     file/fileevent.h \
-    file/fileqss.h \
+    plugin/data/pluginelementconfigdata.h \
+    plugin/data/pluginelementlocalisationdata.h \
+    plugin/element/pluginelementconfig.h \
+    plugin/element/pluginelementevent.h \
     plugin/element/pluginelementlocalisation.h \
     plugin/element/pluginelement.h \
     plugin/element/pluginelementmodel.h \
+    plugin/element/pluginelementstyle.h \
     plugin/pluginmanager.h \
     plugin/pluginobject.h \
     imageprocessing/accessories.h \

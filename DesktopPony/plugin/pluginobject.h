@@ -33,6 +33,8 @@
 #include "metadata.h"
 #include "element/pluginelementlocalisation.h"
 #include "element/pluginelementmodel.h"
+#include "element/pluginelementstyle.h"
+#include "element/pluginelementconfig.h"
 #include "tools.h"
 #include <QFile>
 #include <QDir>
@@ -53,7 +55,7 @@ public:
      * @param 路径
      * @return 错误信息
      */
-    QVector<PLUGIN_ERROR> readHead(QString path, bool isSystem);
+    PLUGIN_EXC_LIST *readHead(QString path, bool isSystem);
 
     /**
      * @brief 元数据检查
@@ -72,9 +74,10 @@ public:
      */
     void clearElementList();
 
-    QVector<PLUGIN_ERROR> *m_p_error = nullptr;   ///< 错误信息
-    PluginObjectMetadata *m_p_metadata = nullptr; ///< 元数据
-    PLUGIN_ELEMENT_LIST *m_p_element_list = nullptr; ///< 元素列表
+    PLUGIN_EXC_LIST *m_p_exc_list = nullptr;   ///< 异常列表
+    PluginObjectMetadata *m_p_metadata = nullptr;   ///< 元数据
+    PLUGIN_ELEMENT_LIST *m_p_element_list = nullptr;///< 元素列表
+    QMap<QString, uint> *m_p_element_uuid_index = nullptr;  ///< 元素uuid索引
 private:
     PluginElementTypeName m_plugin_type_name;
 };
