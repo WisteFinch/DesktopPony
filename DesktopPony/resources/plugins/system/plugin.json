@@ -1,20 +1,21 @@
 {
     "metadata": {
         "id": "system_plugin",
-        "caption": "§[loc_l:sys_plugin_c]",
-        "description": "§[loc_l:sys_plugin_d]",
+        "caption": "§[loc_priv:sys_plugin_c]",
+        "description": "§[loc_priv:sys_plugin_d]",
         "author": "WisteFinch",
-        "version": "0.0.0" 
+        "version": "0.0.0",
+        "icon": "icon.svg"
     },
     "elements": [
         {
             "path": "localisation.json"
         },
         {
-            "path": "style.json"
+            "path": "config.json"
         },
         {
-            "path": "config.json"
+            "path": "style.json"
         }
     ]
 }

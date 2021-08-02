@@ -1,148 +1,184 @@
-QListWidget::item{
-    height:50px;
-    background: rgba(47,144,185,0);
-    color: black;
+/* 通用 */
+*{
+    font-family: 'Microsoft YaHei';
 }
 
-QListWidget::item:hover{
-    background: rgba(47,144,185,20);
-}
 
-QListWidget::item:focus{
-    background: rgba(47,144,185,40);
-}
-
-QLineEdit
-{
+QScrollBar:vertical , QScrollBar:horizontal{
+    border: none;
     background: transparent;
+    width: 10px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical, QScrollBar::handle:horizontal{
+    background: rgba(255, 255, 255, 125);
+    border-radius: 5px;
     border: none;
-    border-bottom: 1px solid black;
 }
 
-QLineEdit:focus
-{
-    border-bottom: 1px solid rgb(47,144,185);
+QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover{
+    background: rgba(255, 255, 255, 150);
+    border-radius: 5px;
+    border: none;
 }
 
-/*****UISettings*****/
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical, QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal, QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal{
+    background: none;
+    width: 0px;
+    height: 0px;
+}
 
-#uisettings_button_tab_character, #uisettings_button_tab_general, #uisettings_button_tab_info{
-    background-color:rgba(255,255,255,125);
+/* 工具 */
+#h_line{
+    min-height: 1px;
+    background-color: rgba(0, 0, 0, 50);
+}
+
+#v_line{
+    min-width: 1px;
+    background-color: rgba(0, 0, 0, 50);
+}
+
+/* 主界面 */
+QWidget[category = 'frame']{
+	background-image: url(background.jpg);
+    background-position: center;
+    min-width: 600;
+    min-height: 370;
+}
+
+QPushButton[category = 'main_panel_tab_buttton']{
+    background-color: rgba(255, 255, 255, 125);
     color: black;
-    height: 50px;
-    width: 120px;
+    min-width: 100px;
+    min-height: 30px;
     font-size: 15px;
     border: none;
+    font: bold;
 }
 
-#uisettings_button_tab_character:hover, #uisettings_button_tab_general:hover, #uisettings_button_tab_info:hover{
-    background-color: rgba(255,255,255,150);
+
+QPushButton[category = 'main_panel_tab_buttton']:hover{
+    background-color: rgba(255, 255, 255, 150);
 }
 
-#uisettings_button_tab_character:pressed, #uisettings_button_tab_general:pressed, #uisettings_button_tab_info:pressed{
-    background-color: rgba(255,255,255,175);
-}
-
-#uisettings_button_tab_character:disabled, #uisettings_button_tab_general:disabled, #uisettings_button_tab_info:disabled{
-    background-color: rgba(255,255,255,200);
-}
-
-QStackedWidget, QScrollArea
-{
-    background-color: rgba(255,255,255,0);
-    border: none;
-}
-
-#uisettings_widget_character, #uisettings_widget_general, #uisettings_widget_info{
-    background-color: rgba(255,255,255,220);
-}
-
-#horzontal_line{
-    background-color: rgba(0,0,0,50);
-}
-
-#uisettings_label_character_switch_content, #uisettings_label_tasks_content, #uisettings_label_general_option_character_size_content, #uisettings_label_general_constant_gravitational_acceleration_content, #uisettings_label_general_constant_obstruction_content, #uisettings_label_info_desc_content, #uisettings_label_info_version_content, #uisettings_label_info_doc_content, #uisettings_label_info_log_content
-{
-    color: #777777;
-}
-
-#uisettings_button_character_switch, #uisettings_button_tasks, #uisettings_button_info_desc, #uisettings_button_info_update, #uisettings_button_info_doc, #uisettings_button_info_log{
-    background: rgba(47,144,185,0);
-    border-radius: 15px;
-    width: 30px;
-    height: 30px;
-}
-
-#uisettings_button_character_switch:hover, #uisettings_button_tasks:hover, #uisettings_button_info_desc:hover, #uisettings_button_info_update:hover, #uisettings_button_info_doc:hover, #uisettings_button_info_log:hover{
-    background: rgba(47,144,185,20);
-}
-
-#uisettings_button_character_switch:pressed, #uisettings_button_tasks:pressed, #uisettings_button_info_desc:pressed, #uisettings_button_info_update:pressed, #uisettings_button_info_doc:pressed, #uisettings_button_info_log:pressed{
-    background: rgba(47,144,185,40);
-}
-
-/*****UICharacter*****/
-#uicharacter_widget_character{
-    background-color: rgba(255,255,255,220);
-}
-
-#uicharacter_button_addnew, #uicharacter_button_edit, #uicharacter_button_delete, #uicharacter_button_refresh, #uicharacter_button_confirm, #uicharacter_button_cancel{
-    background-color:rgba(255,255,255,150);
-    color: black;
-    height: 20px;
-    width: 85px;
-    font-size: 15px;
-    border: none;
-}
-
-#uicharacter_label_metadata_name, #uicharacter_label_metadata_author, #uicharacter_label_metadata_desc, #uicharacter_label_metadata_standard{
-    background-color:rgba(255,255,255,150);
-}
-
-#uicharacter_button_addnew:hover, #uicharacter_button_edit:hover, #uicharacter_button_delete:hover, #uicharacter_button_refresh:hover, #uicharacter_button_confirm:hover, #uicharacter_button_cancel:hover{
-    background-color:rgba(255,255,255,175);
-}
-
-#uicharacter_button_addnew:pressed, #uicharacter_button_edit:pressed, #uicharacter_button_delete:pressed, #uicharacter_button_refresh:pressed, #uicharacter_button_confirm:pressed, #uicharacter_button_cancel:pressed{
-    background-color:rgba(255,255,255,200);
-}
-
-#uicharacter_list_card_widget{
-    background-color: rgba(0,0,0,0);
-    border: none;
-}
-
-/*****UITasks*****/
-#uitasks_widget_standards{
-    background-color: rgba(255,255,255,175);
-}
-
-#uitasks_widget_tasks{
-    background-color: rgba(255,255,255,220);
-}
-
-#uitasks_button_info, #uitasks_button_switch, #uitasks_button_delete, #uitasks_button_refresh, #uitasks_button_exit{
-    background-color:rgba(255,255,255,150);
-    color: black;
-    height: 20px;
-    font-size: 15px;
-    border: none;
-}
-
-#uitasks_button_info:hover, #uitasks_button_switch:hover, #uitasks_button_refresh:hover, #uitasks_button_exit:hover{
-    background-color:rgba(255,255,255,175);
-}
-
-#uitasks_button_info:pressed, #uitasks_button_swicth:pressed, #uitasks_button_refresh:pressed, #uitasks_button_exit:pressed{
-    background-color:rgba(255,255,255,200);
-}
-
-/*****UITasksInfo*****/
-#uitasksinfo_widget_info{
+QPushButton[category = 'main_panel_tab_buttton']:pressed{
     background-color: rgba(255, 255, 255, 175);
 }
 
-#uitasksinfo_widget QTextEdit{
+QPushButton[category = 'main_panel_tab_buttton'][selected = true]{
+    background-color: rgba(255, 255, 255, 200);
+}
+
+
+QLabel[category = 'main_panel_tab_label']{
+    background-color: rgba(255, 255, 255, 100);
+    font-size: 10px;
+    color: rgba(0, 0, 0, 200);
     border: none;
-    background-color: rgba(255, 255, 255, 225);
+}
+
+/* 插件页 */
+QWidget[category = 'page']{
+    background-color: rgba(255,255,255,25);
+}
+
+QLineEdit[category = 'plugin_page_search_line_edit']{
+    background-color: rgba(255,255,255,125);
+    color: black;
+    min-width: 30px;
+    min-height: 30px;
+    border: none;
+}
+
+QLineEdit[category = 'plugin_page_search_line_edit']:hover{
+    background-color: rgba(255,255,255,150);
+}
+
+QLineEdit[category = 'plugin_page_search_line_edit']:focus{
+    background-color: rgba(255,255,255,175);
+}
+
+QPushButton[category = 'plugin_page_search_button']{
+    background-color: rgba(255, 255, 255, 125);
+    color: black;
+    min-width: 30px;
+    min-height: 30px;
+    border: none;
+}
+
+QPushButton[category = 'plugin_page_search_button']:hover{
+    background-color: rgba(255, 255, 255, 150);
+}
+
+QPushButton[category = 'plugin_page_search_button']:pressed{
+    background-color: rgba(255, 255, 255, 175);
+}
+
+QPushButton[category = 'plugin_page_tools_button']{
+    background-color: rgba(255, 255, 255, 125);
+    color: black;
+    min-width: 30px;
+    min-height: 30px;
+    border: none;
+}
+
+QPushButton[category = 'plugin_page_tools_button']:hover{
+    background-color: rgba(255, 255, 255, 150);
+}
+
+QPushButton[category = 'plugin_page_tools_button']:pressed{
+    background-color: rgba(255, 255, 255, 175);
+}
+
+QScrollArea[category = 'plugin_page_scrollarea']{
+    background: rgba(255, 255, 255, 25);
+    border: none;
+}
+
+QWidget[category = 'plugin_page_list_widget']
+{
+    background: transparent;
+}
+
+/* 插件列表卡片 */
+QWidget[category = 'plugin_list_card']{
+    background-color: rgba(255, 255, 255, 50);
+    max-height: 60px;
+}
+
+QWidget[category = 'plugin_list_card']:hover{
+    background-color: rgba(255, 255, 255, 75);
+}
+
+QWidget[category = 'plugin_list_card'][selected = true]{
+    background-color: rgba(255, 255, 255, 100);
+}
+
+#ui_plugin_list_card_icon{
+    max-height: 50px;
+    max-width: 50px;
+    min-height: 50px;
+    min-width: 50px;
+}
+
+#ui_plugin_list_card_caption{
+    font-size: 15px;
+    color: black;
+}
+
+#ui_plugin_list_card_author, #ui_plugin_list_card_version{
+    font-size: 10px;
+    color: rgba(0, 0, 0, 150);
+}
+
+#ui_plugin_list_card_desc{
+    font-size: 12px;
+    color: rgba(0, 0, 0, 200);
+}
+
+QLabel[category = 'plugin_list_card_element_icon_label']{
+    max-height: 15px;
+    max-width: 15px;
 }

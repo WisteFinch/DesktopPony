@@ -7,12 +7,21 @@ PluginElementLocalisation::PluginElementLocalisation()
 
 PluginElementLocalisation::~PluginElementLocalisation()
 {
-    delete this->m_p_metadata;
-    delete this->m_p_exc_list;
-    delete this->m_p_data;
+    if(this->m_p_exc_list != nullptr) {
+        delete this->m_p_exc_list;
+        this->m_p_exc_list = nullptr;
+    }
+    if(this->m_p_metadata != nullptr) {
+        delete this->m_p_metadata;
+        this->m_p_metadata = nullptr;
+    }
+    if(this->m_p_data != nullptr) {
+        delete this->m_p_data;
+        this->m_p_data = nullptr;
+    }
 }
 
-PLUGIN_EXC_LIST *PluginElementLocalisation::read(QJsonObject obj, QString path, bool flag)
+PLUGIN_EXC_LIST *PluginElementLocalisation::read(QJsonObject obj, QString filePath, QString dirPath, bool flag)
 {
     // 清理
     if(this->m_p_exc_list != nullptr && flag) {
@@ -30,7 +39,8 @@ PLUGIN_EXC_LIST *PluginElementLocalisation::read(QJsonObject obj, QString path, 
 
     //读取元数据
     readMetadata(obj.value("metadata").toObject());
-    this->m_p_metadata->file_path = path;
+    this->m_p_metadata->file_path = filePath;
+    this->m_p_metadata->dir_path = dirPath;
 
     //读取内容
     QJsonObject contentObj = obj.value("content").toObject();
@@ -74,51 +84,27 @@ QVector<PluginElementLocalisationData::Lang *> *PluginElementLocalisation::readL
         // 读取语种
         lang->lang = langObj.value("lang").toString();
         if(lang->lang.isEmpty()) {
-            // 异常：错误-101-本地化元素：缺少语种名称
+            // 异常：错误-100-本地化元素：缺少语种名称
             PluginExceptionData d;
-            d.e = PLUGIN_EXC_ERR_101;
+            d.e = PLUGIN_EXC_ERR_100;
             d.group_uuid = lang->uuid16;
             this->m_p_exc_list->append(d);
             lang->isErr = true;
         }
 
         // 读取对照表
-        QJsonArray tableObj = langObj.value("table").toArray();
-        for(int j = 0; j < tableObj.count(); j++) {
-            QJsonObject e = tableObj.at(j).toObject();
+        QJsonObject tableObj = langObj.value("table").toObject();
+        QJsonObject::iterator tblIter = tableObj.begin();
+        int j = 0;
+        while(tblIter != tableObj.end()) {
             PluginElementLocalisationData::Item item;
-
-            // 读取uuid
-            item.uuid16 = e.value("uuid").toString();
-            item.orig_uuid16 = e.value("uuid").toString();
+            // 生成uuid
             do {
                 item.uuid16 = Tools::creatUuid16();
             } while(this->m_p_data->item_uuid_index->contains(item.uuid16));
-            if(this->m_p_data->item_uuid_index->contains(item.uuid16)) {   //uuid冲突
-                // 生成新uuid
-                do {
-                    item.uuid16 = Tools::creatUuid16();
-                } while(this->m_p_data->item_uuid_index->contains(item.uuid16));
-                // 异常：警告007-uuid冲突
-                PluginExceptionData d;
-                d.e = PLUGIN_EXC_WARN_007;
-                d.group_uuid = lang->uuid16;
-                d.item_uuid = item.uuid16;
-                this->m_p_exc_list->append(d);
-            }
 
-            item.key = e.value("key").toString();
-            item.value = e.value("value").toString();
-            if(item.key.isEmpty()) {
-                // 异常：错误100-本地化元素：项缺少键
-                PluginExceptionData d;
-                d.e = PLUGIN_EXC_ERR_100;
-                d.item_uuid = item.uuid16;
-                d.group_uuid = lang->uuid16;
-                this->m_p_exc_list->append(d);
-                item.isErr = true;
-            }
-            lang->table->append(item);
+            item.key = tblIter.key();
+            item.value = tblIter.value().toString();
 
             // 加入索引
             PluginElementLocalisationData::ItemIndex itemIndex;
@@ -126,6 +112,11 @@ QVector<PluginElementLocalisationData::Lang *> *PluginElementLocalisation::readL
             itemIndex.t = isPublic;
             itemIndex.s = j;
             this->m_p_data->item_uuid_index->insert(item.uuid16, itemIndex);
+
+            lang->table->append(item);
+
+            tblIter++;
+            j++;
         }
         v->append(lang);
 

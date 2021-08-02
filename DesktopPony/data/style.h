@@ -34,6 +34,10 @@
 #include <QString>
 #include <QMap>
 
+/**
+ * @brief 样式类
+ * @details 为程序提供外观数据
+ */
 class Style
 {
 public:
@@ -64,9 +68,9 @@ public:
     void refreshStyle();
 
 private:
-    PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfun_get_element_pair_list = nullptr;
-    QString qss;
-    QString m_s_style_name = "default";
+    PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfun_get_element_pair_list = nullptr;   ///< "插件元素组合列表"函数指针
+    QString qss;///< Qt样式表
+    QString m_s_style_name = "default"; ///< 当前样式名称
 };
 
 #endif // QSS_H

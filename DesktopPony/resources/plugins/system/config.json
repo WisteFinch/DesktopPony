@@ -7,7 +7,8 @@
     },
     "content": [
         {
-            "id" : "gravitational_acceleration",
+            "id": "gravitational_acceleration",
+            "config_name": "gravitational_acceleration",
             "caption": "§[loc_priv:sys_plugin_conf_grav_c]",
             "description": "§[loc_priv:sys_plugin_conf_grav_d]",
             "type": "real",

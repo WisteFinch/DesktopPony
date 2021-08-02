@@ -32,22 +32,29 @@
 #include "pluginelement.h"
 #include "../data/pluginelementconfigdata.h"
 
+/**
+ * @brief 配置元素
+ * @details 存放、管理单个配置数据
+ */
 class PluginElementConfig : public PluginElement
 {
 public:
-    PluginElementConfig();
+    PluginElementConfig(ELEMENT_CONFIG_NAME_INDEX *configNameIndex);
     ~PluginElementConfig();
 
     /**
      * @brief 读取元素
      * @param 元素JSON对象
-     * @param 文件地址
+     * @param 元素头文件路径
+     * @param 元素头文件文件夹路径
      * @param 是否进行清理
      * @return 异常列表
      */
-    PLUGIN_EXC_LIST *read(QJsonObject obj, QString path, bool flag = true);
+    PLUGIN_EXC_LIST *read(QJsonObject obj, QString filePath, QString dirPath, bool flag = true);
 
     PluginElementConfigData *m_p_data = nullptr;  ///< 配置数据
+
+    ELEMENT_CONFIG_NAME_INDEX *m_p_config_name_index = nullptr;
 };
 
 #endif // PLUGINELEMENTCONFIG_H

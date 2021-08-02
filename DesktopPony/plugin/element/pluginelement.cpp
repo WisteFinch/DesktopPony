@@ -7,11 +7,17 @@ PluginElement::PluginElement()
 
 PluginElement::~PluginElement()
 {
-    delete this->m_p_metadata;
-    delete this->m_p_exc_list;
+    if(this->m_p_metadata != nullptr) {
+        delete this->m_p_metadata;
+        this->m_p_metadata = nullptr;
+    }
+    if(this->m_p_exc_list != nullptr) {
+        delete this->m_p_exc_list;
+        this->m_p_exc_list = nullptr;
+    }
 }
 
-PLUGIN_EXC_LIST *PluginElement::read(QString path)
+PLUGIN_EXC_LIST *PluginElement::read(QString filePath, QString dirPath)
 {
     // 清理
     if(this->m_p_metadata != nullptr) {
@@ -24,7 +30,7 @@ PLUGIN_EXC_LIST *PluginElement::read(QString path)
     this->m_p_exc_list = new PLUGIN_EXC_LIST;
 
     // 读取元素头文件
-    QFile head(path);
+    QFile head(filePath);
     if(head.open(QIODevice::ReadOnly)) {// 文件是否打开:是
         QByteArray allData = head.readAll();
         head.close();
@@ -43,7 +49,7 @@ PLUGIN_EXC_LIST *PluginElement::read(QString path)
         }
 
         QJsonObject rootObj = jsonDoc.object();
-        this->m_p_exc_list->append(*read(rootObj, path, false));  // 读取元素头文件
+        this->m_p_exc_list->append(*read(rootObj, filePath, dirPath, false));  // 读取元素头文件
     } else { // 文件是否打开:否
         // 异常：错误006-插件元素头文件无法读取
         this->m_p_metadata->uuid16 = Tools::creatUuid16();

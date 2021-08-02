@@ -1,4 +1,4 @@
-#include "parsernode.h"
+﻿#include "parsernode.h"
 
 ScriptParserNode::ScriptParserNode()
 {

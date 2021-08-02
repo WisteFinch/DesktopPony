@@ -7,19 +7,19 @@ PluginManager::PluginManager()
 
 PluginManager::~PluginManager()
 {
-    clearObjectList();
+    clear();
 }
 
 void PluginManager::refreshList()
 {
     // 清理
-    clearObjectList();
-    delete this->m_p_plugin_exc_list;
+    clear();
     this->m_p_plugin_obj_list = new OBJECT_LIST;
     this->m_p_plugin_obj_uuid_index = new OBJECT_UUID_INDEX;
     this->m_p_plugin_obj_type_index = new OBJECT_TYPE_INDEX;
     this->m_p_plugin_element_type_index = new ELEMENT_TYPE_INDEX;
     this->m_p_plugin_exc_list = new PLUGIN_EXC_LIST;
+    this->m_p_plugin_element_config_name_index = new ELEMENT_CONFIG_NAME_INDEX;
 
     // 获取系统插件路径
     QDir sysRoot(STR_SYSTEM_PLUGIN_PATH);
@@ -36,7 +36,7 @@ void PluginManager::refreshList()
         // 读取插件对象
         PluginObject *obj = new  PluginObject();
         this->m_p_plugin_obj_list->append(obj);
-        this->m_p_plugin_exc_list->append(*obj->readHead(sysList.at(i).filePath(), true));
+        this->m_p_plugin_exc_list->append(*obj->readHead(sysList.at(i).filePath(), true, this->m_p_plugin_element_config_name_index));
     }
 
 
@@ -55,7 +55,7 @@ void PluginManager::refreshList()
         // 读取插件对象
         PluginObject *obj = new  PluginObject();
         this->m_p_plugin_obj_list->append(obj);
-        this->m_p_plugin_exc_list->append(*obj->readHead(usrList.at(i).filePath(), false));
+        this->m_p_plugin_exc_list->append(*obj->readHead(usrList.at(i).filePath(), false, this->m_p_plugin_element_config_name_index));
     }
 
     // 创建索引
@@ -106,49 +106,59 @@ void PluginManager::refreshList()
     }
 }
 
-void PluginManager::clearObjectList()
+void PluginManager::clear()
 {
+    // 清理异常
+    if(this->m_p_plugin_exc_list != nullptr) {
+        delete this->m_p_plugin_exc_list;
+        this->m_p_plugin_exc_list = nullptr;
+    }
     // 清理对象uuid索引
     if(this->m_p_plugin_obj_uuid_index != nullptr) {
-        QList<PluginObject *> vl = this->m_p_plugin_obj_uuid_index->values();
-        while(!vl.isEmpty()) {
-            vl.last() = nullptr;
-            vl.pop_back();
+        OBJECT_UUID_INDEX::iterator iter = this->m_p_plugin_obj_uuid_index->begin();
+        while(iter != this->m_p_plugin_obj_uuid_index->end()) {
+            iter.value() = nullptr;
+            iter++;
         }
+        this->m_p_plugin_obj_uuid_index->clear();
         delete this->m_p_plugin_obj_uuid_index;
         this->m_p_plugin_obj_uuid_index = nullptr;
     }
     // 清理对象包含的元素类型索引
     if(this->m_p_plugin_obj_type_index != nullptr) {
-        QList<QVector<QString>*> vl = this->m_p_plugin_obj_type_index->values();
-        while(!vl.isEmpty()) {
-            delete vl.last();
-            vl.pop_back();
+        OBJECT_TYPE_INDEX::iterator iter = this->m_p_plugin_obj_type_index->begin();
+        while(iter != this->m_p_plugin_obj_type_index->end()) {
+            delete iter.value();
+            iter++;
         }
+        this->m_p_plugin_obj_type_index->clear();
         delete this->m_p_plugin_obj_type_index;
         this->m_p_plugin_obj_type_index = nullptr;
     }
     // 清理元素类型索引
     if(this->m_p_plugin_element_type_index != nullptr) {
-        QList<ELEMENT_PAIR_LIST *> vl = this->m_p_plugin_element_type_index->values();
-        while(!vl.isEmpty()) {
-            ELEMENT_PAIR_LIST *v = vl.last();
-            while(!v->isEmpty()) {
-                v->last().first = nullptr;
-                v->pop_back();
+        ELEMENT_TYPE_INDEX::iterator rootIter = this->m_p_plugin_element_type_index->begin();
+        while(rootIter != this->m_p_plugin_element_type_index->end()) {
+            ELEMENT_PAIR_LIST::iterator subIter = rootIter.value()->begin();
+            while(subIter != rootIter.value()->end()) {
+                subIter->first = nullptr;
+                subIter++;
             }
-            delete v;
-            vl.pop_back();
+            delete rootIter.value();
+            rootIter++;
         }
+        this->m_p_plugin_element_type_index->clear();
         delete this->m_p_plugin_element_type_index;
         this->m_p_plugin_element_type_index = nullptr;
     }
     // 清理插件对象列表
+    if(this->m_p_plugin_element_config_name_index != nullptr) {
+        delete this->m_p_plugin_element_config_name_index;
+        this->m_p_plugin_element_config_name_index = nullptr;
+    }
     if(this->m_p_plugin_obj_list != nullptr) {
-        while(!this->m_p_plugin_obj_list->isEmpty()) {
-            delete this->m_p_plugin_obj_list->last();
-            this->m_p_plugin_obj_list->pop_back();
-        }
+        qDeleteAll(this->m_p_plugin_obj_list->begin(), this->m_p_plugin_obj_list->end());
+        this->m_p_plugin_obj_list->clear();
         delete this->m_p_plugin_obj_list;
         this->m_p_plugin_obj_list = nullptr;
     }

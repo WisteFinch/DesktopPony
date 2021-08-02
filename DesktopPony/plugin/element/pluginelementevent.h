@@ -31,6 +31,10 @@
 
 #include "pluginelement.h"
 
+/**
+ * @brief 事件元素
+ * @details 存放、管理单个事件数据
+ */
 class PluginElementEvent : public PluginElement
 {
 public:

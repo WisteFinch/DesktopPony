@@ -5,5 +5,6 @@
         <file>resources/plugins/system/style.json</file>
         <file>resources/plugins/system/style.qss</file>
         <file>resources/plugins/system/config.json</file>
+        <file>resources/plugins/system/icon.svg</file>
     </qresource>
 </RCC>

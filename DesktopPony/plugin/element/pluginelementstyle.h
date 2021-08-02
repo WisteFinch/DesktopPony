@@ -31,6 +31,10 @@
 
 #include "pluginelement.h"
 
+/**
+ * @brief 样式元素
+ * @details 存放、管理单个样式数据
+ */
 class PluginElementStyle : public PluginElement
 {
 public:
@@ -40,11 +44,12 @@ public:
     /**
      * @brief 读取元素
      * @param 元素JSON对象
-     * @param 文件地址
+     * @param 元素头文件路径
+     * @param 元素头文件文件夹路径
      * @param 是否进行清理
      * @return 异常列表
      */
-    PLUGIN_EXC_LIST *read(QJsonObject obj, QString path, bool flag = true);
+    PLUGIN_EXC_LIST *read(QJsonObject obj, QString filePath, QString dirPath, bool flag = true);
 
     PluginElementStyleData *m_p_data = nullptr;  ///< 样式数据
 };

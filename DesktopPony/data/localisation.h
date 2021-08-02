@@ -36,11 +36,13 @@
 
 /**
  * @brief 本地化类
+ * @details 为程序提供文本本地化服务
  */
 class Localisation
 {
 public:
     Localisation();
+    ~Localisation();
 
     struct Element {
         QString str;  ///< 本地化文本
@@ -63,34 +65,34 @@ public:
     void setLanguage(QString lang);
 
     /**
-     * @brief 获取全局文本
+     * @brief 获取公有文本
      * @param 键
      * @return 值
      */
     QString get(QString key);
 
     /**
-     * @brief 获取全局文本调试信息
+     * @brief 获取公有文本调试信息
      * @param 键
      * @return 调试信息
      */
     Element getDebugData(QString key);
 
     /**
-     * @brief 获取局部文本
+     * @brief 获取私有文本
      * @param 插件uuid
      * @param 键
      * @return 值
      */
-    QString getLocal(QString uuid, QString key);
+    QString getPriv(QString uuid, QString key);
 
     /**
-     * @brief 获取局部文本调试信息
+     * @brief 获取私有文本调试信息
      * @param 插件uuid
      * @param 键
      * @return 调试信息
      */
-    Element getLocalDebugData(QString uuid, QString key);
+    Element getPrivDebugData(QString uuid, QString key);
 
     /**
      * @brief 创建本地化索引
@@ -105,7 +107,7 @@ private:
 
     TABLE *m_p_public = nullptr;///< 公有文本
     QMap<QString, TABLE *> *m_p_private = nullptr;   ///< 私有文本 <插件uuid, 局部本地化>
-    PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfun_get_element_pair_list = nullptr;
+    PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfun_get_element_pair_list = nullptr;   ///< "插件元素组合列表"函数指针
 
     QString m_s_language = "zh-hans";
 };

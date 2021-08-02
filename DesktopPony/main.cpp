@@ -33,7 +33,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    a.setQuitOnLastWindowClosed(false);
+    //a.setQuitOnLastWindowClosed(false);
     DesktopPony *d = new DesktopPony;
     d->start();
     return a.exec();

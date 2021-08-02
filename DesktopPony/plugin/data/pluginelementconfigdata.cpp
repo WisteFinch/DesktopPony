@@ -7,10 +7,6 @@ PluginElementConfigData::PluginElementConfigData()
 
 PluginElementConfigData::~PluginElementConfigData()
 {
-    while(!this->item_list->isEmpty()) {
-        delete this->item_list->last();
-        this->item_list->pop_back();
-    }
     delete this->item_list;
     delete this->item_uuid_index;
     delete this->select_item_uuid_index;

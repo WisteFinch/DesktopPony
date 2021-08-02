@@ -31,6 +31,10 @@
 
 #include "../pluginsharedefinition.h"
 
+/**
+ * @brief 本地化元素数据
+ * @details 存放本地化元素数据
+ */
 class PluginElementLocalisationData
 {
 public:
@@ -41,7 +45,6 @@ public:
         QString key;///< 键
         QString value;  ///< 值
         QString uuid16; ///< 组16位唯一标识符
-        QString orig_uuid16;///< 原16位唯一标识符
         bool isErr = false; ///< 存在错误
     };  ///< 项
     typedef QVector<Item> TABLE;   ///< 类型定义：本地化对照表

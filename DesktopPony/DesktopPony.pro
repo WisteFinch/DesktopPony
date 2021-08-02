@@ -47,9 +47,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    data/config.cpp \
     data/localisation.cpp \
     data/style.cpp \
-    file/config.cpp \
+    data/text.cpp \
     file/filecharacter.cpp \
     file/filetasks.cpp \
     plugin/data/pluginelementconfigdata.cpp \
@@ -78,21 +79,30 @@ SOURCES += \
     scriptinterpreter/core/scriptvariable.cpp \
     scriptinterpreter/scriptinterpretershell.cpp \
     tools.cpp \
-    ui/uicharacter/uicharacter.cpp\
-    ui/uicharacter/uicharacterlistcard.cpp \
-    ui/uipony.cpp \
-    ui/uisettings.cpp \
-    ui/uitasks/uitasks.cpp \
-    ui/uitasks/uitaskseventcard.cpp \
-    ui/uitasks/uitasksinfo.cpp \
-    ui/uitasks/uitaskslistcard.cpp \
-    ui/uitasks/uitasksstandardlistcard.cpp
+    oldui/uicharacter/uicharacter.cpp\
+    oldui/uicharacter/uicharacterlistcard.cpp \
+    oldui/uipony.cpp \
+    oldui/uisettings.cpp \
+    oldui/uitasks/uitasks.cpp \
+    oldui/uitasks/uitaskseventcard.cpp \
+    oldui/uitasks/uitasksinfo.cpp \
+    oldui/uitasks/uitaskslistcard.cpp \
+    oldui/uitasks/uitasksstandardlistcard.cpp \
+    ui/character/uicharacterpage.cpp \
+    ui/config/uiconfigpage.cpp \
+    ui/info/uiinfopage.cpp \
+    ui/plugin/uipluginlistcard.cpp \
+    ui/plugin/uipluginpage.cpp \
+    ui/tools/hline.cpp \
+    ui/tools/vline.cpp \
+    ui/uimainpanel.cpp
 
 HEADERS += \
+    data/config.h \
     data/localisation.h \
     data/style.h \
+    data/text.h \
     desktoppony.h \
-    file/config.h \
     file/filecharacter.h \
     file/fileevent.h \
     plugin/data/pluginelementconfigdata.h \
@@ -122,27 +132,41 @@ HEADERS += \
     scriptinterpreter/core/scriptvariable.h \
     scriptinterpreter/scriptinterpretershell.h \
     tools.h \
-    ui/uicharacter/uicharacter.h \
-    ui/uicharacter/uicharacterlistcard.h \
-    ui/uipony.h \
-    ui/uisettings.h \
-    ui/uitasks/uitasks.h \
-    ui/uitasks/uitaskseventcard.h \
-    ui/uitasks/uitasksinfo.h \
-    ui/uitasks/uitaskslistcard.h \
-    ui/uitasks/uitasksstandardlistcard.h
+    oldui/uicharacter/uicharacter.h \
+    oldui/uicharacter/uicharacterlistcard.h \
+    oldui/uipony.h \
+    oldui/uisettings.h \
+    oldui/uitasks/uitasks.h \
+    oldui/uitasks/uitaskseventcard.h \
+    oldui/uitasks/uitasksinfo.h \
+    oldui/uitasks/uitaskslistcard.h \
+    oldui/uitasks/uitasksstandardlistcard.h \
+    ui/character/uicharacterpage.h \
+    ui/config/uiconfigpage.h \
+    ui/info/uiinfopage.h \
+    ui/plugin/uipluginlistcard.h \
+    ui/plugin/uipluginpage.h \
+    ui/tools/hline.h \
+    ui/tools/vline.h \
+    ui/uimainpanel.h
 
 FORMS += \
-    ui/uicharacter/uicharacter.ui \
-    ui/uipony.ui \
-    ui/uisettings.ui \
-    ui/uitasks/uitasks.ui \
-    ui/uitasks/uitasksinfo.ui
+    oldui/uicharacter/uicharacter.ui \
+    oldui/uipony.ui \
+    oldui/uisettings.ui \
+    oldui/uitasks/uitasks.ui \
+    oldui/uitasks/uitasksinfo.ui \
+    ui/character/uicharacterpage.ui \
+    ui/config/uiconfigpage.ui \
+    ui/info/uiinfopage.ui \
+    ui/plugin/uipluginlistcard.ui \
+    ui/plugin/uipluginpage.ui \
+    ui/tools/hline.ui \
+    ui/tools/vline.ui \
+    ui/uimainpanel.ui
 
 RESOURCES += \
-    css.qrc \
     image.qrc \
-    localisation.qrc \
     data.qrc \
     plugin.qrc
 

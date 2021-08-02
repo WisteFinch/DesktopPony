@@ -1,8 +1,34 @@
 <RCC>
     <qresource prefix="/">
-        <file>img/icon.ico</file>
-        <file>img/linkout.png</file>
-        <file>img/next.png</file>
-        <file>img/refresh.png</file>
+        <file>resources/img/icon.ico</file>
+        <file>resources/img/icon.svg</file>
+        <file>resources/img/icon_32.ico</file>
+        <file>resources/img/icon_64.ico</file>
+        <file>resources/img/icon_128.ico</file>
+        <file>resources/img/icon_256.ico</file>
+        <file>resources/img/loading_guide.gif</file>
+        <file>resources/img/delete.svg</file>
+        <file>resources/img/error.svg</file>
+        <file>resources/img/filter.svg</file>
+        <file>resources/img/fork.svg</file>
+        <file>resources/img/github.svg</file>
+        <file>resources/img/library.svg</file>
+        <file>resources/img/link.svg</file>
+        <file>resources/img/localisation.svg</file>
+        <file>resources/img/model.svg</file>
+        <file>resources/img/plus.svg</file>
+        <file>resources/img/reload.svg</file>
+        <file>resources/img/right.svg</file>
+        <file>resources/img/script.svg</file>
+        <file>resources/img/search.svg</file>
+        <file>resources/img/star.svg</file>
+        <file>resources/img/star_fill.svg</file>
+        <file>resources/img/sync.svg</file>
+        <file>resources/img/tick.svg</file>
+        <file>resources/img/warning.svg</file>
+        <file>resources/img/accessories.svg</file>
+        <file>resources/img/action.svg</file>
+        <file>resources/img/config.svg</file>
+        <file>resources/img/style.svg</file>
     </qresource>
 </RCC>

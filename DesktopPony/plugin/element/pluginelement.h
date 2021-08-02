@@ -40,6 +40,9 @@
 #include <QFileInfo>
 #include <QDir>
 
+/**
+ * @brief 元素基类
+ */
 class PluginElement
 {
 public:
@@ -49,20 +52,22 @@ public:
     /**
      * @brief 读取元素
      * @param 元素JSON对象
-     * @param 文件地址
+     * @param 元素头文件路径
+     * @param 元素头文件文件夹路径
      * @param 是否进行清理
      * @return 异常列表
      */
-    virtual PLUGIN_EXC_LIST *read(QJsonObject, QString, bool)
+    virtual PLUGIN_EXC_LIST *read(QJsonObject, QString, QString, bool)
     {
         return nullptr;
     };
     /**
      * @brief 读取元素
      * @param 元素头文件路径
+     * @param 元素头文件文件夹路径
      * @return 异常列表
      */
-    PLUGIN_EXC_LIST *read(QString path);
+    PLUGIN_EXC_LIST *read(QString filePath, QString dirPath);
 
     /**
      * @brief 读取元数据
@@ -71,7 +76,6 @@ public:
      */
     void readMetadata(QJsonObject metadataObj);
 
-    QString m_head_path = nullptr; ///< 元素头文件路径
     PluginElementMetadata *m_p_metadata = nullptr;   ///< 插件元素元数据
     PLUGIN_EXC_LIST *m_p_exc_list = nullptr; ///< 异常列表
 };

@@ -7,13 +7,13 @@ PluginObject::PluginObject()
 
 PluginObject::~PluginObject()
 {
-    clearElementList();
+    clear();
 }
 
-PLUGIN_EXC_LIST *PluginObject::readHead(QString path, bool isSystem)
+PLUGIN_EXC_LIST *PluginObject::readHead(QString path, bool isSystem, ELEMENT_CONFIG_NAME_INDEX *configNameIndex)
 {
     // 清理
-    clearElementList();
+    clear();
     this->m_p_element_list = new PLUGIN_ELEMENT_LIST;
     this->m_p_exc_list = new PLUGIN_EXC_LIST;
     this->m_p_metadata = new PluginObjectMetadata;
@@ -54,6 +54,7 @@ PLUGIN_EXC_LIST *PluginObject::readHead(QString path, bool isSystem)
             this->m_p_metadata->version =  metadataObj.value("version").toString();
             this->m_p_metadata->remote_url =  metadataObj.value("remote_url").toString();
             this->m_p_metadata->file_path = QDir(path).filePath(STR_PLUGIN_HEAD_PATH);
+            this->m_p_metadata->dir_path = path;
             if(!this->m_p_metadata->remote_url.isEmpty()) {
                 this->m_p_metadata->is_remote = true;
             }
@@ -77,7 +78,7 @@ PLUGIN_EXC_LIST *PluginObject::readHead(QString path, bool isSystem)
                 if(p.isEmpty()) {
                     continue;
                 }
-                PluginElement *e = readElement(p);  // 读取元素
+                PluginElement *e = readElement(p, configNameIndex);  // 读取元素
 
                 // 元素uuid去重
                 if(this->m_p_element_uuid_index->contains(e->m_p_metadata->uuid16)) {
@@ -165,7 +166,7 @@ void PluginObject::metadataCheck()
     }
 }
 
-PluginElement *PluginObject::readElement(QString path)
+PluginElement *PluginObject::readElement(QString path, ELEMENT_CONFIG_NAME_INDEX *configNameIndex)
 {
     // 读取元素头文件并转换为jsonObj
     QFile head(path);
@@ -206,30 +207,35 @@ PluginElement *PluginObject::readElement(QString path)
 
         // 获取元素类型
         PLUGIN_ELEMENT_TYPE type = this->m_plugin_type_name.getType(metadataObj.value("type").toString());
+        PluginElement *e;
+
+        QString dirPath = QFileInfo(path).path();
         // 元素类型为本地化
         if(type == element_type_localisation) {
-            PluginElement *e = new PluginElementLocalisation();
-            this->m_p_exc_list->append(*e->read(rootObj, path, true));
-            return e;
+            e = new PluginElementLocalisation();
+            this->m_p_exc_list->append(*e->read(rootObj, path, dirPath, true));
+            this->m_p_metadata->has_localisation = true;
         }
         // 元素为样式
         else if(type == element_type_style) {
-            PluginElement *e = new PluginElementStyle();
-            this->m_p_exc_list->append(*e->read(rootObj, path, true));
-            return e;
-        }// 元素为配置
-        else if(type == element_type_config) {
-            PluginElement *e = new PluginElementConfig();
-            this->m_p_exc_list->append(*e->read(rootObj, path, true));
-            return e;
-        }// 元素为模型
+            e = new PluginElementStyle();
+            this->m_p_exc_list->append(*e->read(rootObj, path, dirPath, true));
+            this->m_p_metadata->has_style = true;
+        }
+        // 元素为模型
         else if(type == element_type_model) {
-            PluginElement *e = new PluginElementModel();
-            this->m_p_exc_list->append(*e->read(rootObj, path, true));
-            return e;
+            e = new PluginElementModel();
+            this->m_p_exc_list->append(*e->read(rootObj, path, dirPath, true));
+            this->m_p_metadata->has_model = true;
+        }
+        // 元素为配置
+        else if(type == element_type_config) {
+            e = new PluginElementConfig(configNameIndex);
+            this->m_p_exc_list->append(*e->read(rootObj, path, dirPath, true));
+            this->m_p_metadata->has_config = true;
         } else {
             // 异常：错误009-插件元素类型不存在
-            PluginElement *e = new PluginElement();
+            e = new PluginElement();
             e->m_p_metadata = new PluginElementMetadata;
             e->m_p_metadata->type = element_type_null;
             e->m_p_metadata->uuid16 = Tools::creatUuid16();
@@ -237,8 +243,9 @@ PluginElement *PluginObject::readElement(QString path)
             d.e = PLUGIN_EXC_ERR_009;
             d.element_uuid = e->m_p_metadata->uuid16;
             this->m_p_exc_list->append(d);
-            return e;
         }
+        e->m_p_metadata->obj_uuid = this->m_p_metadata->uuid;
+        return e;
     } else {// 文件是否打开:否
         // 异常：错误005-插件元素头文件无法读取
         PluginElement *e = new PluginElement();
@@ -252,16 +259,28 @@ PluginElement *PluginObject::readElement(QString path)
         return e;
     }
 }
-void PluginObject::clearElementList()
+void PluginObject::clear()
 {
-    if(this->m_p_element_list != nullptr) {
-        while (!this->m_p_element_list->isEmpty()) {
-            delete this->m_p_element_list->last();
-            this->m_p_element_list->pop_back();
-        }
+    if(this->m_p_exc_list != nullptr) {
+        delete this->m_p_exc_list;
+        this->m_p_exc_list = nullptr;
     }
-    delete this->m_p_element_list;
-    delete this->m_p_exc_list;
-    delete this->m_p_metadata;
-    delete this->m_p_element_uuid_index;
+    if(this->m_p_element_list != nullptr) {
+        qDeleteAll(this->m_p_element_list->begin(), this->m_p_element_list->end());
+        this->m_p_element_list->clear();
+        delete this->m_p_element_list;
+        this->m_p_element_list = nullptr;
+    }
+    if(this->m_p_element_list != nullptr) {
+        delete this->m_p_element_list;
+        this->m_p_element_list = nullptr;
+    }
+    if(this->m_p_metadata != nullptr) {
+        delete this->m_p_metadata;
+        this->m_p_metadata = nullptr;
+    }
+    if(this->m_p_element_uuid_index != nullptr) {
+        delete this->m_p_element_uuid_index;
+        this->m_p_element_uuid_index = nullptr;
+    }
 }

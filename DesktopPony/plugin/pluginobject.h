@@ -44,6 +44,10 @@
 #include <QJsonParseError>
 #include <QJsonArray>
 
+/**
+ * @brief 插件对象
+ * @details 存放、管理单个插件数据
+ */
 class PluginObject
 {
 public:
@@ -51,11 +55,11 @@ public:
     ~PluginObject();
 
     /**
-     * @brief 读取头文件 >>>>>>>>>>>进行中<<<<<<<<<<<<
+     * @brief 读取头文件
      * @param 路径
      * @return 错误信息
      */
-    PLUGIN_EXC_LIST *readHead(QString path, bool isSystem);
+    PLUGIN_EXC_LIST *readHead(QString path, bool isSystem, ELEMENT_CONFIG_NAME_INDEX *configNameIndex);
 
     /**
      * @brief 元数据检查
@@ -67,12 +71,12 @@ public:
      * @param 元素头文件路径
      * @return 元素
      */
-    PluginElement *readElement(QString path);
+    PluginElement *readElement(QString path, ELEMENT_CONFIG_NAME_INDEX *configNameIndex);
 
     /**
-     * @brief 清理元素列表 >>>>>>>>>>>未完成<<<<<<<<<<<<<<
+     * @brief 清理
      */
-    void clearElementList();
+    void clear();
 
     PLUGIN_EXC_LIST *m_p_exc_list = nullptr;   ///< 异常列表
     PluginObjectMetadata *m_p_metadata = nullptr;   ///< 元数据

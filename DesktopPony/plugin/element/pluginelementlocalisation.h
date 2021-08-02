@@ -32,6 +32,10 @@
 #include "pluginelement.h"
 #include "plugin/data/pluginelementlocalisationdata.h"
 
+/**
+ * @brief 本地化元素
+ * @details 存放、管理单个本地化数据
+ */
 class PluginElementLocalisation : public PluginElement
 {
 public:
@@ -41,11 +45,12 @@ public:
     /**
      * @brief 读取元素
      * @param 元素JSON对象
-     * @param 文件地址
+     * @param 元素头文件路径
+     * @param 元素头文件文件夹路径
      * @param 是否进行清理
      * @return 异常列表
      */
-    PLUGIN_EXC_LIST *read(QJsonObject obj, QString path, bool flag = true);
+    PLUGIN_EXC_LIST *read(QJsonObject obj, QString filePath, QString dirPath, bool flag = true);
 
     /**
      * @brief 读取本地化数据

@@ -34,6 +34,9 @@
 #include <QApplication>
 #include <QUuid>
 
+/**
+ * @brief 工具类
+ */
 class Tools
 {
 public:

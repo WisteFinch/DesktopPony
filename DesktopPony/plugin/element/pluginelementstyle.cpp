@@ -7,10 +7,21 @@ PluginElementStyle::PluginElementStyle()
 
 PluginElementStyle::~PluginElementStyle()
 {
-    delete this->m_p_data;
+    if(this->m_p_exc_list != nullptr) {
+        delete this->m_p_exc_list;
+        this->m_p_exc_list = nullptr;
+    }
+    if(this->m_p_metadata != nullptr) {
+        delete this->m_p_metadata;
+        this->m_p_metadata = nullptr;
+    }
+    if(this->m_p_data != nullptr) {
+        delete this->m_p_data;
+        this->m_p_data = nullptr;
+    }
 }
 
-PLUGIN_EXC_LIST *PluginElementStyle::read(QJsonObject obj, QString path, bool flag)
+PLUGIN_EXC_LIST *PluginElementStyle::read(QJsonObject obj, QString filePath, QString dirPath, bool flag)
 {
     if(this->m_p_exc_list != nullptr && flag) {
         if(flag) {
@@ -27,7 +38,8 @@ PLUGIN_EXC_LIST *PluginElementStyle::read(QJsonObject obj, QString path, bool fl
 
     //读取元数据
     readMetadata(obj.value("metadata").toObject());
-    this->m_p_metadata->file_path = path;
+    this->m_p_metadata->file_path = filePath;
+    this->m_p_metadata->dir_path = dirPath;
 
     //读取内容
     QJsonObject contentObj = obj.value("content").toObject();
@@ -42,7 +54,7 @@ PLUGIN_EXC_LIST *PluginElementStyle::read(QJsonObject obj, QString path, bool fl
     }
     this->m_p_data->qss_path = contentObj.value("qss_path").toString();
     if(!this->m_p_data->qss_path.isEmpty()) {
-        QFile file(QDir(QFileInfo(path).path()).filePath(this->m_p_data->qss_path));
+        QFile file(QDir(dirPath).filePath(this->m_p_data->qss_path));
         if(file.open(QIODevice::ReadOnly)) {// 文件是否打开:是
             this->m_p_data->qss = file.readAll();
         } else {

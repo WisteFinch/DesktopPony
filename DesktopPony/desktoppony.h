@@ -29,42 +29,80 @@
 #ifndef DESKTOPPONY_H
 #define DESKTOPPONY_H
 
+#include "ui/uimainpanel.h"
 #include "tools.h"
-#include "imageprocessing/imageprocessing.h"
-#include "ui/uisettings.h"
-#include "file/config.h"
-#include "file/fileevent.h"
-#include "metadata.h"
-#include "file/filecharacter.h"
-#include "ui/uipony.h"
+#include "data/config.h"
 #include "data/localisation.h"
 #include "data/style.h"
+#include "data/text.h"
 #include "plugin/pluginmanager.h"
+#include "metadata.h"
 #include <QObject>
 
-class DesktopPony : QObject
+/**
+ * @brief 主控类
+ * @details 管理程序所有资源
+ */
+class DesktopPony : public QObject
 {
     Q_OBJECT
 public:
     DesktopPony();
+    ~DesktopPony();
+
+    /**
+     * @brief 启动
+     */
     void start();
+
+    /**
+     * @brief 初始化数据
+     */
+    void initData();
+
+    /**
+     * @brief 清理数据
+     */
+    void clearData();
+
+    /**
+     * @brief 初始化ui
+     */
+    void initUi();
+
+    /**
+     * @brief 清理Ui
+     */
+    void clearUi();
+
+    /**
+     * @brief 初始化信号槽
+     */
     void initConnect();
 
+    /**
+     * @brief 清理信号槽
+     */
+    void clearConnect();
+
+    /**
+     * @brief 重新载入数据
+     */
+    void slotReloadData();
+
 private:
-    FileTasks *fileTasks = nullptr;
-    Config *config = nullptr;
-    FileCharacter *fileCharacter = nullptr;
-    Tools *m_p_tools = nullptr;
-    UISettings *uiSettings = nullptr;
-    UIPony *uiPony = nullptr;
-    ImageProcessing *imageProcessing = nullptr;
+    // Ui部分
+    UiMainPanel *m_p_ui_main_panel = nullptr;
+
+    // 数据部分
     PluginManager *m_p_plugin_manager = nullptr;
 
+    Config *m_p_config = nullptr;
     Localisation *m_p_localisation = nullptr;
     Style *m_p_style = nullptr;
+    Text *m_p_text = nullptr;
 
-private slots:
-    void slotSettings(int);
+    PTRFUNC_GET_ELEMENT_PAIR_LIST m_ptrfun_get_element_pair_list = nullptr;
 };
 
 #endif // DESKTOPPONY_H

@@ -7,12 +7,21 @@ PluginElementModel::PluginElementModel()
 
 PluginElementModel::~PluginElementModel()
 {
-    delete this->m_p_metadata;
-    delete this->m_p_exc_list;
-    delete this->m_p_data;
+    if(this->m_p_exc_list != nullptr) {
+        delete this->m_p_exc_list;
+        this->m_p_exc_list = nullptr;
+    }
+    if(this->m_p_metadata != nullptr) {
+        delete this->m_p_metadata;
+        this->m_p_metadata = nullptr;
+    }
+    if(this->m_p_data != nullptr) {
+        delete this->m_p_data;
+        this->m_p_data = nullptr;
+    }
 }
 
-PLUGIN_EXC_LIST *PluginElementModel::read(QJsonObject obj, QString path, bool flag)
+PLUGIN_EXC_LIST *PluginElementModel::read(QJsonObject obj, QString filePath, QString dirPath, bool flag)
 {
     if(this->m_p_exc_list != nullptr && flag) {
         if(flag) {
@@ -30,7 +39,8 @@ PLUGIN_EXC_LIST *PluginElementModel::read(QJsonObject obj, QString path, bool fl
     //读取元数据
     readMetadata(obj.value("metadata").toObject());
 
-    this->m_p_metadata->file_path = path;
+    this->m_p_metadata->file_path = filePath;
+    this->m_p_metadata->dir_path = dirPath;
 
     //读取内容
     QJsonObject contentObj = obj.value("content").toObject();

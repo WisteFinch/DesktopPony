@@ -29,11 +29,11 @@
 #ifndef IMAGEPROCESSINGIMAGEPROCESSING_H
 #define IMAGEPROCESSINGIMAGEPROCESSING_H
 
+#include "data/config.h"
 #include "imageprocessing/imagestruct.h"
 #include "imageprocessing/accessories.h"
 #include "imagestruct.h"
 #include "file/fileevent.h"
-#include "file/config.h"
 #include "file/filecharacter.h"
 #include "scriptinterpreter/scriptinterpretershell.h"
 #include "metadata.h"

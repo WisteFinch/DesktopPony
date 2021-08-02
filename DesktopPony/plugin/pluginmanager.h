@@ -37,6 +37,10 @@
 #include <QDir>
 #include <QJsonObject>
 
+/**
+ * @brief 插件管理
+ * @details 存放、管理所有插件数据
+ */
 class PluginManager
 {
 public:
@@ -45,16 +49,19 @@ public:
 
     /**
      * @brief 刷新插件对象列表
+     * @details 重新从文件中读取插件
      */
     void refreshList();
 
     /**
-     * @brief 清理对象列表
+     * @brief 清理
+     * @details 清理内存中原有的插件数据
      */
-    void clearObjectList();
+    void clear();
 
     /**
      * @brief 获取元素组合列表
+     * @details 返回元素和对象uuid列表，供数据类使用
      * @param 元素类型
      * @return 元素组合列表
      */
@@ -64,6 +71,7 @@ public:
     OBJECT_UUID_INDEX *m_p_plugin_obj_uuid_index = nullptr;   ///< 对象uuid索引
     OBJECT_TYPE_INDEX *m_p_plugin_obj_type_index = nullptr;///< 对象包含的元素类型索引
     ELEMENT_TYPE_INDEX *m_p_plugin_element_type_index = nullptr;  ///< 元素类型索引
+    ELEMENT_CONFIG_NAME_INDEX *m_p_plugin_element_config_name_index = nullptr;  ///< 配置元素名称索引
 
     PLUGIN_EXC_LIST *m_p_plugin_exc_list = nullptr; ///< 插件异常列表
 };

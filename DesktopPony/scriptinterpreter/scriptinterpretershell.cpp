@@ -1,4 +1,4 @@
-#include "scriptinterpretershell.h"
+﻿#include "scriptinterpretershell.h"
 
 ScriptInterpreterShell::ScriptInterpreterShell()
 {
@@ -43,5 +43,6 @@ void ScriptInterpreterShell::exceptionHandle(ScriptExceptionData &se)
 
 ValueData ScriptInterpreterShell::extraFunctions(QString functionName, QVector<ValueData> parameters, QMap<QString, QVector<QPair<int, Variable *>> *> *data, QVector<QVector<QString> *> *record, int layer)
 {
-
+    ValueData v;
+    return v;
 }

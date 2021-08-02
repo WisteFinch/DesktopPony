@@ -4,6 +4,11 @@ Localisation::Localisation()
 {
 }
 
+Localisation::~Localisation()
+{
+    clear();
+}
+
 void Localisation::clear()
 {
     if(this->m_p_public != nullptr) {
@@ -11,11 +16,8 @@ void Localisation::clear()
         this->m_p_public = nullptr;
     }
     if(this->m_p_private != nullptr) {
-        QList<TABLE *> l = this->m_p_private->values();
-        while(!l.isEmpty()) {
-            delete l.last();
-            l.pop_back();
-        }
+        qDeleteAll(this->m_p_private->begin(), this->m_p_private->end());
+        this->m_p_private->clear();
         delete this->m_p_private;
         this->m_p_private = nullptr;
     }
@@ -23,11 +25,6 @@ void Localisation::clear()
 
 void Localisation::init(PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfunc)
 {
-    //清理
-    clear();
-    m_p_public = new TABLE;
-    m_p_private = new QMap<QString, TABLE *>;
-
     this->ptrfun_get_element_pair_list = ptrfunc;
 }
 
@@ -57,7 +54,7 @@ Localisation::Element Localisation::getDebugData(QString key)
 }
 
 
-QString Localisation::getLocal(QString uuid, QString key)
+QString Localisation::getPriv(QString uuid, QString key)
 {
     if(this->m_p_private->contains(uuid)) {
         if(this->m_p_private->value(uuid)->contains(key)) {
@@ -67,7 +64,7 @@ QString Localisation::getLocal(QString uuid, QString key)
     return key;
 }
 
-Localisation::Element Localisation::getLocalDebugData(QString uuid, QString key)
+Localisation::Element Localisation::getPrivDebugData(QString uuid, QString key)
 {
     if(this->m_p_private->contains(uuid)) {
         if(this->m_p_private->value(uuid)->contains(key)) {
@@ -81,6 +78,11 @@ Localisation::Element Localisation::getLocalDebugData(QString uuid, QString key)
 
 void Localisation::creatIndex()
 {
+    //清理
+    clear();
+    m_p_public = new TABLE;
+    m_p_private = new QMap<QString, TABLE *>;
+
     ELEMENT_PAIR_LIST *rootList = this->ptrfun_get_element_pair_list(PLUGIN_ELEMENT_TYPE::element_type_localisation);
     ELEMENT_PAIR_LIST::Iterator rootIter;
     for(rootIter = rootList->begin(); rootIter != rootList->end(); rootIter++) {
