@@ -31,11 +31,6 @@
 
 #include <QFrame>
 
-namespace Ui
-{
-class VLine;
-}
-
 /**
  * @brief 生成垂直线
  */
@@ -46,9 +41,6 @@ class VLine : public QFrame
 public:
     explicit VLine(QWidget *parent = nullptr);
     ~VLine();
-
-private:
-    Ui::VLine *ui;
 };
 
 #endif // VLINE_H

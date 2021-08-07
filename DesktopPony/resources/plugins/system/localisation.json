@@ -51,7 +51,23 @@
                     "ui_plugin_page_tools_disable_tip": "禁用",
                     "ui_plugin_page_tools_star_tip": "收藏",
                     "msgbox_reload_tit": "是否重新载入插件？",
-                    "msgbox_reload_txt": "这可能会花费一些时间"
+                    "msgbox_reload_txt": "这可能会花费一些时间...",
+                    "ui_info_page_about_txt": "DesktopPony是一款以小马为主题的桌面宠物。 用C++/QT编写。",
+                    "ui_info_page_log_caption_txt": "日志",
+                    "ui_info_page_log_desc_txt": "查看程序运行日志",
+                    "ui_info_page_log_view_tip": "打开日志",
+                    "ui_info_page_version_caption_txt": "版本",
+                    "ui_info_page_repo_caption_txt": "仓库",
+                    "ui_info_page_repo_desc_txt": "§[loc_pub:desktoppony]的项目仓库，可查阅程序源码、获取旧版本程序",
+                    "ui_info_page_github_link_tip": "前往位于GitHub的仓库",
+                    "ui_info_page_doc_caption_txt": "§[loc_pub:desktoppony]文档",
+                    "ui_info_page_doc_desc_txt": "可查阅程序编辑辅助文档、插件制作指南等",
+                    "ui_info_page_doc_link_tip": "打开文档",
+                    "ui_info_page_copyright_caption_txt": "版权",
+                    "ui_info_page_author_caption_txt": "作者",
+                    "ui_info_page_license_caption_txt": "许可证",
+                    "ui_info_page_license_link_tip": "查看许可证",
+                    "ui_info_page_license_desc_txt": "MIT"
                 }
             }
         ],

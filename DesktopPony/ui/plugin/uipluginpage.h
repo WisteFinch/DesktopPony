@@ -46,11 +46,6 @@
 #include <QVector>
 #include <QMessageBox>
 
-namespace Ui
-{
-class UiPluginPage;
-}
-
 /**
  * @brief 插件页
  * @details 列出插件，提供插件编辑入口
@@ -68,6 +63,7 @@ public:
      * @details 初始化界面内容
      * @param 配置指针
      * @param 文本指针
+     * @param 插件管理指针
      */
     void init(Config *ptrconf, Text *ptrText, PluginManager *ptrPluginManager);
 
@@ -75,8 +71,6 @@ signals:
     void sigReloadData();   ///< 信号：重载数据
 
 private:
-    Ui::UiPluginPage *ui;
-
     Config *m_p_conf = nullptr; ///< 配置
     Text *m_p_text = nullptr;   ///< 文本
     PluginManager *m_p_plugin = nullptr;///< 插件

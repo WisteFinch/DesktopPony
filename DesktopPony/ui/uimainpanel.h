@@ -33,6 +33,7 @@
 #include "ui/plugin/uipluginpage.h"
 #include "ui/config/uiconfigpage.h"
 #include "ui/info/uiinfopage.h"
+#include "ui/tools/animationstackedwidget.h"
 #include "data/config.h"
 #include "data/style.h"
 #include "data/text.h"
@@ -96,6 +97,7 @@ private:
     int m_page_index;   ///< 当前页序号
 
     // Widget部分
+    AnimationStackedWidget *ui_main_panel_pages = nullptr;  ///< 页堆
     QPushButton *ui_main_panel_tab_character = nullptr; ///< “角色”选项卡
     QPushButton *ui_main_panel_tab_plugin = nullptr;///< “插件”选项卡
     QPushButton *ui_main_panel_tab_config = nullptr;///< “配置”选项卡
@@ -106,7 +108,6 @@ private:
     // Layout部分
     QHBoxLayout *ui_main_panel_layout_main = nullptr;   ///< 主界面布局
     QVBoxLayout *ui_main_panel_layout_tab = nullptr;///< 选项卡布局
-    QStackedLayout *ui_main_panel_layout_pages = nullptr;   ///< 页面布局
 
     // 页部分
     UiCharacterPage *ui_character_page = nullptr;   ///< 角色页

@@ -1,14 +1,13 @@
 #include "uicharacterpage.h"
-#include "ui_uicharacterpage.h"
 
 UiCharacterPage::UiCharacterPage(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::UiCharacterPage)
+    QWidget(parent)
 {
-    ui->setupUi(this);
+    this->setAttribute(Qt::WA_StyledBackground);
+
+    this->setProperty("category", "page");
 }
 
 UiCharacterPage::~UiCharacterPage()
 {
-    delete ui;
 }

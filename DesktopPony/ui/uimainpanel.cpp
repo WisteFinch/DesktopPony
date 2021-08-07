@@ -1,4 +1,4 @@
-#include "uimainpanel.h"
+﻿#include "uimainpanel.h"
 #include "ui_uimainpanel.h"
 
 UiMainPanel::UiMainPanel(QWidget *parent) :
@@ -30,7 +30,6 @@ void UiMainPanel::closeEvent(QCloseEvent *event)
 
 void UiMainPanel::init(Config *ptrconf, Style *ptrStyle, Text *ptrText, PluginManager *ptrPluginManager)
 {
-    this->setAttribute(Qt::WA_StyledBackground);
     this->m_p_conf = ptrconf;
     this->m_p_style = ptrStyle;
     this->m_p_text = ptrText;
@@ -40,6 +39,7 @@ void UiMainPanel::init(Config *ptrconf, Style *ptrStyle, Text *ptrText, PluginMa
     ptrText = nullptr;
     ptrPluginManager = nullptr;
 
+    this->setAttribute(Qt::WA_StyledBackground);
     initWidget();   // 初始化部件
     initObjectName();   // 初始化对象名
     initProperty(); // 初始化属性
@@ -52,7 +52,7 @@ void UiMainPanel::init(Config *ptrconf, Style *ptrStyle, Text *ptrText, PluginMa
 void UiMainPanel::initWidget()
 {
     this->ui_main_panel_layout_main = new QHBoxLayout;
-    this->ui_main_panel_layout_main->setSpacing(0);
+    this->ui_main_panel_layout_main->setSpacing(5);
     this->setLayout(this->ui_main_panel_layout_main);
     // 选项卡
     this->ui_main_panel_layout_tab = new QVBoxLayout;
@@ -72,26 +72,27 @@ void UiMainPanel::initWidget()
     this->ui_main_panel_layout_tab->addWidget(this->ui_main_panel_version);
     this->ui_main_panel_layout_main->addLayout(this->ui_main_panel_layout_tab);
     // 页
-    this->ui_main_panel_layout_pages = new QStackedLayout;
-    this->ui_main_panel_layout_main->addLayout(this->ui_main_panel_layout_pages);
+    this->ui_main_panel_pages = new AnimationStackedWidget;
+    this->ui_main_panel_layout_main->addWidget(this->ui_main_panel_pages);
     this->ui_character_page = new UiCharacterPage;
     //this->ui_character_page->init(this->m_p_conf, this->m_p_text);
-    this->ui_main_panel_layout_pages->addWidget(this->ui_character_page);
+    this->ui_main_panel_pages->addWidget(this->ui_character_page);
     this->ui_plugin_page = new UiPluginPage;
     this->ui_plugin_page->init(this->m_p_conf, this->m_p_text, this->m_p_plugin);
-    this->ui_main_panel_layout_pages->addWidget(this->ui_plugin_page);
+    this->ui_main_panel_pages->addWidget(this->ui_plugin_page);
     this->ui_config_page = new UiConfigPage;
-    //this->ui_config_page->init(this->m_p_conf, this->m_p_text);
-    this->ui_main_panel_layout_pages->addWidget(this->ui_config_page);
+    this->ui_config_page->init(this->m_p_conf, this->m_p_text, this->m_p_plugin);
+    this->ui_main_panel_pages->addWidget(this->ui_config_page);
     this->ui_info_page = new UiInfoPage;
-    //this->ui_info_page->init(this->m_p_conf, this->m_p_text);
-    this->ui_main_panel_layout_pages->addWidget(this->ui_info_page);
+    this->ui_info_page->init(this->m_p_conf, this->m_p_text);
+    this->ui_main_panel_pages->addWidget(this->ui_info_page);
 }
 
 void UiMainPanel::initObjectName()
 {
     this->setObjectName("ui_main_panel");
     // Widget部分
+    this->ui_main_panel_pages->setObjectName("ui_main_panel_pages");
     this->ui_main_panel_tab_character->setObjectName("ui_main_panel_tab_character");
     this->ui_main_panel_tab_plugin->setObjectName("ui_main_panel_tab_plugin");
     this->ui_main_panel_tab_config->setObjectName("ui_main_panel_tab_config");
@@ -102,13 +103,13 @@ void UiMainPanel::initObjectName()
     // Layout部分
     this->ui_main_panel_layout_main->setObjectName("ui_main_panel_layout_main");
     this->ui_main_panel_layout_tab->setObjectName("ui_main_panel_layout_tab");
-    this->ui_main_panel_layout_pages->setObjectName("ui_main_panel_layout_pages");
 }
 
 void UiMainPanel::initProperty()
 {
     this->setProperty("category", "frame");
     // Widget部分
+    this->ui_main_panel_pages->setProperty("category", "main_panel_stacked_widget");
     this->ui_main_panel_tab_character->setProperty("category", "main_panel_tab_buttton");
     this->ui_main_panel_tab_plugin->setProperty("category", "main_panel_tab_buttton");
     this->ui_main_panel_tab_config->setProperty("category", "main_panel_tab_buttton");
@@ -126,7 +127,7 @@ void UiMainPanel::initContent()
     this->ui_main_panel_tab_config->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_config->objectName() + "_cap"));
     this->ui_main_panel_tab_info->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_info->objectName() + "_cap"));
 
-    this->ui_main_panel_version->setText(STR_VERSION);
+    this->ui_main_panel_version->setText(STR_APP_VERSION);
     this->ui_main_panel_version->setAlignment(Qt::AlignCenter);
 }
 
@@ -156,33 +157,35 @@ void UiMainPanel::clearConnect()
 
 void UiMainPanel::slotChangeTab(int index)
 {
-    // 设置当前页序号
-    this->m_page_index = index;
-    // 重置属性
-    this->ui_main_panel_tab_character->setProperty("selected", false);
-    this->ui_main_panel_tab_plugin->setProperty("selected", false);
-    this->ui_main_panel_tab_config->setProperty("selected", false);
-    this->ui_main_panel_tab_info->setProperty("selected", false);
-    // 指定属性
-    switch(index) {
-    case 0:
-        this->ui_main_panel_tab_character->setProperty("selected", true);
-        break;
-    case 1:
-        this->ui_main_panel_tab_plugin->setProperty("selected", true);
-        break;
-    case 2:
-        this->ui_main_panel_tab_config->setProperty("selected", true);
-        break;
-    case 3:
-        this->ui_main_panel_tab_info->setProperty("selected", true);
-        break;
-    }
-    // 刷新样式
-    this->ui_main_panel_tab_character->setStyle(QApplication::style());
-    this->ui_main_panel_tab_plugin->setStyle(QApplication::style());
-    this->ui_main_panel_tab_config->setStyle(QApplication::style());
-    this->ui_main_panel_tab_info->setStyle(QApplication::style());
     // 刷新页
-    this->ui_main_panel_layout_pages->setCurrentIndex(this->m_page_index);
+    bool flag = this->ui_main_panel_pages->slotSetIndex(index);
+    if(flag) {
+        // 设置当前页序号
+        this->m_page_index = index;
+        // 重置属性
+        this->ui_main_panel_tab_character->setProperty("selected", false);
+        this->ui_main_panel_tab_plugin->setProperty("selected", false);
+        this->ui_main_panel_tab_config->setProperty("selected", false);
+        this->ui_main_panel_tab_info->setProperty("selected", false);
+        // 指定属性
+        switch(index) {
+        case 0:
+            this->ui_main_panel_tab_character->setProperty("selected", true);
+            break;
+        case 1:
+            this->ui_main_panel_tab_plugin->setProperty("selected", true);
+            break;
+        case 2:
+            this->ui_main_panel_tab_config->setProperty("selected", true);
+            break;
+        case 3:
+            this->ui_main_panel_tab_info->setProperty("selected", true);
+            break;
+        }
+        // 刷新样式
+        this->ui_main_panel_tab_character->setStyle(QApplication::style());
+        this->ui_main_panel_tab_plugin->setStyle(QApplication::style());
+        this->ui_main_panel_tab_config->setStyle(QApplication::style());
+        this->ui_main_panel_tab_info->setStyle(QApplication::style());
+    }
 }

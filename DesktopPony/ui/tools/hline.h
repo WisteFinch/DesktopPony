@@ -31,11 +31,6 @@
 
 #include <QFrame>
 
-namespace Ui
-{
-class HLine;
-}
-
 /**
  * @brief 生成水平线
  */
@@ -46,9 +41,6 @@ class HLine : public QFrame
 public:
     explicit HLine(QWidget *parent = nullptr);
     ~HLine();
-
-private:
-    Ui::HLine *ui;
 };
 
 #endif // HLINE_H

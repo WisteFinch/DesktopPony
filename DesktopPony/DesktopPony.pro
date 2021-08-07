@@ -79,20 +79,12 @@ SOURCES += \
     scriptinterpreter/core/scriptvariable.cpp \
     scriptinterpreter/scriptinterpretershell.cpp \
     tools.cpp \
-    oldui/uicharacter/uicharacter.cpp\
-    oldui/uicharacter/uicharacterlistcard.cpp \
-    oldui/uipony.cpp \
-    oldui/uisettings.cpp \
-    oldui/uitasks/uitasks.cpp \
-    oldui/uitasks/uitaskseventcard.cpp \
-    oldui/uitasks/uitasksinfo.cpp \
-    oldui/uitasks/uitaskslistcard.cpp \
-    oldui/uitasks/uitasksstandardlistcard.cpp \
     ui/character/uicharacterpage.cpp \
     ui/config/uiconfigpage.cpp \
     ui/info/uiinfopage.cpp \
     ui/plugin/uipluginlistcard.cpp \
     ui/plugin/uipluginpage.cpp \
+    ui/tools/animationstackedwidget.cpp \
     ui/tools/hline.cpp \
     ui/tools/vline.cpp \
     ui/uimainpanel.cpp
@@ -132,37 +124,17 @@ HEADERS += \
     scriptinterpreter/core/scriptvariable.h \
     scriptinterpreter/scriptinterpretershell.h \
     tools.h \
-    oldui/uicharacter/uicharacter.h \
-    oldui/uicharacter/uicharacterlistcard.h \
-    oldui/uipony.h \
-    oldui/uisettings.h \
-    oldui/uitasks/uitasks.h \
-    oldui/uitasks/uitaskseventcard.h \
-    oldui/uitasks/uitasksinfo.h \
-    oldui/uitasks/uitaskslistcard.h \
-    oldui/uitasks/uitasksstandardlistcard.h \
     ui/character/uicharacterpage.h \
     ui/config/uiconfigpage.h \
     ui/info/uiinfopage.h \
     ui/plugin/uipluginlistcard.h \
     ui/plugin/uipluginpage.h \
+    ui/tools/animationstackedwidget.h \
     ui/tools/hline.h \
     ui/tools/vline.h \
     ui/uimainpanel.h
 
 FORMS += \
-    oldui/uicharacter/uicharacter.ui \
-    oldui/uipony.ui \
-    oldui/uisettings.ui \
-    oldui/uitasks/uitasks.ui \
-    oldui/uitasks/uitasksinfo.ui \
-    ui/character/uicharacterpage.ui \
-    ui/config/uiconfigpage.ui \
-    ui/info/uiinfopage.ui \
-    ui/plugin/uipluginlistcard.ui \
-    ui/plugin/uipluginpage.ui \
-    ui/tools/hline.ui \
-    ui/tools/vline.ui \
     ui/uimainpanel.ui
 
 RESOURCES += \

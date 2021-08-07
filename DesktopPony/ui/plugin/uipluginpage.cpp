@@ -1,11 +1,9 @@
 #include "uipluginpage.h"
-#include "ui_uipluginpage.h"
 
 UiPluginPage::UiPluginPage(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::UiPluginPage)
+    QWidget(parent)
 {
-    ui->setupUi(this);
+    this->setAttribute(Qt::WA_StyledBackground);
 }
 
 UiPluginPage::~UiPluginPage()
@@ -15,7 +13,6 @@ UiPluginPage::~UiPluginPage()
     this->m_p_plugin = nullptr;
     clearConnect();
     clearList();
-    delete ui;
 }
 
 void UiPluginPage::init(Config *ptrconf, Text *ptrText, PluginManager *ptrPluginManager)
@@ -39,7 +36,7 @@ void UiPluginPage::init(Config *ptrconf, Text *ptrText, PluginManager *ptrPlugin
 void UiPluginPage::initWidget()
 {
     this->ui_plugin_page_layout_main = new QVBoxLayout;
-    this->ui_plugin_page_layout_main->setSpacing(0);
+    this->ui_plugin_page_layout_main->setSpacing(5);
     this->ui_plugin_page_layout_main->setMargin(0);
     // 搜索
     this->ui_plugin_page_layout_search = new QHBoxLayout;
@@ -52,19 +49,21 @@ void UiPluginPage::initWidget()
     this->ui_plugin_page_layout_search->addWidget(new VLine);
     this->ui_plugin_page_layout_search->addWidget(this->ui_plugin_page_search_filters);
     this->ui_plugin_page_layout_main->addLayout(ui_plugin_page_layout_search);
-    this->ui_plugin_page_layout_main->addWidget(new HLine);
     // 列表
     this->ui_plugin_page_scrollarea = new QScrollArea;
     this->ui_plugin_page_scrollarea->setWidgetResizable(true);
     this->ui_plugin_page_list = new QWidget;
     this->ui_plugin_page_layout_list = new QVBoxLayout;
-    this->ui_plugin_page_layout_list->setSpacing(0);
+    this->ui_plugin_page_layout_list->setSpacing(3);
     this->ui_plugin_page_layout_list->setMargin(0);
+    this->ui_plugin_page_layout_list->setContentsMargins(0, 0, 2, 0);
     this->ui_plugin_page_list->setLayout(this->ui_plugin_page_layout_list);
     this->ui_plugin_page_scrollarea->setWidget(this->ui_plugin_page_list);
     this->ui_plugin_page_layout_main->addWidget(this->ui_plugin_page_scrollarea);
     // 工具
     this->ui_plugin_page_layout_tools = new QHBoxLayout;
+    this->ui_plugin_page_layout_tools->setSpacing(0);
+    this->ui_plugin_page_layout_tools->setMargin(0);
     this->ui_plugin_page_tools_reload = new QPushButton;
     this->ui_plugin_page_tools_addnew = new QPushButton;
     this->ui_plugin_page_tools_delete = new QPushButton;
@@ -209,9 +208,9 @@ void UiPluginPage::slotListIndexChange(qint32 index)
 
 void UiPluginPage::slotReolad()
 {
-    /*
-       QMessageBox::StandardButton b = QMessageBox::warning(this, this->m_p_text->getLoc("msgbox_reload_tit"), this->m_p_text->getLoc("msgbox_reload_txt"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-       if(b == QMessageBox::Yes) {
-           emit sigReloadData();
-       }*/emit sigReloadData();
+
+    QMessageBox::StandardButton b = QMessageBox::warning(this, this->m_p_text->getLoc("msgbox_reload_tit"), this->m_p_text->getLoc("msgbox_reload_txt"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if(b == QMessageBox::Yes) {
+        emit sigReloadData();
+    }
 }

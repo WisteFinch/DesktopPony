@@ -30,16 +30,12 @@
 #define UICHARACTERPAGE_H
 
 #include <QWidget>
+#include <QVariant>
 
 /**
  * @brief 角色页
  * @details 列出角色项，提供编辑角色入口
  */
-namespace Ui
-{
-class UiCharacterPage;
-}
-
 class UiCharacterPage : public QWidget
 {
     Q_OBJECT
@@ -49,7 +45,6 @@ public:
     ~UiCharacterPage();
 
 private:
-    Ui::UiCharacterPage *ui;
 };
 
 #endif // UICHARACTERPAGE_H

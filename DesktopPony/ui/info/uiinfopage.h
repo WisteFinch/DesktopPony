@@ -29,12 +29,16 @@
 #ifndef UIINFOPAGE_H
 #define UIINFOPAGE_H
 
+#include "ui/tools/hline.h"
+#include "data/config.h"
+#include "data/text.h"
 #include <QWidget>
-
-namespace Ui
-{
-class UiInfoPage;
-}
+#include <QLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QDesktopServices>
+#include <QUrl>
 
 /**
  * @brief 信息页
@@ -48,8 +52,95 @@ public:
     explicit UiInfoPage(QWidget *parent = nullptr);
     ~UiInfoPage();
 
+    /**
+     * @brief 初始化
+     * @details 初始化界面内容
+     * @param 配置指针
+     * @param 文本指针
+     */
+    void init(Config *ptrconf, Text *ptrText);
+
 private:
-    Ui::UiInfoPage *ui;
+    Config *m_p_conf = nullptr; ///< 配置
+    Text *m_p_text = nullptr;   ///< 文本
+
+    // 部件部分
+    QScrollArea *ui_info_page_scrollarea = nullptr;   ///< 滚动区域
+    QWidget *ui_info_page_scrollarea_widget = nullptr;///< 滚动区域显示部件
+    QWidget *ui_info_page_scrollarea_basis = nullptr;///< 滚动区域基础部件
+    QLabel *ui_info_page_about_icon = nullptr;  ///< 关于-图标
+    QLabel *ui_info_page_about = nullptr;   ///< 关于
+    QLabel *ui_info_page_log_caption = nullptr; ///< 日志-标题
+    QLabel *ui_info_page_log_desc = nullptr;///< 日志-描述
+    QPushButton *ui_info_page_log_view = nullptr;   ///< 查看日志
+    QLabel *ui_info_page_version_caption = nullptr; ///< 版本-标题
+    QLabel *ui_info_page_version_desc = nullptr;///< 版本-描述
+    QPushButton *ui_info_page_version_check_update = nullptr;   ///< 检查更新
+    QLabel *ui_info_page_repo_caption = nullptr;///< 仓库
+    QLabel *ui_info_page_repo_desc = nullptr;   ///< 仓库
+    QPushButton *ui_info_page_github_link = nullptr;///< 打开GitHub
+    QLabel *ui_info_page_doc_caption = nullptr; ///< GitHub
+    QLabel *ui_info_page_doc_desc = nullptr;///< GitHub
+    QPushButton *ui_info_page_doc_link = nullptr;   ///< 打开GitHub
+    QLabel *ui_info_page_copyright_caption = nullptr;   ///< 版权-标题
+    QLabel *ui_info_page_copyright = nullptr;   ///< 版权
+    QLabel *ui_info_page_author_caption = nullptr;  ///< 作者-标题
+    QLabel *ui_info_page_author = nullptr;  ///< 作者
+    QLabel *ui_info_page_license_caption = nullptr; ///< 许可证-标题
+    QLabel *ui_info_page_license = nullptr; ///< 许可证
+    QPushButton *ui_info_page_license_link = nullptr;///< 许可证链接
+
+    // 布局部分
+    QVBoxLayout *ui_info_page_layout_main = nullptr;  ///< 主界面布局
+    QVBoxLayout *ui_info_page_layout_scrollarea = nullptr;  ///< 滚动区域布局
+    QVBoxLayout *ui_info_page_layout_scrollarea_basis = nullptr;  ///< 滚动区域基础布局
+    QHBoxLayout *ui_info_page_layout_about = nullptr; ///< 关于布局
+    QVBoxLayout *ui_info_page_layout_about_icon = nullptr;  ///< 关于-图标布局
+    QHBoxLayout *ui_info_page_layout_log = nullptr; ///< 日志布局
+    QVBoxLayout *ui_info_page_layout_log_text = nullptr;///< 日志-文本布局
+    QHBoxLayout *ui_info_page_layout_version = nullptr; ///< 版本布局
+    QVBoxLayout *ui_info_page_layout_version_text = nullptr;///< 版本-文本布局
+    QHBoxLayout *ui_info_page_layout_repo = nullptr;///< 仓库布局
+    QVBoxLayout *ui_info_page_layout_repo_text = nullptr;   ///< 仓库-文本布局
+    QHBoxLayout *ui_info_page_layout_doc = nullptr; ///< 文档布局
+    QVBoxLayout *ui_info_page_layout_doc_text = nullptr;///< 文档-文本布局
+    QHBoxLayout *ui_info_page_layout_copyright = nullptr;   ///< 版权部件
+    QHBoxLayout *ui_info_page_layout_author = nullptr;  ///< 版权部件
+    QHBoxLayout *ui_info_page_layout_license = nullptr; ///< 许可证部件
+
+    QGridLayout *ui_info_page_layout_appinfo = nullptr;
+
+
+    /**
+     * @brief 初始化部件
+     */
+    void initWidget();
+
+    /**
+     * @brief 初始化对象名称
+     */
+    void initObjectName();
+
+    /**
+     * @brief 初始化属性
+     */
+    void initProperty();
+
+    /**
+     * @brief 初始化内容
+     */
+    void initContent();
+
+    /**
+     * @brief 初始化信号槽
+     */
+    void initConnect();
+
+    /**
+     * @brief 清理信号槽
+     */
+    void clearConnect();
+
 };
 
 #endif // UIINFOPAGE_H

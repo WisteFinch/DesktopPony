@@ -40,11 +40,6 @@
 #include <QVector>
 #include <QMouseEvent>
 
-namespace Ui
-{
-class UiPluginListCard;
-}
-
 /**
  * @brief 插件列表卡片
  * @details 位于插件页的插件列表，显示插件概要
@@ -74,8 +69,6 @@ public:
     void setSelected(bool flag = true);
 
 private:
-    Ui::UiPluginListCard *ui;
-
     Text *m_p_text = nullptr;   ///< 文本
     PluginObject *m_p_obj = nullptr;///< 插件对象
 

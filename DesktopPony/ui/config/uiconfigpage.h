@@ -29,17 +29,23 @@
 #ifndef UICONFIGPAGE_H
 #define UICONFIGPAGE_H
 
+#include "ui/plugin/uipluginlistcard.h"
+#include "ui/tools/vline.h"
+#include "ui/tools/hline.h"
+#include "data/config.h"
+#include "data/text.h"
+#include "plugin/pluginmanager.h"
 #include <QWidget>
+#include <QLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QScrollArea>
 
 /**
  * @brief 配置页
  * @details 列出程序配置项
  */
-namespace Ui
-{
-class UiConfigPage;
-}
-
 class UiConfigPage : public QWidget
 {
     Q_OBJECT
@@ -48,8 +54,72 @@ public:
     explicit UiConfigPage(QWidget *parent = nullptr);
     ~UiConfigPage();
 
+    /**
+     * @brief 初始化
+     * @details 初始化界面内容
+     * @param 配置指针
+     * @param 文本指针
+     * @param 插件管理指针
+     */
+    void init(Config *ptrconf, Text *ptrText, PluginManager *ptrPluginManager);
+
 private:
-    Ui::UiConfigPage *ui;
+    Config *m_p_conf = nullptr; ///< 配置
+    Text *m_p_text = nullptr;   ///< 文本
+    PluginManager *m_p_plugin = nullptr;///< 插件
+
+    // 部件部分
+    QScrollArea *ui_conf_page_scrollarea = nullptr;   ///< 滚动区域
+
+    // 布局部分
+    QVBoxLayout *ui_conf_page_layout_main = nullptr;  ///< 主界面布局
+    QVBoxLayout *ui_conf_page_layout_list = nullptr;  ///< 列表布局
+
+
+    /**
+     * @brief 初始化部件
+     */
+    void initWidget();
+
+    /**
+     * @brief 初始化对象名称
+     */
+    void initObjectName();
+
+    /**
+     * @brief 初始化属性
+     */
+    void initProperty();
+
+    /**
+     * @brief 初始化内容
+     */
+    void initContent();
+
+    /**
+     * @brief 初始化信号槽
+     */
+    void initConnect();
+
+    /**
+     * @brief 清理信号槽
+     */
+    void clearConnect();
+
+    /**
+     * @brief 生成列表
+     */
+    void creatList();
+
+    /**
+     * @brief 清除列表
+     */
+    void clearList();
+
+    /**
+     * @brief 刷新列表
+     */
+    void refreshList();
 };
 
 #endif // UICONFIGPAGE_H

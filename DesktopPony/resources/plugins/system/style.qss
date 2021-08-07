@@ -4,22 +4,29 @@
 }
 
 
-QScrollBar:vertical , QScrollBar:horizontal{
+QScrollBar:vertical{
     border: none;
     background: transparent;
-    width: 10px;
+    width: 8px;
+    margin: 0px;
+}
+
+QScrollBar:horizontal{
+    border: none;
+    background: transparent;
+    height: 8px;
     margin: 0px;
 }
 
 QScrollBar::handle:vertical, QScrollBar::handle:horizontal{
-    background: rgba(255, 255, 255, 125);
-    border-radius: 5px;
+    background: rgba(255, 255, 255, 175);
+    border-radius: 4px;
     border: none;
 }
 
 QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover{
-    background: rgba(255, 255, 255, 150);
-    border-radius: 5px;
+    background: rgba(255, 255, 255, 200);
+    border-radius: 4px;
     border: none;
 }
 
@@ -27,6 +34,12 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-li
     background: none;
     width: 0px;
     height: 0px;
+}
+
+
+QScrollArea{
+    background: transparent;
+    border: none;
 }
 
 /* 工具 */
@@ -44,12 +57,12 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-li
 QWidget[category = 'frame']{
 	background-image: url(background.jpg);
     background-position: center;
-    min-width: 600;
-    min-height: 370;
+    min-width: 600px;
+    min-height: 370px;
 }
 
 QPushButton[category = 'main_panel_tab_buttton']{
-    background-color: rgba(255, 255, 255, 125);
+    background-color: rgba(255, 255, 255, 150);
     color: black;
     min-width: 100px;
     min-height: 30px;
@@ -60,32 +73,34 @@ QPushButton[category = 'main_panel_tab_buttton']{
 
 
 QPushButton[category = 'main_panel_tab_buttton']:hover{
-    background-color: rgba(255, 255, 255, 150);
-}
-
-QPushButton[category = 'main_panel_tab_buttton']:pressed{
     background-color: rgba(255, 255, 255, 175);
 }
 
-QPushButton[category = 'main_panel_tab_buttton'][selected = true]{
+QPushButton[category = 'main_panel_tab_buttton']:pressed{
     background-color: rgba(255, 255, 255, 200);
+}
+
+QPushButton[category = 'main_panel_tab_buttton'][selected = true]{
+    background-color: rgba(255, 255, 255, 225);
 }
 
 
 QLabel[category = 'main_panel_tab_label']{
-    background-color: rgba(255, 255, 255, 100);
+    background-color: rgba(255, 255, 255, 150);
     font-size: 10px;
     color: rgba(0, 0, 0, 200);
     border: none;
 }
 
-/* 插件页 */
 QWidget[category = 'page']{
-    background-color: rgba(255,255,255,25);
+    background-color: transparent;
+    border: none;
 }
 
+/* 插件页 */
+
 QLineEdit[category = 'plugin_page_search_line_edit']{
-    background-color: rgba(255,255,255,125);
+    background-color: rgba(255, 255, 255, 150);
     color: black;
     min-width: 30px;
     min-height: 30px;
@@ -93,15 +108,15 @@ QLineEdit[category = 'plugin_page_search_line_edit']{
 }
 
 QLineEdit[category = 'plugin_page_search_line_edit']:hover{
-    background-color: rgba(255,255,255,150);
+    background-color: rgba(255, 255, 255, 175);
 }
 
 QLineEdit[category = 'plugin_page_search_line_edit']:focus{
-    background-color: rgba(255,255,255,175);
+    background-color: rgba(255, 255, 255, 200);
 }
 
 QPushButton[category = 'plugin_page_search_button']{
-    background-color: rgba(255, 255, 255, 125);
+    background-color: rgba(255, 255, 255, 150);
     color: black;
     min-width: 30px;
     min-height: 30px;
@@ -109,15 +124,15 @@ QPushButton[category = 'plugin_page_search_button']{
 }
 
 QPushButton[category = 'plugin_page_search_button']:hover{
-    background-color: rgba(255, 255, 255, 150);
-}
-
-QPushButton[category = 'plugin_page_search_button']:pressed{
     background-color: rgba(255, 255, 255, 175);
 }
 
+QPushButton[category = 'plugin_page_search_button']:pressed{
+    background-color: rgba(255, 255, 255, 200);
+}
+
 QPushButton[category = 'plugin_page_tools_button']{
-    background-color: rgba(255, 255, 255, 125);
+    background-color: rgba(255, 255, 255, 150);
     color: black;
     min-width: 30px;
     min-height: 30px;
@@ -125,16 +140,11 @@ QPushButton[category = 'plugin_page_tools_button']{
 }
 
 QPushButton[category = 'plugin_page_tools_button']:hover{
-    background-color: rgba(255, 255, 255, 150);
-}
-
-QPushButton[category = 'plugin_page_tools_button']:pressed{
     background-color: rgba(255, 255, 255, 175);
 }
 
-QScrollArea[category = 'plugin_page_scrollarea']{
-    background: rgba(255, 255, 255, 25);
-    border: none;
+QPushButton[category = 'plugin_page_tools_button']:pressed{
+    background-color: rgba(255, 255, 255, 200);
 }
 
 QWidget[category = 'plugin_page_list_widget']
@@ -144,16 +154,17 @@ QWidget[category = 'plugin_page_list_widget']
 
 /* 插件列表卡片 */
 QWidget[category = 'plugin_list_card']{
-    background-color: rgba(255, 255, 255, 50);
+    background-color: rgba(255, 255, 255, 150);
     max-height: 60px;
+    border-radius: 5px;
 }
 
 QWidget[category = 'plugin_list_card']:hover{
-    background-color: rgba(255, 255, 255, 75);
+    background-color: rgba(255, 255, 255, 175);
 }
 
 QWidget[category = 'plugin_list_card'][selected = true]{
-    background-color: rgba(255, 255, 255, 100);
+    background-color: rgba(255, 255, 255, 200);
 }
 
 #ui_plugin_list_card_icon{
@@ -181,4 +192,47 @@ QWidget[category = 'plugin_list_card'][selected = true]{
 QLabel[category = 'plugin_list_card_element_icon_label']{
     max-height: 15px;
     max-width: 15px;
+}
+
+/* 配置页 */
+
+/* 信息页 */
+
+#ui_info_page_scrollarea_widget{
+    background-color: rgba(255, 255, 255, 200);
+    border: none;
+    border-radius: 5px;
+}
+
+#ui_info_page_scrollarea_basis{
+    background: transparent;
+}
+
+QPushButton[category = 'plugin_info_button']{
+    background: rgba(47,144,185,0);
+    color: black;
+    max-width: 30px;
+    min-width: 30px;
+    max-height: 30px;
+    min-height: 30px;
+    border-radius: 15px;
+}
+
+QPushButton[category = 'plugin_info_button']:hover{
+    background: rgba(47,144,185,40);
+}
+
+QPushButton[category = 'plugin_info_button']:pressed{
+    background: rgba(47,144,185,80);
+}
+
+#ui_info_page_about_icon{
+    max-height: 50px;
+    max-width: 50px;
+    min-height: 50px;
+    min-width: 50px;
+}
+
+QLabel[category = 'plugin_info_item_desc_label']{
+    color: rgb(100, 100, 100);
 }

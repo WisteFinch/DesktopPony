@@ -2,10 +2,8 @@
 #include "ui_uipluginlistcard.h"
 
 UiPluginListCard::UiPluginListCard(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::UiPluginListCard)
+    QWidget(parent)
 {
-    ui->setupUi(this);
 }
 
 UiPluginListCard::~UiPluginListCard()
@@ -18,13 +16,10 @@ UiPluginListCard::~UiPluginListCard()
         this->ui_plugin_list_card_elements->pop_back();
     }
     delete this->ui_plugin_list_card_elements;
-
-    delete ui;
 }
 
 void UiPluginListCard::init(Text *ptrText, PluginObject *ptrObj, qint32 index)
 {
-    this->setAttribute(Qt::WA_StyledBackground);
     this->m_p_text = ptrText;
     this->m_p_obj = ptrObj;
     ptrText = nullptr;
@@ -32,6 +27,7 @@ void UiPluginListCard::init(Text *ptrText, PluginObject *ptrObj, qint32 index)
 
     this->m_index = index;
 
+    this->setAttribute(Qt::WA_StyledBackground);
     initWidget();
     initObjectName();
     initProperty();
