@@ -62,9 +62,10 @@ public:
     struct Item {
         struct SelectItem {
             QString id; ///< 标识符
-            QString caption;///< 名称
+            QString name;   ///< 名称
             QString uuid16; ///< 项16位唯一标识符
-            QString orig_uuid16; ///< 原项16位唯一标识符
+            QString orig_uuid16;///< 原项16位唯一标识符
+            QString obj_uuid;   ///< 对象uuid
         };
         QString id; ///< 标识符
         QString config_name;///< 配置名称
@@ -81,6 +82,8 @@ public:
         QVariant range_to;  ///< 终止范围
         QVector<SelectItem> select; ///< 下拉框
         bool isErr = false; ///< 存在错误
+        QString category = "general";///< 类别
+        bool restart = false;   ///< 请求重启程序
     };  ///< 组
 
     struct SelectItemIndex {

@@ -95,7 +95,6 @@ private:
     QVBoxLayout *ui_info_page_layout_scrollarea = nullptr;  ///< 滚动区域布局
     QVBoxLayout *ui_info_page_layout_scrollarea_basis = nullptr;  ///< 滚动区域基础布局
     QHBoxLayout *ui_info_page_layout_about = nullptr; ///< 关于布局
-    QVBoxLayout *ui_info_page_layout_about_icon = nullptr;  ///< 关于-图标布局
     QHBoxLayout *ui_info_page_layout_log = nullptr; ///< 日志布局
     QVBoxLayout *ui_info_page_layout_log_text = nullptr;///< 日志-文本布局
     QHBoxLayout *ui_info_page_layout_version = nullptr; ///< 版本布局

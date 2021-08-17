@@ -20,6 +20,7 @@ void PluginManager::refreshList()
     this->m_p_plugin_element_type_index = new ELEMENT_TYPE_INDEX;
     this->m_p_plugin_exc_list = new PLUGIN_EXC_LIST;
     this->m_p_plugin_element_config_name_index = new ELEMENT_CONFIG_NAME_INDEX;
+    this->m_p_lang_list = new QSet<QString>;
 
     // 获取系统插件路径
     QDir sysRoot(STR_SYSTEM_PLUGIN_PATH);
@@ -36,7 +37,7 @@ void PluginManager::refreshList()
         // 读取插件对象
         PluginObject *obj = new  PluginObject();
         this->m_p_plugin_obj_list->append(obj);
-        this->m_p_plugin_exc_list->append(*obj->readHead(sysList.at(i).filePath(), true, this->m_p_plugin_element_config_name_index));
+        this->m_p_plugin_exc_list->append(*obj->readHead(sysList.at(i).filePath(), true, this->m_p_plugin_element_config_name_index, this->m_p_lang_list));
     }
 
 
@@ -55,7 +56,7 @@ void PluginManager::refreshList()
         // 读取插件对象
         PluginObject *obj = new  PluginObject();
         this->m_p_plugin_obj_list->append(obj);
-        this->m_p_plugin_exc_list->append(*obj->readHead(usrList.at(i).filePath(), false, this->m_p_plugin_element_config_name_index));
+        this->m_p_plugin_exc_list->append(*obj->readHead(usrList.at(i).filePath(), false, this->m_p_plugin_element_config_name_index, this->m_p_lang_list));
     }
 
     // 创建索引
@@ -162,10 +163,19 @@ void PluginManager::clear()
         delete this->m_p_plugin_obj_list;
         this->m_p_plugin_obj_list = nullptr;
     }
+    if(this->m_p_lang_list != nullptr) {
+        delete this->m_p_lang_list;
+        this->m_p_lang_list = nullptr;
+    }
 }
 
 ELEMENT_PAIR_LIST *PluginManager::getElementPairList(PLUGIN_ELEMENT_TYPE type)
 {
     return this->m_p_plugin_element_type_index->value(type);
+}
+
+QSet<QString> *PluginManager::getLangList()
+{
+    return this->m_p_lang_list;
 }
 

@@ -29,7 +29,7 @@
 #ifndef UICONFIGPAGE_H
 #define UICONFIGPAGE_H
 
-#include "ui/plugin/uipluginlistcard.h"
+#include "ui/config/uiconfigitemcard.h"
 #include "ui/tools/vline.h"
 #include "ui/tools/hline.h"
 #include "data/config.h"
@@ -60,13 +60,20 @@ public:
      * @param 配置指针
      * @param 文本指针
      * @param 插件管理指针
+     * @param 函数指针：获取配置
      */
-    void init(Config *ptrconf, Text *ptrText, PluginManager *ptrPluginManager);
+    void init(Config *ptrconf, Text *ptrText, PluginManager *ptrPluginManager, Config::PTRFUNC_GET_CONFIG ptrfuncGetConf);
+
+    bool m_value_changed = false;
+signals:
+    void sigRestart();  ///< 信号：重启
 
 private:
     Config *m_p_conf = nullptr; ///< 配置
     Text *m_p_text = nullptr;   ///< 文本
     PluginManager *m_p_plugin = nullptr;///< 插件
+    Config::PTRFUNC_GET_CONFIG m_ptrfunc_get_conf;///< 函数指针：获取配置获取配置
+    QVector<UiConfigItemCard *> *m_p_items = nullptr;   ///< 项列表
 
     // 部件部分
     QScrollArea *ui_conf_page_scrollarea = nullptr;   ///< 滚动区域
@@ -110,6 +117,11 @@ private:
      * @brief 生成列表
      */
     void creatList();
+
+    /**
+     * @brief 加入项
+     */
+    void addItem(QMap<QString, QVector<QString>*>::iterator indexIter, QMap<QString, Config::Item *> *list);
 
     /**
      * @brief 清除列表

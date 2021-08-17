@@ -107,7 +107,7 @@ private:
 
     TABLE *m_p_public = nullptr;///< 公有文本
     QMap<QString, TABLE *> *m_p_private = nullptr;   ///< 私有文本 <插件uuid, 局部本地化>
-    PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfun_get_element_pair_list = nullptr;   ///< "插件元素组合列表"函数指针
+    PTRFUNC_GET_ELEMENT_PAIR_LIST m_ptrfunc_get_element_pair_list = nullptr;   ///< "插件元素组合列表"函数指针
 
     QString m_s_language = "zh-hans";
 };

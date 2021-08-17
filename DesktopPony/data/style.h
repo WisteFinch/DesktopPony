@@ -68,7 +68,7 @@ public:
     void refreshStyle();
 
 private:
-    PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfun_get_element_pair_list = nullptr;   ///< "插件元素组合列表"函数指针
+    PTRFUNC_GET_ELEMENT_PAIR_LIST m_ptrfunc_get_element_pair_list = nullptr;   ///< "插件元素组合列表"函数指针
     QString qss;///< Qt样式表
     QString m_s_style_name = "default"; ///< 当前样式名称
 };

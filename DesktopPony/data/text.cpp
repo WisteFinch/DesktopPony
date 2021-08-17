@@ -69,5 +69,8 @@ QString Text::getLoc(QString key)
 
 QString Text::getLocPriv(QString key, QString objUuid)
 {
+    if(objUuid.isNull() || objUuid.isEmpty()) {
+        return nullptr;
+    }
     return replacePara(this->m_p_loc->getPriv(objUuid, key));
 }

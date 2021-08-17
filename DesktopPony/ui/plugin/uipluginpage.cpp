@@ -209,7 +209,7 @@ void UiPluginPage::slotListIndexChange(qint32 index)
 void UiPluginPage::slotReolad()
 {
 
-    QMessageBox::StandardButton b = QMessageBox::warning(this, this->m_p_text->getLoc("msgbox_reload_tit"), this->m_p_text->getLoc("msgbox_reload_txt"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    QMessageBox::StandardButton b = QMessageBox::warning(this, this->m_p_text->getLoc("ui_plugin_page_msgbox_reload_tit"), this->m_p_text->getLoc("ui_plugin_page_msgbox_reload_txt"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if(b == QMessageBox::Yes) {
         emit sigReloadData();
     }

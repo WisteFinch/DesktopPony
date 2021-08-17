@@ -28,12 +28,13 @@ void UiMainPanel::closeEvent(QCloseEvent *event)
     qApp->quit();
 }
 
-void UiMainPanel::init(Config *ptrconf, Style *ptrStyle, Text *ptrText, PluginManager *ptrPluginManager)
+void UiMainPanel::init(Config *ptrconf, Style *ptrStyle, Text *ptrText, PluginManager *ptrPluginManager, Config::PTRFUNC_GET_CONFIG ptrGetConf)
 {
     this->m_p_conf = ptrconf;
     this->m_p_style = ptrStyle;
     this->m_p_text = ptrText;
     this->m_p_plugin = ptrPluginManager;
+    this->m_ptrfunc_get_conf = ptrGetConf;
     ptrconf = nullptr;
     ptrStyle = nullptr;
     ptrText = nullptr;
@@ -81,7 +82,7 @@ void UiMainPanel::initWidget()
     this->ui_plugin_page->init(this->m_p_conf, this->m_p_text, this->m_p_plugin);
     this->ui_main_panel_pages->addWidget(this->ui_plugin_page);
     this->ui_config_page = new UiConfigPage;
-    this->ui_config_page->init(this->m_p_conf, this->m_p_text, this->m_p_plugin);
+    this->ui_config_page->init(this->m_p_conf, this->m_p_text, this->m_p_plugin, this->m_ptrfunc_get_conf);
     this->ui_main_panel_pages->addWidget(this->ui_config_page);
     this->ui_info_page = new UiInfoPage;
     this->ui_info_page->init(this->m_p_conf, this->m_p_text);
@@ -139,8 +140,9 @@ void UiMainPanel::initConnect()
     connect(this->ui_main_panel_tab_config, &QPushButton::clicked, this, [ = ] {slotChangeTab(2);});
     connect(this->ui_main_panel_tab_info, &QPushButton::clicked, this, [ = ] {slotChangeTab(3);});
 
-    // 重载数据
-    connect(this->ui_plugin_page, &UiPluginPage::sigReloadData, this, [ = ] {emit sigReloadData();});
+    // 重启
+    connect(this->ui_plugin_page, &UiPluginPage::sigReloadData, this, [ = ] {emit sigRestart();});
+    connect(this->ui_config_page, &UiConfigPage::sigRestart, this, [ = ] {emit sigRestart();});
 }
 
 void UiMainPanel::clearConnect()
@@ -151,15 +153,21 @@ void UiMainPanel::clearConnect()
     disconnect(this->ui_main_panel_tab_config, &QPushButton::clicked, this, nullptr);
     disconnect(this->ui_main_panel_tab_info, &QPushButton::clicked, this, nullptr);
 
-    // 重载数据
+    // 重启
     disconnect(this->ui_plugin_page, &UiPluginPage::sigReloadData, this, nullptr);
+    disconnect(this->ui_config_page, &UiConfigPage::sigRestart, this, nullptr);
 }
 
 void UiMainPanel::slotChangeTab(int index)
 {
+    qint32 origIndex = this->ui_main_panel_pages->currentIndex();
     // 刷新页
     bool flag = this->ui_main_panel_pages->slotSetIndex(index);
     if(flag) {
+        if(origIndex == 2 && this->ui_config_page->m_value_changed) {
+            this->m_p_conf->save();
+        }
+
         // 设置当前页序号
         this->m_page_index = index;
         // 重置属性
@@ -177,6 +185,7 @@ void UiMainPanel::slotChangeTab(int index)
             break;
         case 2:
             this->ui_main_panel_tab_config->setProperty("selected", true);
+            this->ui_config_page->m_value_changed = false;
             break;
         case 3:
             this->ui_main_panel_tab_info->setProperty("selected", true);

@@ -1,8 +1,8 @@
 /**
- * @file ui/plugin/uipluginlistcard.h
- * @brief 界面-插件-插件列表卡片
+ * @file ui/config/uiconfigitemcard.h
+ * @brief 界面-配置-配置项卡片
  * @author WisteFinch
- * @date 2021.7.29
+ * @date 2021.8.9
  *
  * MIT License
  * Copyright (c) 2019-2021 WisteFinch
@@ -26,64 +26,70 @@
  * SOFTWARE.
  */
 
-#ifndef UIPLUGINLISTCARD_H
-#define UIPLUGINLISTCARD_H
+#ifndef UICONFIGITEMCARD_H
+#define UICONFIGITEMCARD_H
 
 #include "data/text.h"
-#include "plugin/pluginobject.h"
-#include <QWidget>
+#include "data/config.h"
 #include <QLabel>
 #include <QVector>
 #include <QLayout>
-#include <QPixmap>
-#include <QMouseEvent>
 #include <QDir>
+#include <QMouseEvent>
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QComboBox>
+#include <QDoubleSpinBox>
+#include <QSpinBox>
+#include <QListView>
+#include <QMessageBox>
 
 /**
- * @brief 插件列表卡片
- * @details 位于插件页的插件列表，显示插件概要
+ * @brief 配置项
+ * @details 位于配置页，用于显示配置信息
  */
-class UiPluginListCard : public QWidget
+
+class UiConfigItemCard : public QWidget
 {
     Q_OBJECT
-
 public:
-    explicit UiPluginListCard(QWidget *parent = nullptr);
-    ~UiPluginListCard();
-
-    qint32 m_index; ///< 序号
+    explicit UiConfigItemCard(QWidget *parent = nullptr);
+    ~UiConfigItemCard();
 
     /**
      * @brief 初始化
      * @details 初始化界面内容
      * @param 文本指针
-     * @param 插件对象指针
-     * @param 序号
+     * @param 配置项指针
+     * @param 函数指针：获取配置
      */
-    void init(Text *ptrText, PluginObject *ptrObj, qint32 index);
+    void init(Text *ptrText, Config::Item *ptrItem, Config::PTRFUNC_GET_CONFIG ptrfuncGetConf);
 
-    /**
-     * @brief 设置选定
-     * @param 是否选定
-     */
-    void setSelected(bool flag = true);
+signals:
+    void sigValueChanged(); ///< 信号：值改变
+    void sigRestart();  ///< 信号：重启
 
 private:
     Text *m_p_text = nullptr;   ///< 文本
-    PluginObject *m_p_obj = nullptr;///< 插件对象
+    Config::Item *m_p_item = nullptr;   ///< 配置项指针
+    bool m_restart_flag = false;///< 重启
+    Config::PTRFUNC_GET_CONFIG m_ptrfunc_get_conf;///< 函数指针：获取配置
 
     // 部件部分
-    QLabel *ui_plugin_list_card_icon = nullptr; ///< 图标
-    QLabel *ui_plugin_list_card_caption = nullptr;  ///< 名称
-    QLabel *ui_plugin_list_card_author = nullptr;   ///< 作者
-    QLabel *ui_plugin_list_card_version = nullptr;  ///< 版本
-    QLabel *ui_plugin_list_card_desc = nullptr; ///< 介绍
-    QVector<QLabel *> *ui_plugin_list_card_elements = nullptr;  ///< 元素列表
+    QLabel *ui_conf_item_card_caption = nullptr;///< 标题
+    QLabel *ui_conf_item_card_desc = nullptr;   ///< 描述
+    QLabel *ui_conf_item_card_name = nullptr;   ///< 配置名称
+    QLabel *ui_conf_item_card_status = nullptr; ///< 状态
+
+    QCheckBox *ui_conf_item_card_switch = nullptr;  ///< 开关
+    QLineEdit *ui_conf_item_card_lineedit = nullptr;///< 文本编辑
+    QDoubleSpinBox *ui_conf_item_card_spin_box_real = nullptr;///< 实数数值框
+    QSpinBox *ui_conf_item_card_spin_box = nullptr;  ///< 整数数值框
+    QComboBox *ui_conf_item_card_combobox = nullptr;///< 组合框
+
     // 部件部分
-    QHBoxLayout *ui_plugin_list_card_layout_main = nullptr; ///< 主布局
-    QVBoxLayout *ui_plugin_list_card_layout_content = nullptr;  ///< 内容布局
-    QHBoxLayout *ui_plugin_list_card_layout_title = nullptr;///< 标题布局
-    QHBoxLayout *ui_plugin_list_card_layout_elements = nullptr; ///< 元素布局
+    QHBoxLayout *ui_conf_item_card_layout_main = nullptr; ///< 主布局
+    QVBoxLayout *ui_conf_item_card_layout_text = nullptr; ///< 文本布局
 
     /**
      * @brief 初始化部件
@@ -116,21 +122,15 @@ private:
     void clearConnect();
 
     /**
-     * @brief 初始化元素图标
+     * @brief 刷新状态
      */
-    void initElementsIcon();
+    void refreshStatus();
 
     /**
-     * @brief 获取元素图标
-     * @return 图标标签
+     * @brief 槽：值改变
      */
-    QLabel *getElementIcon();
+    void slotValueChanged();
 
-signals:
-    void clicked(qint32);
-
-protected:
-    virtual void mouseReleaseEvent(QMouseEvent *ev);
 };
 
-#endif // UIPLUGINLISTCARD_H
+#endif // UICONFIGITEMCARD_H

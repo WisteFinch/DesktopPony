@@ -102,7 +102,8 @@ private:
     Style *m_p_style = nullptr;
     Text *m_p_text = nullptr;
 
-    PTRFUNC_GET_ELEMENT_PAIR_LIST m_ptrfun_get_element_pair_list = nullptr;
+    PTRFUNC_GET_ELEMENT_PAIR_LIST m_ptrfunc_get_element_pair_list = nullptr; ///< 函数指针：
+    Config::PTRFUNC_GET_CONFIG m_ptrfunc_get_conf;///< 函数指针：获取配置
 };
 
 #endif // DESKTOPPONY_H

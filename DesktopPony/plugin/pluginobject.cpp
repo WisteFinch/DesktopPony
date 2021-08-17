@@ -10,7 +10,7 @@ PluginObject::~PluginObject()
     clear();
 }
 
-PLUGIN_EXC_LIST *PluginObject::readHead(QString path, bool isSystem, ELEMENT_CONFIG_NAME_INDEX *configNameIndex)
+PLUGIN_EXC_LIST *PluginObject::readHead(QString path, bool isSystem, ELEMENT_CONFIG_NAME_INDEX *configNameIndex, QSet<QString> *langList)
 {
     // 清理
     clear();
@@ -78,7 +78,7 @@ PLUGIN_EXC_LIST *PluginObject::readHead(QString path, bool isSystem, ELEMENT_CON
                 if(p.isEmpty()) {
                     continue;
                 }
-                PluginElement *e = readElement(p, configNameIndex);  // 读取元素
+                PluginElement *e = readElement(p, configNameIndex, langList);  // 读取元素
 
                 // 元素uuid去重
                 if(this->m_p_element_uuid_index->contains(e->m_p_metadata->uuid16)) {
@@ -166,7 +166,7 @@ void PluginObject::metadataCheck()
     }
 }
 
-PluginElement *PluginObject::readElement(QString path, ELEMENT_CONFIG_NAME_INDEX *configNameIndex)
+PluginElement *PluginObject::readElement(QString path, ELEMENT_CONFIG_NAME_INDEX *configNameIndex, QSet<QString> *langList)
 {
     // 读取元素头文件并转换为jsonObj
     QFile head(path);
@@ -212,7 +212,7 @@ PluginElement *PluginObject::readElement(QString path, ELEMENT_CONFIG_NAME_INDEX
         QString dirPath = QFileInfo(path).path();
         // 元素类型为本地化
         if(type == element_type_localisation) {
-            e = new PluginElementLocalisation();
+            e = new PluginElementLocalisation(langList);
             this->m_p_exc_list->append(*e->read(rootObj, path, dirPath, true));
             this->m_p_metadata->has_localisation = true;
         }

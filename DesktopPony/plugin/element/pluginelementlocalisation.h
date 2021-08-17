@@ -39,7 +39,7 @@
 class PluginElementLocalisation : public PluginElement
 {
 public:
-    PluginElementLocalisation();
+    PluginElementLocalisation(QSet<QString> *langList);
     ~PluginElementLocalisation();
 
     /**
@@ -60,6 +60,7 @@ public:
     QVector<PluginElementLocalisationData::Lang *> *readLang(QJsonArray array, bool isPublic);
 
     PluginElementLocalisationData *m_p_data = nullptr;  ///< 本地化数据
+    QSet<QString> *m_p_lang_list = nullptr; ///< 语种列表
 };
 
 #endif // PLUGINELEMENTLOCALISATION_H

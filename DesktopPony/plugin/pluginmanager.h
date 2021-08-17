@@ -36,6 +36,7 @@
 #include <QFile>
 #include <QDir>
 #include <QJsonObject>
+#include <QSet>
 
 /**
  * @brief 插件管理
@@ -67,11 +68,18 @@ public:
      */
     ELEMENT_PAIR_LIST *getElementPairList(PLUGIN_ELEMENT_TYPE type);
 
+    /**
+     * @brief 获取语种列表
+     * @return 语种列表
+     */
+    QSet<QString> *getLangList();
+
     OBJECT_LIST *m_p_plugin_obj_list = nullptr;  ///< 插件对象列表
     OBJECT_UUID_INDEX *m_p_plugin_obj_uuid_index = nullptr;   ///< 对象uuid索引
     OBJECT_TYPE_INDEX *m_p_plugin_obj_type_index = nullptr;///< 对象包含的元素类型索引
     ELEMENT_TYPE_INDEX *m_p_plugin_element_type_index = nullptr;  ///< 元素类型索引
     ELEMENT_CONFIG_NAME_INDEX *m_p_plugin_element_config_name_index = nullptr;  ///< 配置元素名称索引
+    QSet<QString> *m_p_lang_list = nullptr; ///< 语种列表
 
     PLUGIN_EXC_LIST *m_p_plugin_exc_list = nullptr; ///< 插件异常列表
 };

@@ -30,6 +30,8 @@
 #define CONFIG_H
 
 #include "plugin/element/pluginelementconfig.h"
+#include "plugin/element/pluginelementstyle.h"
+#include "plugin/element/pluginelementlocalisation.h"
 #include "metadata.h"
 
 /**
@@ -43,19 +45,21 @@ public:
     ~Config();
 
     struct Item {
-        QString config_name;///< 配置名称
         QVariant v; ///< 值
-        PluginElementConfigData::Config_TYPE type;  ///< 类型
         QString obj_uuid;   ///< 对象uuid
         QString element_uuid;   ///< 元素uuid
         QString group_uuid; ///< 组uuid
+        PluginElementConfigData::Item *info = nullptr;  ///< 信息
     };  ///< 配置项
+
+    typedef std::function<QVariant(QString)> PTRFUNC_GET_CONFIG;///< 类型定义：函数指针:获取配置
 
     /**
      * @brief 初始化
      * @param "插件元素组合列表"函数指针
+     * @param 语种列表
      */
-    void init(PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfunc);
+    void init(PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfunc, QSet<QString> *langList);
 
     /**
      * @brief 清理
@@ -96,11 +100,44 @@ public:
      */
     void set(QString key, QVariant value);
 
+    /**
+     * @brief 获取配置项信息
+     * @param 对象uuid
+     * @param 元素uuid
+     * @param 项uuid
+     * @return 配置项信息
+     */
+    PluginElementConfigData::Item getItem(QString objUuid, QString elementUuid, QString itemUuid);
+
+    /**
+     * @brief 获取配置项列表
+     * @return 配置项列表
+     */
+    QMap<QString, Item *> *getList();
+
+    /**
+     * @brief 获取配置项类别索引
+     * @return 配置项类别索引
+     */
+    QMap<QString, QVector<QString>*> *getCategoryIndex();
+
 private:
     QMap<QString, Item *> *m_p_config_data = nullptr;  ///< 配置数据
+    QMap<QString, QVector<QString>*> *m_p_category_index = nullptr;  ///< 配置项类别索引 <类别, <配置项id>>
     QMap<QPair<QString, QString>, PluginElementConfig *> *m_p_element_index = nullptr;///< 配置元素索引 <<对象uuid, 元素uuid>, 配置元素>
-    PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfun_get_element_pair_list = nullptr;   ///< "插件元素组合列表"函数指针
+    PTRFUNC_GET_ELEMENT_PAIR_LIST m_ptrfunc_get_element_pair_list = nullptr;   ///< "插件元素组合列表"函数指针
     QJsonObject *m_p_json_obj = nullptr;  ///< 配置文件json对象
+    QSet<QString> *m_p_lang_list = nullptr; ///< 语种列表
+
+    PluginElementConfigData::Item *m_p_sys_item_info_lang = nullptr; ///< 系统配置项信息：语种
+    PluginElementConfigData::Item *m_p_sys_item_info_style = nullptr;///< 系统配置项信息：样式
+    PluginElementConfigData::Item *m_p_sys_item_info_character = nullptr;///< 系统配置项信息：角色
+    PluginElementConfigData::Item *m_p_sys_item_info_debug = nullptr;///< 系统配置项信息：调试
+
+    /**
+     * @brief 初始化系统配置项信息
+     */
+    void initSystemItem();
 };
 
 #endif // CONFIG_H

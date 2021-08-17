@@ -2,17 +2,19 @@
 
 Config::Config()
 {
-
 }
 
 Config::~Config()
 {
     clear();
+    this->m_p_lang_list = nullptr;
 }
 
-void Config::init(PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfunc)
+void Config::init(PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfunc, QSet<QString> *langList)
 {
-    this->ptrfun_get_element_pair_list = ptrfunc;
+    this->m_ptrfunc_get_element_pair_list = ptrfunc;
+    this->m_p_lang_list = langList;
+    langList = nullptr;
 }
 
 void Config::clear()
@@ -31,9 +33,31 @@ void Config::clear()
         delete this->m_p_element_index;
         this->m_p_element_index = nullptr;
     }
+    if(this->m_p_category_index != nullptr) {
+        qDeleteAll(this->m_p_category_index->begin(), this->m_p_category_index->end());
+        delete this->m_p_category_index;
+        this->m_p_category_index = nullptr;
+    }
     if(this->m_p_json_obj != nullptr) {
         delete this->m_p_json_obj;
         this->m_p_json_obj = nullptr;
+    }
+
+    if(this->m_p_sys_item_info_lang != nullptr) {
+        delete this->m_p_sys_item_info_lang;
+        this->m_p_sys_item_info_lang = nullptr;
+    }
+    if(this->m_p_sys_item_info_style != nullptr) {
+        delete this->m_p_sys_item_info_style;
+        this->m_p_sys_item_info_style = nullptr;
+    }
+    if(this->m_p_sys_item_info_character != nullptr) {
+        delete this->m_p_sys_item_info_character;
+        this->m_p_sys_item_info_character = nullptr;
+    }
+    if(this->m_p_sys_item_info_debug != nullptr) {
+        delete this->m_p_sys_item_info_debug;
+        this->m_p_sys_item_info_debug = nullptr;
     }
 }
 
@@ -41,12 +65,37 @@ void Config::creatIndex()
 {
     // 清理
     clear();
+    initSystemItem();
     this->m_p_config_data = new QMap<QString, Item *>;
     this->m_p_element_index = new QMap<QPair<QString, QString>, PluginElementConfig *>;
+    this->m_p_category_index = new QMap<QString, QVector<QString>*>;
 
-    ELEMENT_PAIR_LIST *rootList = this->ptrfun_get_element_pair_list(PLUGIN_ELEMENT_TYPE::element_type_config);
-    ELEMENT_PAIR_LIST::Iterator rootIter;
-    for(rootIter = rootList->begin(); rootIter != rootList->end(); rootIter++) {
+    // 系统配置
+    this->m_p_category_index->insert(QStringLiteral("system"), new QVector<QString>);
+    // 语言
+    Item *langItem = new Item;
+    langItem->info = this->m_p_sys_item_info_lang;
+    langItem->v = this->m_p_sys_item_info_lang->_default;
+    this->m_p_config_data->insert(this->m_p_sys_item_info_lang->config_name, langItem);
+    this->m_p_category_index->value(QStringLiteral("system"))->append(langItem->info->config_name);
+    // 样式
+    Item *styleItem = new Item;
+    styleItem->info = this->m_p_sys_item_info_style;
+    styleItem->v = this->m_p_sys_item_info_style->_default;
+    this->m_p_config_data->insert(this->m_p_sys_item_info_style->config_name, styleItem);
+    this->m_p_category_index->value(QStringLiteral("system"))->append(styleItem->info->config_name);
+    // 调试
+    Item *debugItem = new Item;
+    debugItem->info = this->m_p_sys_item_info_debug;
+    debugItem->v = this->m_p_sys_item_info_debug->_default;
+    this->m_p_config_data->insert(this->m_p_sys_item_info_debug->config_name, debugItem);
+    this->m_p_category_index->value(QStringLiteral("system"))->append(debugItem->info->config_name);
+
+
+    // 插件配置
+    ELEMENT_PAIR_LIST *rootList = this->m_ptrfunc_get_element_pair_list(PLUGIN_ELEMENT_TYPE::element_type_config);
+    ELEMENT_PAIR_LIST::Iterator rootIter = rootList->begin();
+    while(rootIter != rootList->end()) {
         PluginElementConfig *element = static_cast<PluginElementConfig *>(rootIter->first);
         QVector<PluginElementConfigData::Item> *list = element->m_p_data->item_list;
 
@@ -58,16 +107,20 @@ void Config::creatIndex()
         while(listIter != list->end()) {
             if(!listIter->isErr) {
                 Item *item = new Item;
-                item->config_name = listIter->config_name;
-                item->type = listIter->type;
+                item->info = listIter;
                 item->v = listIter->_default;
                 item->obj_uuid = rootIter->first->m_p_metadata->obj_uuid;
                 item->element_uuid = rootIter->first->m_p_metadata->uuid16;
                 item->group_uuid = listIter->uuid16;
-                this->m_p_config_data->insert(item->config_name, item);
+                this->m_p_config_data->insert(item->info->config_name, item);
+                if(!this->m_p_category_index->contains(item->info->category)) {
+                    this->m_p_category_index->insert(item->info->category, new QVector<QString>);
+                }
+                this->m_p_category_index->value(item->info->category)->append(item->info->config_name);
             }
             listIter++;
         }
+        rootIter++;
     }
 }
 
@@ -100,16 +153,16 @@ void Config::load()
         for(int i = 0; i < keyList.count(); i++) {
             QVariant v = rootObj.value(keyList.at(i)).toVariant();
             Item *item = this->m_p_config_data->value(keyList.at(i));
-            if(item->type == PluginElementConfigData::config_type_integer) {
-                item->v = v.toInt();
-            } else if(item->type == PluginElementConfigData::config_type_real) {
-                item->v = v.toDouble();
-            } else if(item->type == PluginElementConfigData::config_type_bool) {
-                item->v = v.toBool();
-            } else if(item->type == PluginElementConfigData::config_type_string) {
-                item->v = v.toString();
-            } else if(item->type == PluginElementConfigData::config_type_select) {
-                item->v = v.toString();
+            if(item->info->type == PluginElementConfigData::config_type_integer) {
+                item->v.setValue(v.toInt());
+            } else if(item->info->type == PluginElementConfigData::config_type_real) {
+                item->v.setValue(v.toDouble());
+            } else if(item->info->type == PluginElementConfigData::config_type_bool) {
+                item->v.setValue(v.toBool());
+            } else if(item->info->type == PluginElementConfigData::config_type_string) {
+                item->v.setValue(v.toString());
+            } else if(item->info->type == PluginElementConfigData::config_type_select) {
+                item->v.setValue(v.toString());
             }
         }
     } else {
@@ -126,8 +179,8 @@ void Config::save()
 
     QMap<QString, Item *>::iterator iter = this->m_p_config_data->begin();
     while(iter != this->m_p_config_data->end()) {
-        this->m_p_json_obj->remove(iter.value()->config_name);
-        this->m_p_json_obj->insert(iter.value()->config_name, QJsonValue::fromVariant(iter.value()->v));
+        this->m_p_json_obj->remove(iter.value()->info->config_name);
+        this->m_p_json_obj->insert(iter.value()->info->config_name, QJsonValue::fromVariant(iter.value()->v));
         iter++;
     }
 
@@ -159,7 +212,7 @@ void Config::makeJsonObj()
 
     QMap<QString, Item *>::iterator iter = this->m_p_config_data->begin();
     while(iter != this->m_p_config_data->end()) {
-        this->m_p_json_obj->insert(iter.value()->config_name, QJsonValue::fromVariant(iter.value()->v));
+        this->m_p_json_obj->insert(iter.value()->info->config_name, QJsonValue::fromVariant(iter.value()->v));
         iter++;
     }
 }
@@ -178,15 +231,15 @@ void Config::set(QString key, QVariant value)
 {
     if(this->m_p_config_data->contains(key)) {
         Item *item = this->m_p_config_data->value(key);
-        if(item->type == PluginElementConfigData::config_type_integer && value.type() == QVariant::Int) {
+        if(item->info->type == PluginElementConfigData::config_type_integer && value.type() == QVariant::Int) {
             item->v = value;
-        } else if(item->type == PluginElementConfigData::config_type_real && value.type() == QVariant::Double) {
+        } else if(item->info->type == PluginElementConfigData::config_type_real && value.type() == QVariant::Double) {
             item->v = value;
-        } else if(item->type == PluginElementConfigData::config_type_bool && value.type() == QVariant::Bool) {
+        } else if(item->info->type == PluginElementConfigData::config_type_bool && value.type() == QVariant::Bool) {
             item->v = value;
-        } else if(item->type == PluginElementConfigData::config_type_string && value.type() == QVariant::String) {
+        } else if(item->info->type == PluginElementConfigData::config_type_string && value.type() == QVariant::String) {
             item->v = value;
-        } else if(item->type == PluginElementConfigData::config_type_select && value.type() == QVariant::String) {
+        } else if(item->info->type == PluginElementConfigData::config_type_select && value.type() == QVariant::String) {
             item->v = value;
         } else {
             // 异常：类型不符
@@ -195,3 +248,91 @@ void Config::set(QString key, QVariant value)
         // 异常：键不存在
     }
 }
+
+PluginElementConfigData::Item Config::getItem(QString objUuid, QString elementUuid, QString itemUuid)
+{
+    PluginElementConfigData::Item item;
+    if(this->m_p_element_index->contains(QPair<QString, QString>(objUuid, elementUuid))) {
+        PluginElementConfigData *data = (this->m_p_element_index->value(QPair<QString, QString>(objUuid, elementUuid)))->m_p_data;
+        if(data->item_uuid_index->contains(itemUuid)) {
+            item = data->item_list->at(data->item_uuid_index->value(itemUuid));
+        }
+    }
+    return item;
+}
+
+QMap<QString, Config::Item *> *Config::getList()
+{
+    return this->m_p_config_data;
+}
+
+QMap<QString, QVector<QString>*> *Config::getCategoryIndex()
+{
+    return this->m_p_category_index;
+}
+
+void Config::initSystemItem()
+{
+    this->m_p_sys_item_info_lang = new PluginElementConfigData::Item;
+    this->m_p_sys_item_info_style = new PluginElementConfigData::Item;
+    this->m_p_sys_item_info_character = new PluginElementConfigData::Item;
+    this->m_p_sys_item_info_debug = new PluginElementConfigData::Item;
+    // 语种
+    this->m_p_sys_item_info_lang->id = QStringLiteral("sys_lang");
+    this->m_p_sys_item_info_lang->caption = QStringLiteral("§[loc_pub:conf_item_sys_lang_cap]");
+    this->m_p_sys_item_info_lang->desc = QStringLiteral("§[loc_pub:conf_item_sys_lang_desc]");
+    this->m_p_sys_item_info_lang->config_name = QStringLiteral("sys_lang");
+    this->m_p_sys_item_info_lang->category = QStringLiteral("system");
+    this->m_p_sys_item_info_lang->type = PluginElementConfigData::config_type_select;
+    this->m_p_sys_item_info_lang->_default.setValue(QStringLiteral("zh-hans"));
+    this->m_p_sys_item_info_lang->restart = true;
+    if(this->m_p_lang_list != nullptr) {
+        QSet<QString>::iterator iter = this->m_p_lang_list->begin();
+        while(iter != this->m_p_lang_list->end()) {
+            PluginElementConfigData::Item::SelectItem selectItem;
+            selectItem.id = *iter;
+            selectItem.name = QStringLiteral("§[loc_pub:lang_") + *iter + QStringLiteral("]");
+            this->m_p_sys_item_info_lang->select.append(selectItem);
+            iter++;
+        }
+    }
+
+    // 样式
+    this->m_p_sys_item_info_style->id = QStringLiteral("sys_style");
+    this->m_p_sys_item_info_style->caption = QStringLiteral("§[loc_pub:conf_item_sys_style_cap]");
+    this->m_p_sys_item_info_style->desc = QStringLiteral("§[loc_pub:conf_item_sys_style_desc]");
+    this->m_p_sys_item_info_style->config_name = QStringLiteral("sys_style");
+    this->m_p_sys_item_info_style->category = QStringLiteral("system");
+    this->m_p_sys_item_info_style->type = PluginElementConfigData::config_type_select;
+    this->m_p_sys_item_info_style->_default.setValue(QStringLiteral("default"));
+    this->m_p_sys_item_info_style->restart = true;
+    ELEMENT_PAIR_LIST *rootList = this->m_ptrfunc_get_element_pair_list(PLUGIN_ELEMENT_TYPE::element_type_style);
+    ELEMENT_PAIR_LIST::Iterator rootIter;
+    if(rootList != nullptr) {
+        rootIter = rootList->begin();
+        while(rootIter != rootList->end()) {
+            PluginElementStyle *element = static_cast<PluginElementStyle *>(rootIter->first);
+            PluginElementStyleData *data = element->m_p_data;
+
+            PluginElementConfigData::Item::SelectItem selectItem;
+            selectItem.id = data->style_name;
+            selectItem.obj_uuid = element->m_p_metadata->obj_uuid;
+            selectItem.name = QStringLiteral("§[loc_priv:style_") + data->style_name + QStringLiteral("]");
+            this->m_p_sys_item_info_style->select.append(selectItem);
+            rootIter++;
+        }
+    }
+
+    // 角色
+
+    // 调试
+    this->m_p_sys_item_info_debug->id = QStringLiteral("sys_debug");
+    this->m_p_sys_item_info_debug->caption = QStringLiteral("§[loc_pub:conf_item_sys_debug_cap]");
+    this->m_p_sys_item_info_debug->desc = QStringLiteral("§[loc_pub:conf_item_sys_debug_desc]");
+    this->m_p_sys_item_info_debug->config_name = QStringLiteral("sys_debug");
+    this->m_p_sys_item_info_debug->category = QStringLiteral("system");
+    this->m_p_sys_item_info_debug->type = PluginElementConfigData::config_type_bool;
+    this->m_p_sys_item_info_debug->_default.setValue(false);
+    this->m_p_sys_item_info_debug->hidden = true;
+}
+

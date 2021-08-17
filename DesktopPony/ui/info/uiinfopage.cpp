@@ -48,12 +48,9 @@ void UiInfoPage::initWidget()
 
     // 关于
     this->ui_info_page_layout_about = new QHBoxLayout;
-    this->ui_info_page_layout_about_icon = new QVBoxLayout;
-    this->ui_info_page_layout_about->addLayout(this->ui_info_page_layout_about_icon);
     this->ui_info_page_about_icon = new QLabel;
     this->ui_info_page_about_icon->setScaledContents(true);
-    this->ui_info_page_layout_about_icon->addWidget(this->ui_info_page_about_icon);
-    this->ui_info_page_layout_about_icon->addStretch();
+    this->ui_info_page_layout_about->addWidget(this->ui_info_page_about_icon, Qt::AlignTop);
     this->ui_info_page_about = new QLabel;
     this->ui_info_page_about->setWordWrap(true);
     this->ui_info_page_layout_about->addWidget(this->ui_info_page_about);
@@ -181,7 +178,6 @@ void UiInfoPage::initObjectName()
     this->ui_info_page_layout_scrollarea->setObjectName("ui_info_page_layout_scrollarea");
     this->ui_info_page_layout_scrollarea_basis->setObjectName("ui_info_page_layout_scrollarea_basis");
     this->ui_info_page_layout_about->setObjectName("ui_info_page_layout_about");
-    this->ui_info_page_layout_about_icon->setObjectName("ui_info_page_layout_about_icon");
     this->ui_info_page_layout_log->setObjectName("ui_info_page_layout_log");
     this->ui_info_page_layout_log_text->setObjectName("ui_info_page_layout_log_text");
     this->ui_info_page_layout_version->setObjectName("ui_info_page_layout_version");
@@ -197,30 +193,30 @@ void UiInfoPage::initProperty()
 {
     this->setProperty("category", "page");
     // 部件部分
-    this->ui_info_page_scrollarea->setProperty("category", "plugin_info_scrollarea");
-    this->ui_info_page_scrollarea_widget->setProperty("category", "plugin_info_scrollarea_widget");
-    this->ui_info_page_scrollarea_basis->setProperty("category", "plugin_info_scrollarea_basis_widget");
-    this->ui_info_page_about_icon->setProperty("category", "plugin_info_icon_label");
-    this->ui_info_page_about->setProperty("category", "plugin_info_desc_label");
-    this->ui_info_page_log_caption->setProperty("category", "plugin_info_item_caption_label");
-    this->ui_info_page_log_desc->setProperty("category", "plugin_info_item_desc_label");
-    this->ui_info_page_log_view->setProperty("category", "plugin_info_button");
-    this->ui_info_page_version_caption->setProperty("category", "plugin_info_item_caption_label");
-    this->ui_info_page_version_desc->setProperty("category", "plugin_info_item_desc_label");
-    this->ui_info_page_version_check_update->setProperty("category", "plugin_info_button");
-    this->ui_info_page_repo_caption->setProperty("category", "plugin_info_item_caption_label");
-    this->ui_info_page_repo_desc->setProperty("category", "plugin_info_item_desc_label");
-    this->ui_info_page_github_link->setProperty("category", "plugin_info_button");
-    this->ui_info_page_doc_caption->setProperty("category", "plugin_info_item_caption_label");
-    this->ui_info_page_doc_desc->setProperty("category", "plugin_info_item_desc_label");
-    this->ui_info_page_doc_link->setProperty("category", "plugin_info_button");
-    this->ui_info_page_copyright_caption->setProperty("category", "plugin_info_appinfo_caption_label");
-    this->ui_info_page_copyright->setProperty("category", "plugin_info_appinfo_text_label");
-    this->ui_info_page_author_caption->setProperty("category", "plugin_info_appinfo_caption_label");
-    this->ui_info_page_author->setProperty("category", "plugin_info_appinfo_text_label");
-    this->ui_info_page_license_caption->setProperty("category", "plugin_info_appinfo_caption_label");
-    this->ui_info_page_license->setProperty("category", "plugin_info_appinfo_text_label");
-    this->ui_info_page_license_link->setProperty("category", "plugin_info_button");
+    this->ui_info_page_scrollarea->setProperty("category", "info_page_scrollarea");
+    this->ui_info_page_scrollarea_widget->setProperty("category", "info_page_scrollarea_widget");
+    this->ui_info_page_scrollarea_basis->setProperty("category", "info_page_scrollarea_basis_widget");
+    this->ui_info_page_about_icon->setProperty("category", "info_page_icon_label");
+    this->ui_info_page_about->setProperty("category", "info_page_desc_label");
+    this->ui_info_page_log_caption->setProperty("category", "info_page_item_caption_label");
+    this->ui_info_page_log_desc->setProperty("category", "info_page_item_desc_label");
+    this->ui_info_page_log_view->setProperty("category", "info_page_button");
+    this->ui_info_page_version_caption->setProperty("category", "info_page_item_caption_label");
+    this->ui_info_page_version_desc->setProperty("category", "info_page_item_desc_label");
+    this->ui_info_page_version_check_update->setProperty("category", "info_page_button");
+    this->ui_info_page_repo_caption->setProperty("category", "info_page_item_caption_label");
+    this->ui_info_page_repo_desc->setProperty("category", "info_page_item_desc_label");
+    this->ui_info_page_github_link->setProperty("category", "info_page_button");
+    this->ui_info_page_doc_caption->setProperty("category", "info_page_item_caption_label");
+    this->ui_info_page_doc_desc->setProperty("category", "info_page_item_desc_label");
+    this->ui_info_page_doc_link->setProperty("category", "info_page_button");
+    this->ui_info_page_copyright_caption->setProperty("category", "info_page_appinfo_caption_label");
+    this->ui_info_page_copyright->setProperty("category", "info_page_appinfo_text_label");
+    this->ui_info_page_author_caption->setProperty("category", "info_page_appinfo_caption_label");
+    this->ui_info_page_author->setProperty("category", "info_page_appinfo_text_label");
+    this->ui_info_page_license_caption->setProperty("category", "info_page_appinfo_caption_label");
+    this->ui_info_page_license->setProperty("category", "info_page_appinfo_text_label");
+    this->ui_info_page_license_link->setProperty("category", "info_page_button");
 }
 
 void UiInfoPage::initContent()

@@ -75,8 +75,9 @@ public:
      * @param 配置指针
      * @param 样式指针
      * @param 文本指针
+     * @param 函数指针：获取配置
      */
-    void init(Config *ptrconf, Style *ptrStyle, Text *ptrText, PluginManager *ptrPluginManager);
+    void init(Config *ptrconf, Style *ptrStyle, Text *ptrText, PluginManager *ptrPluginManager, Config::PTRFUNC_GET_CONFIG ptrfuncGetConf);
 
     /**
      * @brief 槽：切换标签
@@ -84,7 +85,7 @@ public:
     void slotChangeTab(int index);
 
 signals:
-    void sigReloadData();   ///< 信号：重载数据
+    void sigRestart();  ///< 信号：重启
 
 private:
     Ui::UiMainPanel *ui;
@@ -93,7 +94,7 @@ private:
     Style *m_p_style = nullptr; ///< 样式
     Text *m_p_text = nullptr;   ///< 文本
     PluginManager *m_p_plugin = nullptr;///< 插件
-
+    Config::PTRFUNC_GET_CONFIG m_ptrfunc_get_conf;///< 函数指针：获取配置
     int m_page_index;   ///< 当前页序号
 
     // Widget部分

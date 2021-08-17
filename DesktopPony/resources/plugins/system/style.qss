@@ -196,6 +196,54 @@ QLabel[category = 'plugin_list_card_element_icon_label']{
 
 /* 配置页 */
 
+#ui_conf_page_category_widget{
+    background-color: rgba(255, 255, 255, 200);
+    border-radius: 5px;
+    height: 30px;
+}
+
+#ui_conf_page_category_caption{
+    font: bold;
+}
+
+#ui_conf_item_card_desc, #ui_conf_item_card_name{
+    color: rgba(0, 0, 0, 175);
+}
+
+#ui_conf_item_card_status{
+    color: rgba(255, 0, 0, 175);
+}
+
+QSpinBox[category = 'conf_item_card_value'], QDoubleSpinBox[category = 'conf_item_card_value'], QLineEdit[category = 'conf_item_card_value'], QComboBox[category = 'conf_item_card_value']{
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 100);
+    min-width: 200px;
+    max-width: 200px;
+    border-radius: 3px;
+}
+
+QSpinBox[category = 'conf_item_card_value']:selected:hover, QDoubleSpinBox[category = 'conf_item_card_value']:hover, QLineEdit[category = 'conf_item_card_value']:hover, QComboBox[category = 'conf_item_card_value']:hover{
+    border: 1px solid rgba(47, 144, 185, 200);
+}
+
+QSpinBox:selected[category = 'conf_item_card_value']:focus, QDoubleSpinBox[category = 'conf_item_card_value']:focus, QLineEdit[category = 'conf_item_card_value']:focus{
+    border: 1px solid rgba(47, 144, 185, 200);
+    background: rgba(47, 144, 185, 25);
+}
+
+QSpinBox[category = 'conf_item_card_value']::up-button, QSpinBox[category = 'conf_item_card_value']::down-button, QDoubleSpinBox[category = 'conf_item_card_value']::up-button, QDoubleSpinBox[category = 'conf_item_card_value']::down-button{
+    width: 0px;
+}
+
+QCheckBox[category = 'conf_item_card_value']{
+    background: transparent;
+}
+
+QComboBox[category = 'conf_item_card_value'] QAbstractItemView {
+    border: 1px solid rgb(47,144,185);
+    background: rgba(255, 255, 255, 200);
+}
+
 /* 信息页 */
 
 #ui_info_page_scrollarea_widget{
@@ -208,7 +256,7 @@ QLabel[category = 'plugin_list_card_element_icon_label']{
     background: transparent;
 }
 
-QPushButton[category = 'plugin_info_button']{
+QPushButton[category = 'info_page_button']{
     background: rgba(47,144,185,0);
     color: black;
     max-width: 30px;
@@ -218,11 +266,11 @@ QPushButton[category = 'plugin_info_button']{
     border-radius: 15px;
 }
 
-QPushButton[category = 'plugin_info_button']:hover{
+QPushButton[category = 'info_page_button']:hover{
     background: rgba(47,144,185,40);
 }
 
-QPushButton[category = 'plugin_info_button']:pressed{
+QPushButton[category = 'info_page_button']:pressed{
     background: rgba(47,144,185,80);
 }
 
@@ -233,6 +281,6 @@ QPushButton[category = 'plugin_info_button']:pressed{
     min-width: 50px;
 }
 
-QLabel[category = 'plugin_info_item_desc_label']{
+QLabel[category = 'info_page_item_desc_label']{
     color: rgb(100, 100, 100);
 }

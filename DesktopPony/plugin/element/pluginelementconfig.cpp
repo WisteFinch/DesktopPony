@@ -106,22 +106,27 @@ PLUGIN_EXC_LIST *PluginElementConfig::read(QJsonObject obj, QString filePath, QS
         }
         item.caption = itemObj.value("caption").toString();
         item.desc = itemObj.value("description").toString();
+        QString category = itemObj.value("category").toString();
+        if(!category.isEmpty()) {
+            item.category = category;
+        }
         item.type = this->m_p_data->getType(itemObj.value("type").toString());
         item.hidden = itemObj.value("hidden").toBool();
         item.reset = itemObj.value("reset").toBool();
         item.read_only = itemObj.value("read_only").toBool();
+        item.restart = itemObj.value("restart").toBool();
         if(item.type == PluginElementConfigData::Config_TYPE::config_type_integer) {
-            item._default = itemObj.value("default").toInt();
-            item.range_from = itemObj.value("range_from").toInt();
-            item.range_to = itemObj.value("range_to").toInt();
+            item._default.setValue(itemObj.value("default").toInt());
+            item.range_from.setValue(itemObj.value("range_from").toInt());
+            item.range_to.setValue(itemObj.value("range_to").toInt());
         } else if(item.type == PluginElementConfigData::Config_TYPE::config_type_real) {
-            item._default = itemObj.value("default").toDouble();
-            item.range_from = itemObj.value("range_from").toDouble();
-            item.range_to = itemObj.value("range_to").toDouble();
+            item._default.setValue(itemObj.value("default").toDouble());
+            item.range_from.setValue(itemObj.value("range_from").toDouble());
+            item.range_to.setValue(itemObj.value("range_to").toDouble());
         } else if(item.type == PluginElementConfigData::Config_TYPE::config_type_bool) {
-            item._default = itemObj.value("default").toBool();
+            item._default.setValue(itemObj.value("default").toBool());
         } else if(item.type == PluginElementConfigData::Config_TYPE::config_type_string) {
-            item._default = itemObj.value("default").toString();
+            item._default.setValue(itemObj.value("default").toString());
         } else if(item.type == PluginElementConfigData::Config_TYPE::config_type_select) {
             QJsonArray selectList = itemObj.value("select_list").toArray();
             for(int j = 0; j < selectList.count(); j++) {
@@ -166,10 +171,11 @@ PLUGIN_EXC_LIST *PluginElementConfig::read(QJsonObject obj, QString filePath, QS
                     this->m_p_exc_list->append(d);
                     item.isErr = true;
                 }
-                si.caption = sObj.value("caption").toString();
+                si.name = sObj.value("name").toString();
+                si.obj_uuid = this->m_p_metadata->obj_uuid;
 
                 item.select.append(si);
-                item._default = itemObj.value("default").toString();
+                item._default.setValue(itemObj.value("default").toString());
             }
         } else {
             // 异常：错误701-配置元素：组少项类型
@@ -179,7 +185,6 @@ PLUGIN_EXC_LIST *PluginElementConfig::read(QJsonObject obj, QString filePath, QS
             this->m_p_exc_list->append(d);
             item.isErr = true;
         }
-
 
         // 加入索引
         this->m_p_data->item_uuid_index->insert(item.uuid16, i);

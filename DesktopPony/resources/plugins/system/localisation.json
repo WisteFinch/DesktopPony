@@ -21,6 +21,14 @@
                     "plugin_accessories": "配件",
                     "plugin_model": "模型",
                     "plugin_config": "配置",
+                    "config_category_system": "系统",
+                    "config_category_general": "通用",
+                    "conf_item_sys_lang_cap": "语言",
+                    "conf_item_sys_lang_desc": "选择程序语言，重启后生效",
+                    "conf_item_sys_style_cap": "皮肤",
+                    "conf_item_sys_style_desc": "选择程序皮肤，重启后生效",
+                    "conf_item_sys_debug_cap": "启用调试",
+                    "conf_item_sys_debug_desc": "启用调试",
                     "EXCEPTION_I001": "参数数量错误，需要§[num:0]个，但提供了§[num:1]个",
                     "EXCEPTION_I002": "无效的运算('§[value_type:0]'和'§[value_type:1]')",
                     "EXCEPTION_I003": "数组的大小为非整数类型'§[value_type:0]'",
@@ -50,8 +58,11 @@
                     "ui_plugin_page_tools_enable_tip": "启用",
                     "ui_plugin_page_tools_disable_tip": "禁用",
                     "ui_plugin_page_tools_star_tip": "收藏",
-                    "msgbox_reload_tit": "是否重新载入插件？",
-                    "msgbox_reload_txt": "这可能会花费一些时间...",
+                    "ui_plugin_page_msgbox_reload_tit": "是否重新载入插件？",
+                    "ui_plugin_page_msgbox_reload_txt": "这可能会花费一些时间...",
+                    "ui_conf_page_item_card_status_restart": "重启后生效",
+                    "ui_conf_page_msgbox_restart_tit": "立即应用改动？",
+                    "ui_conf_page_msgbox_restart_txt": "改动将在程序重启后生效，是否立即重启？",
                     "ui_info_page_about_txt": "DesktopPony是一款以小马为主题的桌面宠物。 用C++/QT编写。",
                     "ui_info_page_log_caption_txt": "日志",
                     "ui_info_page_log_desc_txt": "查看程序运行日志",
@@ -87,8 +98,9 @@
                     "sys_plugin_conf_lang_0_c": "简体中文",
                     "sys_plugin_conf_lang_1_c": "繁体中文",
                     "sys_plugin_conf_lang_2_c": "英文",
-                    "sys_plugin_conf_grav_c": "配置",
-                    "sys_plugin_conf_grav_d": "单位：%缩放因子/秒平方"
+                    "sys_plugin_conf_grav_c": "重力",
+                    "sys_plugin_conf_grav_d": "单位：%缩放因子/秒平方",
+                    "style_default": "默认"
                 }
             }
         ]

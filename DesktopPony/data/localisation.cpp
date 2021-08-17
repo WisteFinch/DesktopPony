@@ -25,7 +25,7 @@ void Localisation::clear()
 
 void Localisation::init(PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfunc)
 {
-    this->ptrfun_get_element_pair_list = ptrfunc;
+    this->m_ptrfunc_get_element_pair_list = ptrfunc;
 }
 
 void Localisation::setLanguage(QString lang)
@@ -83,9 +83,9 @@ void Localisation::creatIndex()
     m_p_public = new TABLE;
     m_p_private = new QMap<QString, TABLE *>;
 
-    ELEMENT_PAIR_LIST *rootList = this->ptrfun_get_element_pair_list(PLUGIN_ELEMENT_TYPE::element_type_localisation);
-    ELEMENT_PAIR_LIST::Iterator rootIter;
-    for(rootIter = rootList->begin(); rootIter != rootList->end(); rootIter++) {
+    ELEMENT_PAIR_LIST *rootList = this->m_ptrfunc_get_element_pair_list(PLUGIN_ELEMENT_TYPE::element_type_localisation);
+    ELEMENT_PAIR_LIST::Iterator rootIter = rootList->begin();
+    while(rootIter != rootList->end()) {
         PluginElementLocalisation *element = static_cast<PluginElementLocalisation *>(rootIter->first);
         PluginElementLocalisationData *data = element->m_p_data;
         // 读取公有
@@ -142,5 +142,6 @@ void Localisation::creatIndex()
             }
         }
         data = nullptr;
+        rootIter++;
     }
 }

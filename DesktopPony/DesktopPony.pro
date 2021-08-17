@@ -80,6 +80,7 @@ SOURCES += \
     scriptinterpreter/scriptinterpretershell.cpp \
     tools.cpp \
     ui/character/uicharacterpage.cpp \
+    ui/config/uiconfigitemcard.cpp \
     ui/config/uiconfigpage.cpp \
     ui/info/uiinfopage.cpp \
     ui/plugin/uipluginlistcard.cpp \
@@ -125,6 +126,7 @@ HEADERS += \
     scriptinterpreter/scriptinterpretershell.h \
     tools.h \
     ui/character/uicharacterpage.h \
+    ui/config/uiconfigitemcard.h \
     ui/config/uiconfigpage.h \
     ui/info/uiinfopage.h \
     ui/plugin/uipluginlistcard.h \

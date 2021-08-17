@@ -7,15 +7,26 @@
     },
     "content": [
         {
-            "id": "gravitational_acceleration",
+            "id": "conf_g",
             "config_name": "gravitational_acceleration",
             "caption": "§[loc_priv:sys_plugin_conf_grav_c]",
             "description": "§[loc_priv:sys_plugin_conf_grav_d]",
             "type": "real",
             "hidden": false,
+            "read_only": false,
             "default": 1,
-            "range_from": "0",
-            "range_to": "100"
+            "range_from": 0,
+            "range_to": 100
+        },
+        {
+            "id": "conf_test",
+            "config_name": "switch_test",
+            "caption": "开关测试",
+            "description": "开关测试",
+            "type": "bool",
+            "hidden": false,
+            "read_only": false,
+            "default": true
         }
     ]
 }

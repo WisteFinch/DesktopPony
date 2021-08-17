@@ -43,6 +43,7 @@
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QJsonArray>
+#include <QSet>
 
 /**
  * @brief 插件对象
@@ -57,9 +58,11 @@ public:
     /**
      * @brief 读取头文件
      * @param 路径
+     * @param 配置元素名称索引
+     * @param 语种列表
      * @return 错误信息
      */
-    PLUGIN_EXC_LIST *readHead(QString path, bool isSystem, ELEMENT_CONFIG_NAME_INDEX *configNameIndex);
+    PLUGIN_EXC_LIST *readHead(QString path, bool isSystem, ELEMENT_CONFIG_NAME_INDEX *configNameIndex, QSet<QString> *langList);
 
     /**
      * @brief 元数据检查
@@ -69,9 +72,11 @@ public:
     /**
      * @brief 读取元素
      * @param 元素头文件路径
+     * @param 配置元素名称索引
+     * @param 语种列表
      * @return 元素
      */
-    PluginElement *readElement(QString path, ELEMENT_CONFIG_NAME_INDEX *configNameIndex);
+    PluginElement *readElement(QString path, ELEMENT_CONFIG_NAME_INDEX *configNameIndex, QSet<QString> *langList);
 
     /**
      * @brief 清理

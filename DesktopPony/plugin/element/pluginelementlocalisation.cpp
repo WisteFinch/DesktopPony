@@ -1,8 +1,8 @@
 #include "pluginelementlocalisation.h"
 
-PluginElementLocalisation::PluginElementLocalisation()
+PluginElementLocalisation::PluginElementLocalisation(QSet<QString> *langList)
 {
-
+    this->m_p_lang_list = langList;
 }
 
 PluginElementLocalisation::~PluginElementLocalisation()
@@ -83,6 +83,7 @@ QVector<PluginElementLocalisationData::Lang *> *PluginElementLocalisation::readL
 
         // 读取语种
         lang->lang = langObj.value("lang").toString();
+        this->m_p_lang_list->insert(lang->lang);
         if(lang->lang.isEmpty()) {
             // 异常：错误-100-本地化元素：缺少语种名称
             PluginExceptionData d;

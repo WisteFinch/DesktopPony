@@ -92,6 +92,7 @@ bool AnimationStackedWidget::slotSetIndex(qint32 i)
         if(dMin >= this->m_quick_distance && m_quick_mode_enable) {
             this->m_is_quick_mode = true;
             this->m_duration /= this->m_quick_ratio;
+            this->m_p_animation->setEasingCurve(QEasingCurve::Linear);
         }
         if(dMin == 0) {
             return true;
@@ -227,6 +228,7 @@ void AnimationStackedWidget::slotAnimationFinished()
     if(qAbs(this->m_target_index - this->currentIndex()) <= 1 && m_is_quick_mode) {
         this->m_is_quick_mode = false;
         this->m_duration *= this->m_quick_ratio;
+        this->m_p_animation->setEasingCurve(QEasingCurve::OutQuint);
     }
     // 如果当前页不在目标页，则继续切换
     if(this->m_target_index != currentIndex()) {
