@@ -44,12 +44,14 @@ PLUGIN_EXC_LIST *PluginElement::read(QString filePath, QString dirPath)
             PluginExceptionData d;
             d.e = PLUGIN_EXC_ERR_006;
             d.element_uuid = this->m_p_metadata->uuid16;
-            this->m_p_exc_list->append(d);
+            this->m_p_exc_list->first.append(d);
             return this->m_p_exc_list;
         }
 
         QJsonObject rootObj = jsonDoc.object();
-        this->m_p_exc_list->append(*read(rootObj, filePath, dirPath, false));  // 读取元素头文件
+        PLUGIN_EXC_LIST excList = *read(rootObj, filePath, dirPath, false); // 读取元素头文件
+        this->m_p_exc_list->first.append(excList.first);
+        this->m_p_exc_list->second.append(excList.second);
     } else { // 文件是否打开:否
         // 异常：错误006-插件元素头文件无法读取
         this->m_p_metadata->uuid16 = Tools::creatUuid16();
@@ -57,12 +59,15 @@ PLUGIN_EXC_LIST *PluginElement::read(QString filePath, QString dirPath)
         PluginExceptionData d;
         d.e = PLUGIN_EXC_ERR_005;
         d.element_uuid = this->m_p_metadata->uuid16;
-        this->m_p_exc_list->append(d);
+        this->m_p_exc_list->first.append(d);
         return this->m_p_exc_list;
     }
 
-    PLUGIN_EXC_LIST::iterator iter;
-    for(iter = this->m_p_exc_list->begin(); iter != this->m_p_exc_list->end(); iter++) {
+    QVector<PluginExceptionData>::iterator iter;
+    for(iter = this->m_p_exc_list->first.begin(); iter != this->m_p_exc_list->first.end(); iter++) {
+        iter->element_uuid = this->m_p_metadata->uuid16;
+    }
+    for(iter = this->m_p_exc_list->second.begin(); iter != this->m_p_exc_list->second.end(); iter++) {
         iter->element_uuid = this->m_p_metadata->uuid16;
     }
     return this->m_p_exc_list;
@@ -82,7 +87,7 @@ void PluginElement::readMetadata(QJsonObject metadataObj)
         PluginExceptionData d;
         d.e = PLUGIN_EXC_WARN_006;
         d.element_uuid = this->m_p_metadata->uuid16;
-        this->m_p_exc_list->append(d);
+        this->m_p_exc_list->second.append(d);
     }
     this->m_p_metadata->id = metadataObj.value("id").toString();
     if(this->m_p_metadata->id.isEmpty()) {
@@ -90,7 +95,7 @@ void PluginElement::readMetadata(QJsonObject metadataObj)
         PluginExceptionData d;
         d.e = PLUGIN_EXC_ERR_008;
         d.element_uuid = this->m_p_metadata->uuid16;
-        this->m_p_exc_list->append(d);
+        this->m_p_exc_list->first.append(d);
     }
     this->m_p_metadata->caption = metadataObj.value("caption").toString();
     this->m_p_metadata->description = metadataObj.value("description").toString();

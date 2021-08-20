@@ -52,6 +52,9 @@ public:
     ~UiPluginListCard();
 
     qint32 m_index; ///< 序号
+    PluginObject *m_p_obj = nullptr;///< 插件对象
+    bool m_is_fav = false;  ///< 是否收藏
+    bool m_is_disabled = false; ///< 是否禁用
 
     /**
      * @brief 初始化
@@ -59,8 +62,10 @@ public:
      * @param 文本指针
      * @param 插件对象指针
      * @param 序号
+     * @param 是否收藏
+     * @param 是否禁用
      */
-    void init(Text *ptrText, PluginObject *ptrObj, qint32 index);
+    void init(Text *ptrText, PluginObject *ptrObj, qint32 index, bool isFav, bool isDisabled);
 
     /**
      * @brief 设置选定
@@ -68,9 +73,19 @@ public:
      */
     void setSelected(bool flag = true);
 
+    /**
+     * @brief 获取所有文本
+     * @return 文本
+     */
+    QString getAllText();
+
+    /**
+     * @brief 刷新状态
+     */
+    void refreshStatus();
+
 private:
     Text *m_p_text = nullptr;   ///< 文本
-    PluginObject *m_p_obj = nullptr;///< 插件对象
 
     // 部件部分
     QLabel *ui_plugin_list_card_icon = nullptr; ///< 图标
@@ -78,6 +93,7 @@ private:
     QLabel *ui_plugin_list_card_author = nullptr;   ///< 作者
     QLabel *ui_plugin_list_card_version = nullptr;  ///< 版本
     QLabel *ui_plugin_list_card_desc = nullptr; ///< 介绍
+    QLabel *ui_plugin_list_card_status = nullptr;   ///< 状态
     QVector<QLabel *> *ui_plugin_list_card_elements = nullptr;  ///< 元素列表
     // 部件部分
     QHBoxLayout *ui_plugin_list_card_layout_main = nullptr; ///< 主布局

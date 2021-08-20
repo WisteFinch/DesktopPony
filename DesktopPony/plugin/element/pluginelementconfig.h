@@ -31,6 +31,7 @@
 
 #include "pluginelement.h"
 #include "../data/pluginelementconfigdata.h"
+#include <QSet>
 
 /**
  * @brief 配置元素

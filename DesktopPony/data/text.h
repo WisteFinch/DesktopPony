@@ -30,8 +30,9 @@
 #define TEXT_H
 
 #include "data/localisation.h"
-#include "QRegularExpression"
 #include "metadata.h"
+#include <QRegularExpression>
+#include <QVariant>
 
 /**
  * @brief 文本类
@@ -52,25 +53,56 @@ public:
     /**
      * @brief 获取文本
      * @param 文本
-     * @param 插件对象uuid
+     * @param 附加变量
      * @return 处理后文本
      */
-    QString get(QString str, QString objUuid = nullptr);
+    QString get(QString str, QVariant var);
+
+    /**
+     * @brief 获取文本
+     * @param 文本
+     * @return 处理后文本
+     */
+    QString get(QString str)
+    {
+        return get(str, QVariant());
+    }
+
+    /**
+     * @brief 获取公有本地化文本
+     * @param 键
+     * @param 附加变量
+     * @return 值
+     */
+    QString getLoc(QString key, QVariant var);
 
     /**
      * @brief 获取公有本地化文本
      * @param 键
      * @return 值
      */
-    QString getLoc(QString key);
+    QString getLoc(QString key)
+    {
+        return getLoc(key, QVariant());
+    }
 
     /**
      * @brief 获取私有本地化文本
      * @param 键
-     * @param 插件对象uuid
+     * @param 附加变量
      * @return 值
      */
-    QString getLocPriv(QString key, QString objUuid);
+    QString getLocPriv(QString key, QVariant var);
+
+    /**
+     * @brief 获取私有本地化文本
+     * @param 键
+     * @return 值
+     */
+    QString getLocPriv(QString key)
+    {
+        return getLocPriv(key, QVariant());
+    }
 
 private:
     Localisation *m_p_loc = nullptr;///< 本地化数据
@@ -79,18 +111,33 @@ private:
     /**
      * @brief 替换文本中的参数
      * @param 原文
-     * @param 插件对象uuid
+     * @param 附加变量
      * @return 替换后文本
      */
-    QString replacePara(QString str, QString objUuid = nullptr);
+    QString replacePara(QString str, QVariant var);
 
     /**
      * @brief 获取参数值
      * @param 参数
-     * @param 插件对象uuid
+     * @param 附加变量
      * @return 值
      */
-    QString getPara(QString para, QString objUuid = nullptr);
+    QString getPara(QString para, QVariant var);
+
+    /**
+     * @brief 解析附加值
+     * @param 附加值
+     * @param 下标
+     * @return 结果
+     */
+    QVariant getVar(QVariant &var, qint32 s = 0);
+
+    /**
+     * @brief 变量转字符串
+     * @param 变量
+     * @return 字符串
+     */
+    QString varToString(QVariant var);
 };
 
 #endif // TEXT_H

@@ -59,6 +59,14 @@ void Config::clear()
         delete this->m_p_sys_item_info_debug;
         this->m_p_sys_item_info_debug = nullptr;
     }
+    if(this->m_p_sys_item_info_fav_plugin != nullptr) {
+        delete this->m_p_sys_item_info_fav_plugin;
+        this->m_p_sys_item_info_fav_plugin = nullptr;
+    }
+    if(this->m_p_sys_item_info_disabled_plugin != nullptr) {
+        delete this->m_p_sys_item_info_disabled_plugin;
+        this->m_p_sys_item_info_disabled_plugin = nullptr;
+    }
 }
 
 void Config::creatIndex()
@@ -90,6 +98,19 @@ void Config::creatIndex()
     debugItem->v = this->m_p_sys_item_info_debug->_default;
     this->m_p_config_data->insert(this->m_p_sys_item_info_debug->config_name, debugItem);
     this->m_p_category_index->value(QStringLiteral("system"))->append(debugItem->info->config_name);
+    // 收藏的插件
+    Item *favPluginItem = new Item;
+    favPluginItem->info = this->m_p_sys_item_info_fav_plugin;
+    favPluginItem->v = this->m_p_sys_item_info_fav_plugin->_default;
+    this->m_p_config_data->insert(this->m_p_sys_item_info_fav_plugin->config_name, favPluginItem);
+    this->m_p_category_index->value(QStringLiteral("system"))->append(favPluginItem->info->config_name);
+    // 禁用的插件
+    Item *disabledPluginItem = new Item;
+    disabledPluginItem->info = this->m_p_sys_item_info_disabled_plugin;
+    disabledPluginItem->v = this->m_p_sys_item_info_disabled_plugin->_default;
+    this->m_p_config_data->insert(this->m_p_sys_item_info_disabled_plugin->config_name, disabledPluginItem);
+    this->m_p_category_index->value(QStringLiteral("system"))->append(disabledPluginItem->info->config_name);
+
 
 
     // 插件配置
@@ -151,18 +172,36 @@ void Config::load()
 
         QStringList keyList = rootObj.keys();
         for(int i = 0; i < keyList.count(); i++) {
-            QVariant v = rootObj.value(keyList.at(i)).toVariant();
+            if(!this->m_p_config_data->contains(keyList.at(i))) {
+                continue;
+            }
             Item *item = this->m_p_config_data->value(keyList.at(i));
-            if(item->info->type == PluginElementConfigData::config_type_integer) {
-                item->v.setValue(v.toInt());
-            } else if(item->info->type == PluginElementConfigData::config_type_real) {
-                item->v.setValue(v.toDouble());
-            } else if(item->info->type == PluginElementConfigData::config_type_bool) {
-                item->v.setValue(v.toBool());
-            } else if(item->info->type == PluginElementConfigData::config_type_string) {
-                item->v.setValue(v.toString());
-            } else if(item->info->type == PluginElementConfigData::config_type_select) {
-                item->v.setValue(v.toString());
+            if(item->info->type == PluginElementConfigData::config_type_list) {
+                QJsonArray array = rootObj.value(keyList.at(i)).toArray();
+                QSet<QString> set;
+                for(int k = 0; k < array.count(); k++) {
+                    set.insert(array.at(k).toString());
+                }
+                QList<QVariant> list;
+                QSet<QString>::iterator iter = set.begin();
+                while(iter != set.end()) {
+                    list.append(*iter);
+                    iter++;
+                }
+                item->v.setValue(list);
+            } else {
+                QVariant v = rootObj.value(keyList.at(i)).toVariant();
+                if(item->info->type == PluginElementConfigData::config_type_integer) {
+                    item->v.setValue(v.toInt());
+                } else if(item->info->type == PluginElementConfigData::config_type_real) {
+                    item->v.setValue(v.toDouble());
+                } else if(item->info->type == PluginElementConfigData::config_type_bool) {
+                    item->v.setValue(v.toBool());
+                } else if(item->info->type == PluginElementConfigData::config_type_string) {
+                    item->v.setValue(v.toString());
+                } else if(item->info->type == PluginElementConfigData::config_type_select) {
+                    item->v.setValue(v.toString());
+                }
             }
         }
     } else {
@@ -241,6 +280,8 @@ void Config::set(QString key, QVariant value)
             item->v = value;
         } else if(item->info->type == PluginElementConfigData::config_type_select && value.type() == QVariant::String) {
             item->v = value;
+        } else if(item->info->type == PluginElementConfigData::config_type_list && value.type() == QVariant::List) {
+            item->v = value;
         } else {
             // 异常：类型不符
         }
@@ -277,6 +318,8 @@ void Config::initSystemItem()
     this->m_p_sys_item_info_style = new PluginElementConfigData::Item;
     this->m_p_sys_item_info_character = new PluginElementConfigData::Item;
     this->m_p_sys_item_info_debug = new PluginElementConfigData::Item;
+    this->m_p_sys_item_info_fav_plugin = new PluginElementConfigData::Item;
+    this->m_p_sys_item_info_disabled_plugin = new PluginElementConfigData::Item;
     // 语种
     this->m_p_sys_item_info_lang->id = QStringLiteral("sys_lang");
     this->m_p_sys_item_info_lang->caption = QStringLiteral("§[loc_pub:conf_item_sys_lang_cap]");
@@ -289,10 +332,10 @@ void Config::initSystemItem()
     if(this->m_p_lang_list != nullptr) {
         QSet<QString>::iterator iter = this->m_p_lang_list->begin();
         while(iter != this->m_p_lang_list->end()) {
-            PluginElementConfigData::Item::SelectItem selectItem;
-            selectItem.id = *iter;
-            selectItem.name = QStringLiteral("§[loc_pub:lang_") + *iter + QStringLiteral("]");
-            this->m_p_sys_item_info_lang->select.append(selectItem);
+            PluginElementConfigData::Item::Entry entry;
+            entry.id = *iter;
+            entry.name = QStringLiteral("§[loc_pub:lang_") + *iter + QStringLiteral("]");
+            this->m_p_sys_item_info_lang->list.append(entry);
             iter++;
         }
     }
@@ -314,11 +357,11 @@ void Config::initSystemItem()
             PluginElementStyle *element = static_cast<PluginElementStyle *>(rootIter->first);
             PluginElementStyleData *data = element->m_p_data;
 
-            PluginElementConfigData::Item::SelectItem selectItem;
-            selectItem.id = data->style_name;
-            selectItem.obj_uuid = element->m_p_metadata->obj_uuid;
-            selectItem.name = QStringLiteral("§[loc_priv:style_") + data->style_name + QStringLiteral("]");
-            this->m_p_sys_item_info_style->select.append(selectItem);
+            PluginElementConfigData::Item::Entry entry;
+            entry.id = data->style_name;
+            entry.obj_uuid = element->m_p_metadata->obj_uuid;
+            entry.name = QStringLiteral("§[loc_priv:style_") + data->style_name + QStringLiteral("]");
+            this->m_p_sys_item_info_style->list.append(entry);
             rootIter++;
         }
     }
@@ -333,6 +376,26 @@ void Config::initSystemItem()
     this->m_p_sys_item_info_debug->category = QStringLiteral("system");
     this->m_p_sys_item_info_debug->type = PluginElementConfigData::config_type_bool;
     this->m_p_sys_item_info_debug->_default.setValue(false);
-    this->m_p_sys_item_info_debug->hidden = true;
+    this->m_p_sys_item_info_debug->restart = true;
+
+    // 收藏的插件
+    this->m_p_sys_item_info_fav_plugin->id = QStringLiteral("sys_fav_plugin");
+    this->m_p_sys_item_info_fav_plugin->caption = QStringLiteral("§[loc_pub:conf_item_sys_fav_plugin_cap]");
+    this->m_p_sys_item_info_fav_plugin->desc = QStringLiteral("§[loc_pub:conf_item_fav_plugin_desc]");
+    this->m_p_sys_item_info_fav_plugin->config_name = QStringLiteral("sys_fav_plugin");
+    this->m_p_sys_item_info_fav_plugin->category = QStringLiteral("system");
+    this->m_p_sys_item_info_fav_plugin->type = PluginElementConfigData::config_type_list;
+    this->m_p_sys_item_info_fav_plugin->hidden = true;
+    this->m_p_sys_item_info_fav_plugin->read_only = true;
+
+    // 禁用的插件
+    this->m_p_sys_item_info_disabled_plugin->id = QStringLiteral("sys_disabled_plugin");
+    this->m_p_sys_item_info_disabled_plugin->caption = QStringLiteral("§[loc_pub:conf_item_sys_disabled_plugin_cap]");
+    this->m_p_sys_item_info_disabled_plugin->desc = QStringLiteral("§[loc_pub:conf_item_disabled_plugin_desc]");
+    this->m_p_sys_item_info_disabled_plugin->config_name = QStringLiteral("sys_disabled_plugin");
+    this->m_p_sys_item_info_disabled_plugin->category = QStringLiteral("system");
+    this->m_p_sys_item_info_disabled_plugin->type = PluginElementConfigData::config_type_list;
+    this->m_p_sys_item_info_disabled_plugin->hidden = true;
+    this->m_p_sys_item_info_disabled_plugin->read_only = true;
 }
 

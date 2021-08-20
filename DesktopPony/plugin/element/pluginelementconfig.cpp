@@ -69,7 +69,7 @@ PLUGIN_EXC_LIST *PluginElementConfig::read(QJsonObject obj, QString filePath, QS
             PluginExceptionData d;
             d.e = PLUGIN_EXC_ERR_007;
             d.group_uuid = item.uuid16;
-            this->m_p_exc_list->append(d);
+            this->m_p_exc_list->second.append(d);
         }
 
         item.id = itemObj.value("id").toString();
@@ -78,7 +78,7 @@ PLUGIN_EXC_LIST *PluginElementConfig::read(QJsonObject obj, QString filePath, QS
             PluginExceptionData d;
             d.e = PLUGIN_EXC_ERR_700;
             d.group_uuid = item.uuid16;
-            this->m_p_exc_list->append(d);
+            this->m_p_exc_list->first.append(d);
             item.isErr = true;
         }
         item.config_name = itemObj.value("config_name").toString();
@@ -87,7 +87,7 @@ PLUGIN_EXC_LIST *PluginElementConfig::read(QJsonObject obj, QString filePath, QS
             PluginExceptionData d;
             d.e = PLUGIN_EXC_ERR_702;
             d.group_uuid = item.uuid16;
-            this->m_p_exc_list->append(d);
+            this->m_p_exc_list->first.append(d);
             item.isErr = true;
         }
         if(this->m_p_config_name_index->contains(item.config_name)) {
@@ -95,7 +95,7 @@ PLUGIN_EXC_LIST *PluginElementConfig::read(QJsonObject obj, QString filePath, QS
             PluginExceptionData d;
             d.e = PLUGIN_EXC_ERR_703;
             d.group_uuid = item.uuid16;
-            this->m_p_exc_list->append(d);
+            this->m_p_exc_list->first.append(d);
             item.isErr = true;
         } else {
             UuidIndexItem index;
@@ -127,62 +127,71 @@ PLUGIN_EXC_LIST *PluginElementConfig::read(QJsonObject obj, QString filePath, QS
             item._default.setValue(itemObj.value("default").toBool());
         } else if(item.type == PluginElementConfigData::Config_TYPE::config_type_string) {
             item._default.setValue(itemObj.value("default").toString());
-        } else if(item.type == PluginElementConfigData::Config_TYPE::config_type_select) {
+        } else if(item.type == PluginElementConfigData::Config_TYPE::config_type_select || item.type == PluginElementConfigData::Config_TYPE::config_type_list) {
             QJsonArray selectList = itemObj.value("select_list").toArray();
             for(int j = 0; j < selectList.count(); j++) {
                 QJsonObject sObj = selectList.at(j).toObject();
-                PluginElementConfigData::Item::SelectItem si;
+                PluginElementConfigData::Item::Entry entry;
 
                 // 读取uuid
-                si.uuid16 = sObj.value("uuid").toString();
-                si.orig_uuid16 = sObj.value("uuid").toString();
-                if(si.uuid16.isEmpty()) {// uuid为空
+                entry.uuid16 = sObj.value("uuid").toString();
+                entry.orig_uuid16 = sObj.value("uuid").toString();
+                if(entry.uuid16.isEmpty()) {// uuid为空
                     // 生成uuid
                     do {
-                        si.uuid16 = Tools::creatUuid16();
+                        entry.uuid16 = Tools::creatUuid16();
                     } while(this->m_p_data->select_item_uuid_index->contains(item.uuid16));
                 }
-                if(this->m_p_data->select_item_uuid_index->contains(si.uuid16)) {   //uuid冲突
+                if(this->m_p_data->select_item_uuid_index->contains(entry.uuid16)) {   //uuid冲突
                     // 生成新uuid
                     do {
-                        si.uuid16 = Tools::creatUuid16();
-                    } while(this->m_p_data->select_item_uuid_index->contains(si.uuid16));
+                        entry.uuid16 = Tools::creatUuid16();
+                    } while(this->m_p_data->select_item_uuid_index->contains(entry.uuid16));
                     // 异常：警告007-uuid冲突
                     PluginExceptionData d;
                     d.e = PLUGIN_EXC_ERR_007;
                     d.group_uuid = item.uuid16;
-                    d.item_uuid = si.uuid16;
-                    this->m_p_exc_list->append(d);
+                    d.item_uuid = entry.uuid16;
+                    this->m_p_exc_list->second.append(d);
                 }
 
                 //加入索引
                 PluginElementConfigData::SelectItemIndex index;
                 index.item_uuid = item.uuid16;
                 index.s = j;
-                this->m_p_data->select_item_uuid_index->insert(si.uuid16, index);
+                this->m_p_data->select_item_uuid_index->insert(entry.uuid16, index);
 
-                si.id = sObj.value("id").toString();
-                if(si.id.isEmpty()) {
+                entry.id = sObj.value("id").toString();
+                if(entry.id.isEmpty()) {
                     // 异常：错误704-配置元素：下拉项缺少标识符
                     PluginExceptionData d;
                     d.e = PLUGIN_EXC_ERR_704;
                     d.group_uuid = item.uuid16;
-                    d.item_uuid = si.uuid16;
-                    this->m_p_exc_list->append(d);
+                    d.item_uuid = entry.uuid16;
+                    this->m_p_exc_list->first.append(d);
                     item.isErr = true;
                 }
-                si.name = sObj.value("name").toString();
-                si.obj_uuid = this->m_p_metadata->obj_uuid;
+                entry.name = sObj.value("name").toString();
+                entry.obj_uuid = this->m_p_metadata->obj_uuid;
 
-                item.select.append(si);
-                item._default.setValue(itemObj.value("default").toString());
+                item.list.append(entry);
+                if(item.type == PluginElementConfigData::Config_TYPE::config_type_select) {
+                    item._default.setValue(itemObj.value("default").toString());
+                } else {
+                    QJsonArray array = itemObj.value("default").toArray();
+                    QSet<QString> list;
+                    for(int k = 0; k < array.count(); k++) {
+                        list.insert(array.at(k).toString());
+                    }
+                    item._default.setValue(list);
+                }
             }
         } else {
             // 异常：错误701-配置元素：组少项类型
             PluginExceptionData d;
             d.e = PLUGIN_EXC_ERR_701;
             d.group_uuid = item.uuid16;
-            this->m_p_exc_list->append(d);
+            this->m_p_exc_list->first.append(d);
             item.isErr = true;
         }
 
@@ -192,8 +201,11 @@ PLUGIN_EXC_LIST *PluginElementConfig::read(QJsonObject obj, QString filePath, QS
         this->m_p_data->item_list->append(item);
     }
 
-    PLUGIN_EXC_LIST::iterator iter;
-    for(iter = this->m_p_exc_list->begin(); iter != this->m_p_exc_list->end(); iter++) {
+    QVector<PluginExceptionData>::iterator iter;
+    for(iter = this->m_p_exc_list->first.begin(); iter != this->m_p_exc_list->first.end(); iter++) {
+        iter->element_uuid = this->m_p_metadata->uuid16;
+    }
+    for(iter = this->m_p_exc_list->second.begin(); iter != this->m_p_exc_list->second.end(); iter++) {
         iter->element_uuid = this->m_p_metadata->uuid16;
     }
     return this->m_p_exc_list;

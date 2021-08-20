@@ -33,6 +33,7 @@
 #include "plugin/element/pluginelementstyle.h"
 #include "plugin/element/pluginelementlocalisation.h"
 #include "metadata.h"
+#include <QSet>
 
 /**
  * @brief 配置类
@@ -133,6 +134,8 @@ private:
     PluginElementConfigData::Item *m_p_sys_item_info_style = nullptr;///< 系统配置项信息：样式
     PluginElementConfigData::Item *m_p_sys_item_info_character = nullptr;///< 系统配置项信息：角色
     PluginElementConfigData::Item *m_p_sys_item_info_debug = nullptr;///< 系统配置项信息：调试
+    PluginElementConfigData::Item *m_p_sys_item_info_fav_plugin = nullptr;  ///< 系统配置项信息：收藏的插件
+    PluginElementConfigData::Item *m_p_sys_item_info_disabled_plugin = nullptr; ///< 系统配置项信息：禁用的插件
 
     /**
      * @brief 初始化系统配置项信息

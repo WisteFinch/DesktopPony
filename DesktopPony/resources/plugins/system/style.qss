@@ -107,6 +107,10 @@ QLineEdit[category = 'plugin_page_search_line_edit']{
     border: none;
 }
 
+QLineEdit[category = 'plugin_page_search_line_edit'][no_match = true]{
+    color: red;
+}
+
 QLineEdit[category = 'plugin_page_search_line_edit']:hover{
     background-color: rgba(255, 255, 255, 175);
 }
@@ -152,19 +156,65 @@ QWidget[category = 'plugin_page_list_widget']
     background: transparent;
 }
 
+/* 插件筛选器 */
+#ui_plugin_filter_widget{
+    background-color: rgba(255, 255, 255, 200);
+    border-radius: 5px;
+    max-width: 100px;
+}
+
 /* 插件列表卡片 */
 QWidget[category = 'plugin_list_card']{
-    background-color: rgba(255, 255, 255, 150);
+    background: rgba(255, 255, 255, 150);
     max-height: 60px;
     border-radius: 5px;
 }
 
-QWidget[category = 'plugin_list_card']:hover{
-    background-color: rgba(255, 255, 255, 175);
+/* 卡片状态 */
+
+QWidget[category = 'plugin_list_card'][is_fav = true]{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 215, 0, 150), stop: 0.1 rgba(255, 255, 255, 150))
 }
 
+QWidget[category = 'plugin_list_card'][is_fav = true][is_disabled = true]{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 215, 0, 150), stop: 0.1 rgba(200, 200, 200, 150))
+}
+
+QWidget[category = 'plugin_list_card'][is_disabled = true]{
+    background: rgba(200, 200, 200, 150);
+}
+
+QWidget[category = 'plugin_list_card']:hover{
+    background: rgba(255, 255, 255, 175);
+}
+
+QWidget[category = 'plugin_list_card'][is_fav = true]:hover{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 215, 0, 175), stop: 0.1 rgba(255, 255, 255, 175))
+}
+
+QWidget[category = 'plugin_list_card'][is_fav = true][is_disabled = true]:hover{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 215, 0, 175), stop: 0.1 rgba(210, 210, 210, 175))
+}
+
+QWidget[category = 'plugin_list_card'][is_disabled = true]:hover{
+    background: rgba(210, 210, 210, 175);
+}
+
+
 QWidget[category = 'plugin_list_card'][selected = true]{
-    background-color: rgba(255, 255, 255, 200);
+    background: rgba(255, 255, 255, 200);
+}
+
+QWidget[category = 'plugin_list_card'][is_fav = true][selected = true]{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 215, 0, 200), stop: 0.1 rgba(255, 255, 255, 200))
+}
+
+QWidget[category = 'plugin_list_card'][is_fav = true][is_disabled = true][selected = true]{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 215, 0, 200), stop: 0.1 rgba(220, 220, 220, 200))
+}
+
+QWidget[category = 'plugin_list_card'][is_disabled = true][selected = true]{
+    background: rgba(220, 220, 220, 200);
 }
 
 #ui_plugin_list_card_icon{
@@ -172,6 +222,13 @@ QWidget[category = 'plugin_list_card'][selected = true]{
     max-width: 50px;
     min-height: 50px;
     min-width: 50px;
+}
+
+#ui_plugin_list_card_status{
+    max-height: 40px;
+    max-width: 40px;
+    min-height: 40px;
+    min-width: 40px;
 }
 
 #ui_plugin_list_card_caption{
@@ -212,6 +269,10 @@ QLabel[category = 'plugin_list_card_element_icon_label']{
 
 #ui_conf_item_card_status{
     color: rgba(255, 0, 0, 175);
+}
+
+#ui_conf_page_scrollarea_widget{
+    background: transparent;
 }
 
 QSpinBox[category = 'conf_item_card_value'], QDoubleSpinBox[category = 'conf_item_card_value'], QLineEdit[category = 'conf_item_card_value'], QComboBox[category = 'conf_item_card_value']{

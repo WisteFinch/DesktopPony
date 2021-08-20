@@ -63,8 +63,6 @@ SOURCES += \
     plugin/element/pluginelementstyle.cpp \
     plugin/pluginmanager.cpp \
     plugin/pluginobject.cpp \
-    imageprocessing/accessories.cpp \
-    imageprocessing/imageprocessing.cpp \
     main.cpp \
     desktoppony.cpp \
     plugin/pluginsharedefinition.cpp \
@@ -83,6 +81,7 @@ SOURCES += \
     ui/config/uiconfigitemcard.cpp \
     ui/config/uiconfigpage.cpp \
     ui/info/uiinfopage.cpp \
+    ui/plugin/uipluginfilter.cpp \
     ui/plugin/uipluginlistcard.cpp \
     ui/plugin/uipluginpage.cpp \
     ui/tools/animationstackedwidget.cpp \
@@ -108,9 +107,6 @@ HEADERS += \
     plugin/element/pluginelementstyle.h \
     plugin/pluginmanager.h \
     plugin/pluginobject.h \
-    imageprocessing/accessories.h \
-    imageprocessing/imageprocessing.h \
-    imageprocessing/imagestruct.h \
     metadata.h \
     plugin/pluginsharedefinition.h \
     scriptinterpreter/core/lexer/lexer.h \
@@ -129,6 +125,7 @@ HEADERS += \
     ui/config/uiconfigitemcard.h \
     ui/config/uiconfigpage.h \
     ui/info/uiinfopage.h \
+    ui/plugin/uipluginfilter.h \
     ui/plugin/uipluginlistcard.h \
     ui/plugin/uipluginpage.h \
     ui/tools/animationstackedwidget.h \

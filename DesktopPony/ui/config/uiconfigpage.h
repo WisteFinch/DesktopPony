@@ -2,7 +2,7 @@
  * @file ui/config/uiconfigpage.h
  * @brief 界面-配置-配置页
  * @author WisteFinch
- * @date 2021.7.29
+ * @date 2021.8.8
  *
  * MIT License
  * Copyright (c) 2019-2021 WisteFinch
@@ -77,6 +77,7 @@ private:
 
     // 部件部分
     QScrollArea *ui_conf_page_scrollarea = nullptr;   ///< 滚动区域
+    QWidget *ui_conf_page_scrollarea_widget = nullptr;   ///< 滚动区域部件
 
     // 布局部分
     QVBoxLayout *ui_conf_page_layout_main = nullptr;  ///< 主界面布局

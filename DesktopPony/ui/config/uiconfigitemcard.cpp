@@ -51,23 +51,23 @@ void UiConfigItemCard::initWidget()
 
 void UiConfigItemCard::initObjectName()
 {
-    this->setObjectName("ui_conf_item_card");
+    this->setObjectName(QStringLiteral("ui_conf_item_card"));
     // 部件部分
-    this->ui_conf_item_card_caption->setObjectName("ui_conf_item_card_caption");
-    this->ui_conf_item_card_desc->setObjectName("ui_conf_item_card_desc");
-    this->ui_conf_item_card_name->setObjectName("ui_conf_item_card_name");
+    this->ui_conf_item_card_caption->setObjectName(QStringLiteral("ui_conf_item_card_caption"));
+    this->ui_conf_item_card_desc->setObjectName(QStringLiteral("ui_conf_item_card_desc"));
+    this->ui_conf_item_card_name->setObjectName(QStringLiteral("ui_conf_item_card_name"));
     // 布局部分
-    this->ui_conf_item_card_layout_main->setObjectName("ui_conf_item_card_layout_main");
-    this->ui_conf_item_card_layout_text->setObjectName("ui_conf_item_card_layout_text");
+    this->ui_conf_item_card_layout_main->setObjectName(QStringLiteral("ui_conf_item_card_layout_main"));
+    this->ui_conf_item_card_layout_text->setObjectName(QStringLiteral("ui_conf_item_card_layout_text"));
 }
 
 void UiConfigItemCard::initProperty()
 {
-    this->setProperty("category", "conf_item_card");
+    this->setProperty("category", QStringLiteral("conf_item_card"));
     // 部件部分
-    this->ui_conf_item_card_caption->setProperty("category", "conf_item_card_caption_label");
-    this->ui_conf_item_card_desc->setProperty("category", "conf_item_card_desc_label");
-    this->ui_conf_item_card_name->setProperty("category", "conf_item_card_name_label");
+    this->ui_conf_item_card_caption->setProperty("category", QStringLiteral("conf_item_card_caption_label"));
+    this->ui_conf_item_card_desc->setProperty("category", QStringLiteral("conf_item_card_desc_label"));
+    this->ui_conf_item_card_name->setProperty("category", QStringLiteral("conf_item_card_name_label"));
 }
 
 void UiConfigItemCard::initContent()
@@ -76,8 +76,8 @@ void UiConfigItemCard::initContent()
         this->ui_conf_item_card_spin_box = new QSpinBox;
         this->ui_conf_item_card_layout_main->addWidget(this->ui_conf_item_card_spin_box);
 
-        this->ui_conf_item_card_spin_box->setObjectName("ui_conf_item_card_spin_box");
-        this->ui_conf_item_card_spin_box->setProperty("category", "conf_item_card_value");
+        this->ui_conf_item_card_spin_box->setObjectName(QStringLiteral("ui_conf_item_card_spin_box"));
+        this->ui_conf_item_card_spin_box->setProperty("category", QStringLiteral("conf_item_card_value"));
         this->ui_conf_item_card_spin_box->setEnabled(!this->m_p_item->info->read_only);
 
         this->ui_conf_item_card_spin_box->setMinimum(this->m_p_item->info->range_from.toInt());
@@ -89,8 +89,8 @@ void UiConfigItemCard::initContent()
         this->ui_conf_item_card_spin_box_real = new QDoubleSpinBox;
         this->ui_conf_item_card_layout_main->addWidget(this->ui_conf_item_card_spin_box_real);
 
-        this->ui_conf_item_card_spin_box_real->setObjectName("ui_conf_item_card_spin_box_real");
-        this->ui_conf_item_card_spin_box_real->setProperty("category", "conf_item_card_value");
+        this->ui_conf_item_card_spin_box_real->setObjectName(QStringLiteral("ui_conf_item_card_spin_box_real"));
+        this->ui_conf_item_card_spin_box_real->setProperty("category", QStringLiteral("conf_item_card_value"));
         this->ui_conf_item_card_spin_box_real->setEnabled(!this->m_p_item->info->read_only);
 
         this->ui_conf_item_card_spin_box_real->setMinimum(this->m_p_item->info->range_from.toDouble());
@@ -102,8 +102,8 @@ void UiConfigItemCard::initContent()
         this->ui_conf_item_card_switch = new QCheckBox;
         this->ui_conf_item_card_layout_main->addWidget(this->ui_conf_item_card_switch);
 
-        this->ui_conf_item_card_switch->setObjectName("ui_conf_item_card_switch");
-        this->ui_conf_item_card_switch->setProperty("category", "conf_item_card_value");
+        this->ui_conf_item_card_switch->setObjectName(QStringLiteral("ui_conf_item_card_switch"));
+        this->ui_conf_item_card_switch->setProperty("category", QStringLiteral("conf_item_card_value"));
         this->ui_conf_item_card_switch->setEnabled(!this->m_p_item->info->read_only);
 
         this->ui_conf_item_card_switch->setChecked(this->m_p_item->v.toBool());
@@ -113,8 +113,8 @@ void UiConfigItemCard::initContent()
         this->ui_conf_item_card_lineedit = new QLineEdit;
         this->ui_conf_item_card_layout_main->addWidget(this->ui_conf_item_card_lineedit);
 
-        this->ui_conf_item_card_lineedit->setObjectName("ui_conf_item_card_lineedit");
-        this->ui_conf_item_card_lineedit->setProperty("category", "conf_item_card_value");
+        this->ui_conf_item_card_lineedit->setObjectName(QStringLiteral("ui_conf_item_card_lineedit"));
+        this->ui_conf_item_card_lineedit->setProperty("category", QStringLiteral("conf_item_card_value"));
         this->ui_conf_item_card_lineedit->setEnabled(!this->m_p_item->info->read_only);
 
         this->ui_conf_item_card_lineedit->setText(this->m_p_item->v.toString());
@@ -127,22 +127,22 @@ void UiConfigItemCard::initContent()
         this->ui_conf_item_card_combobox->view()->parentWidget()->setAttribute(Qt::WA_TranslucentBackground);
         this->ui_conf_item_card_layout_main->addWidget(this->ui_conf_item_card_combobox);
 
-        this->ui_conf_item_card_combobox->setObjectName("ui_conf_item_card_combobox");
-        this->ui_conf_item_card_combobox->setProperty("category", "conf_item_card_value");
+        this->ui_conf_item_card_combobox->setObjectName(QStringLiteral("ui_conf_item_card_combobox"));
+        this->ui_conf_item_card_combobox->setProperty("category", QStringLiteral("conf_item_card_value"));
         this->ui_conf_item_card_combobox->setEnabled(!this->m_p_item->info->read_only);
 
-        for(int i = 0 ; i < this->m_p_item->info->select.count(); i++) {
-            this->ui_conf_item_card_combobox->addItem(this->m_p_text->get(this->m_p_item->info->select.at(i).name, this->m_p_item->info->select.at(i).obj_uuid), i);
+        for(int i = 0 ; i < this->m_p_item->info->list.count(); i++) {
+            this->ui_conf_item_card_combobox->addItem(this->m_p_text->get(this->m_p_item->info->list.at(i).name, this->m_p_item->info->list.at(i).obj_uuid), i);
         }
 
-        for(int i = 0; i < this->m_p_item->info->select.count(); i++) {
-            if(this->m_p_item->v.toString() == this->m_p_item->info->select.at(i).id) {
+        for(int i = 0; i < this->m_p_item->info->list.count(); i++) {
+            if(this->m_p_item->v.toString() == this->m_p_item->info->list.at(i).id) {
                 this->ui_conf_item_card_combobox->setCurrentIndex(i);
             }
         }
 
         connect(this->ui_conf_item_card_combobox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [ = ](int index) {
-            this->m_p_item->v = this->m_p_item->info->select.at(index).id;
+            this->m_p_item->v = this->m_p_item->info->list.at(index).id;
             emit sigValueChanged();
         });
     }
@@ -166,8 +166,8 @@ void UiConfigItemCard::refreshStatus()
     if(this->ui_conf_item_card_status == nullptr) {
         this->ui_conf_item_card_status = new QLabel;
         this->ui_conf_item_card_layout_text->addWidget(this->ui_conf_item_card_status);
-        this->ui_conf_item_card_status->setObjectName("ui_conf_item_card_status");
-        this->ui_conf_item_card_status->setProperty("category", "conf_item_card_status_label");
+        this->ui_conf_item_card_status->setObjectName(QStringLiteral("ui_conf_item_card_status"));
+        this->ui_conf_item_card_status->setProperty("category", QStringLiteral("conf_item_card_status_label"));
     }
     this->ui_conf_item_card_status->clear();
     QString txt;

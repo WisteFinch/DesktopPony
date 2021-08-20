@@ -57,7 +57,7 @@ PLUGIN_EXC_LIST *PluginElementModel::read(QJsonObject obj, QString filePath, QSt
         // 异常：警告600-模型元素：缺少图层
         PluginExceptionData d;
         d.e = PLUGIN_EXC_WARN_600;
-        this->m_p_exc_list->append(d);
+        this->m_p_exc_list->second.append(d);
     }
 
     PluginElementModelData::IMG_CATEGORIES imgCategories;
@@ -69,7 +69,7 @@ PLUGIN_EXC_LIST *PluginElementModel::read(QJsonObject obj, QString filePath, QSt
         // 异常：警告601-模型元素：缺少图像类别
         PluginExceptionData d;
         d.e = PLUGIN_EXC_WARN_601;
-        this->m_p_exc_list->append(d);
+        this->m_p_exc_list->second.append(d);
     }
 
     PluginElementModelData::Units units;
@@ -88,11 +88,14 @@ PLUGIN_EXC_LIST *PluginElementModel::read(QJsonObject obj, QString filePath, QSt
         // 异常：警告602-模型元素：缺少部件
         PluginExceptionData d;
         d.e = PLUGIN_EXC_WARN_602;
-        this->m_p_exc_list->append(d);
+        this->m_p_exc_list->second.append(d);
     }
 
-    PLUGIN_EXC_LIST::iterator iter;
-    for(iter = this->m_p_exc_list->begin(); iter != this->m_p_exc_list->end(); iter++) {
+    QVector<PluginExceptionData>::iterator iter;
+    for(iter = this->m_p_exc_list->first.begin(); iter != this->m_p_exc_list->first.end(); iter++) {
+        iter->element_uuid = this->m_p_metadata->uuid16;
+    }
+    for(iter = this->m_p_exc_list->second.begin(); iter != this->m_p_exc_list->second.end(); iter++) {
         iter->element_uuid = this->m_p_metadata->uuid16;
     }
     return this->m_p_exc_list;

@@ -49,7 +49,7 @@ PLUGIN_EXC_LIST *PluginElementStyle::read(QJsonObject obj, QString filePath, QSt
         PluginExceptionData d;
         d.e = PLUGIN_EXC_ERR_200;
         d.element_uuid = this->m_p_metadata->uuid16;
-        this->m_p_exc_list->append(d);
+        this->m_p_exc_list->first.append(d);
         return this->m_p_exc_list;
     }
     this->m_p_data->qss_path = contentObj.value("qss_path").toString();
@@ -62,13 +62,16 @@ PLUGIN_EXC_LIST *PluginElementStyle::read(QJsonObject obj, QString filePath, QSt
             PluginExceptionData d;
             d.e = PLUGIN_EXC_ERR_201;
             d.element_uuid = this->m_p_metadata->uuid16;
-            this->m_p_exc_list->append(d);
+            this->m_p_exc_list->first.append(d);
             return this->m_p_exc_list;
         }
     }
 
-    PLUGIN_EXC_LIST::iterator iter;
-    for(iter = this->m_p_exc_list->begin(); iter != this->m_p_exc_list->end(); iter++) {
+    QVector<PluginExceptionData>::iterator iter;
+    for(iter = this->m_p_exc_list->first.begin(); iter != this->m_p_exc_list->first.end(); iter++) {
+        iter->element_uuid = this->m_p_metadata->uuid16;
+    }
+    for(iter = this->m_p_exc_list->second.begin(); iter != this->m_p_exc_list->second.end(); iter++) {
         iter->element_uuid = this->m_p_metadata->uuid16;
     }
     return this->m_p_exc_list;

@@ -43,29 +43,33 @@ void UiConfigPage::initWidget()
     this->ui_conf_page_scrollarea = new QScrollArea;
     this->ui_conf_page_scrollarea->setWidgetResizable(true);
     this->ui_conf_page_layout_main->addWidget(this->ui_conf_page_scrollarea);
+    this->ui_conf_page_scrollarea_widget = new QWidget;
     this->ui_conf_page_layout_list = new QVBoxLayout;
-    this->ui_conf_page_layout_list->setSpacing(3);
+    this->ui_conf_page_layout_list->setSpacing(5);
     this->ui_conf_page_layout_list->setContentsMargins(0, 0, 2, 0);
-    this->ui_conf_page_scrollarea->setLayout(this->ui_conf_page_layout_list);
+    this->ui_conf_page_scrollarea_widget->setLayout(this->ui_conf_page_layout_list);
+    this->ui_conf_page_scrollarea->setWidget(this->ui_conf_page_scrollarea_widget);
 
     this->setLayout(this->ui_conf_page_layout_main);
 }
 
 void UiConfigPage::initObjectName()
 {
-    this->setObjectName("ui_conf_page");
+    this->setObjectName(QStringLiteral("ui_conf_page"));
     // 部件部分
-    this->ui_conf_page_scrollarea->setObjectName("ui_conf_page_scrollarea");
+    this->ui_conf_page_scrollarea->setObjectName(QStringLiteral("ui_conf_page_scrollarea"));
+    this->ui_conf_page_scrollarea_widget->setObjectName(QStringLiteral("ui_conf_page_scrollarea_widget"));
     // 布局
-    this->ui_conf_page_scrollarea->setObjectName("ui_conf_page_scrollarea");
-    this->ui_conf_page_layout_list->setObjectName("ui_conf_page_scrollarea");
+    this->ui_conf_page_scrollarea->setObjectName(QStringLiteral("ui_conf_page_scrollarea"));
+    this->ui_conf_page_layout_list->setObjectName(QStringLiteral("ui_conf_page_scrollarea"));
 }
 
 void UiConfigPage::initProperty()
 {
-    this->setProperty("category", "page");
+    this->setProperty("category", QStringLiteral("page"));
     // 部件部分
-    this->ui_conf_page_scrollarea->setProperty("category", "conf_page_scrollarea");
+    this->ui_conf_page_scrollarea->setProperty("category", QStringLiteral("conf_page_scrollarea"));
+    this->ui_conf_page_scrollarea_widget->setProperty("category", QStringLiteral("conf_page_widget"));
 }
 
 void UiConfigPage::initContent()
@@ -115,7 +119,7 @@ void UiConfigPage::addItem(QMap<QString, QVector<QString>*>::iterator indexIter,
 
     for(int i = 0; i < indexIter.value()->count(); i++) {
         Config::Item *item = list->value(indexIter.value()->at(i));
-        if(item->info->type == PluginElementConfigData::config_type_null || item->info->hidden) {
+        if(item->info->type == PluginElementConfigData::config_type_null || (item->info->hidden && ! this->m_p_conf->get(QStringLiteral("sys_debug")).toBool())) {
             continue;
         }
         UiConfigItemCard *itemCard = new UiConfigItemCard;
@@ -137,13 +141,13 @@ void UiConfigPage::addItem(QMap<QString, QVector<QString>*>::iterator indexIter,
         categoryLayout->addLayout(categoryItemLayout);
         categoryWidget->setLayout(categoryLayout);
 
-        categoryWidget->setObjectName("ui_conf_page_category_widget");
-        categoryLayout->setObjectName("ui_conf_page_category_layout");
-        categoryItemLayout->setObjectName("ui_conf_page_category_item_layout");
-        categoryCaption->setObjectName("ui_conf_page_category_caption");
+        categoryWidget->setObjectName(QStringLiteral("ui_conf_page_category_widget"));
+        categoryLayout->setObjectName(QStringLiteral("ui_conf_page_category_layout"));
+        categoryItemLayout->setObjectName(QStringLiteral("ui_conf_page_category_item_layout"));
+        categoryCaption->setObjectName(QStringLiteral("ui_conf_page_category_caption"));
 
-        categoryWidget->setProperty("category", "conf_page_category_widget");
-        categoryCaption->setProperty("category", "conf_page_category_label");
+        categoryWidget->setProperty("category", QStringLiteral("conf_page_category_widget"));
+        categoryCaption->setProperty("category", QStringLiteral("conf_page_category_label"));
 
         categoryCaption->setText(this->m_p_text->getLoc("config_category_" + indexIter.key()));
 

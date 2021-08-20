@@ -37,7 +37,9 @@ void PluginManager::refreshList()
         // 读取插件对象
         PluginObject *obj = new  PluginObject();
         this->m_p_plugin_obj_list->append(obj);
-        this->m_p_plugin_exc_list->append(*obj->readHead(sysList.at(i).filePath(), true, this->m_p_plugin_element_config_name_index, this->m_p_lang_list));
+        PLUGIN_EXC_LIST excList =  *obj->readHead(sysList.at(i).filePath(), true, this->m_p_plugin_element_config_name_index, this->m_p_lang_list);
+        this->m_p_plugin_exc_list->first.append(excList.first);
+        this->m_p_plugin_exc_list->second.append(excList.second);
     }
 
 
@@ -56,7 +58,9 @@ void PluginManager::refreshList()
         // 读取插件对象
         PluginObject *obj = new  PluginObject();
         this->m_p_plugin_obj_list->append(obj);
-        this->m_p_plugin_exc_list->append(*obj->readHead(usrList.at(i).filePath(), false, this->m_p_plugin_element_config_name_index, this->m_p_lang_list));
+        PLUGIN_EXC_LIST excList = *obj->readHead(usrList.at(i).filePath(), false, this->m_p_plugin_element_config_name_index, this->m_p_lang_list);
+        this->m_p_plugin_exc_list->first.append(excList.first);
+        this->m_p_plugin_exc_list->second.append(excList.second);
     }
 
     // 创建索引
@@ -76,7 +80,7 @@ void PluginManager::refreshList()
                 PluginExceptionData d;
                 d.e = PLUGIN_EXC_ERR_007;
                 d.object_uuid = obj->m_p_metadata->uuid;
-                this->m_p_plugin_exc_list->append(d);
+                this->m_p_plugin_exc_list->second.append(d);
             }
         }
 

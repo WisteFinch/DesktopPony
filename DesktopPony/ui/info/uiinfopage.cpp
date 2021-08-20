@@ -145,78 +145,78 @@ void UiInfoPage::initWidget()
 
 void UiInfoPage::initObjectName()
 {
-    this->setObjectName("ui_info_page");
+    this->setObjectName(QStringLiteral("ui_info_page"));
 
     // 部件部分
-    this->ui_info_page_scrollarea->setObjectName("ui_info_page_scrollarea");
-    this->ui_info_page_scrollarea_widget->setObjectName("ui_info_page_scrollarea_widget");
-    this->ui_info_page_scrollarea_basis->setObjectName("ui_info_page_scrollarea_basis");
-    this->ui_info_page_about_icon->setObjectName("ui_info_page_about_icon");
-    this->ui_info_page_about->setObjectName("ui_info_page_about");
-    this->ui_info_page_log_caption->setObjectName("ui_info_page_log_caption");
-    this->ui_info_page_log_desc->setObjectName("ui_info_page_log_desc");
-    this->ui_info_page_log_view->setObjectName("ui_info_page_log_view");
-    this->ui_info_page_version_caption->setObjectName("ui_info_page_version_caption");
-    this->ui_info_page_version_desc->setObjectName("ui_info_page_version_desc");
-    this->ui_info_page_version_check_update->setObjectName("ui_info_page_version_check_update");
-    this->ui_info_page_repo_caption->setObjectName("ui_info_page_repo_caption");
-    this->ui_info_page_repo_desc->setObjectName("ui_info_page_repo_desc");
-    this->ui_info_page_github_link->setObjectName("ui_info_page_github_link");
-    this->ui_info_page_doc_caption->setObjectName("ui_info_page_doc_caption");
-    this->ui_info_page_doc_desc->setObjectName("ui_info_page_doc_desc");
-    this->ui_info_page_doc_link->setObjectName("ui_info_page_doc_link");
-    this->ui_info_page_copyright_caption->setObjectName("ui_info_page_copyright_caption");
-    this->ui_info_page_copyright->setObjectName("ui_info_page_page_copyright");
-    this->ui_info_page_author_caption->setObjectName("ui_info_page_author_caption");
-    this->ui_info_page_author->setObjectName("ui_info_page_author");
-    this->ui_info_page_license_caption->setObjectName("ui_info_page_license_caption");
-    this->ui_info_page_license->setObjectName("ui_info_page_license");
-    this->ui_info_page_license_link->setObjectName("ui_info_page_license_link");
+    this->ui_info_page_scrollarea->setObjectName(QStringLiteral("ui_info_page_scrollarea"));
+    this->ui_info_page_scrollarea_widget->setObjectName(QStringLiteral("ui_info_page_scrollarea_widget"));
+    this->ui_info_page_scrollarea_basis->setObjectName(QStringLiteral("ui_info_page_scrollarea_basis"));
+    this->ui_info_page_about_icon->setObjectName(QStringLiteral("ui_info_page_about_icon"));
+    this->ui_info_page_about->setObjectName(QStringLiteral("ui_info_page_about"));
+    this->ui_info_page_log_caption->setObjectName(QStringLiteral("ui_info_page_log_caption"));
+    this->ui_info_page_log_desc->setObjectName(QStringLiteral("ui_info_page_log_desc"));
+    this->ui_info_page_log_view->setObjectName(QStringLiteral("ui_info_page_log_view"));
+    this->ui_info_page_version_caption->setObjectName(QStringLiteral("ui_info_page_version_caption"));
+    this->ui_info_page_version_desc->setObjectName(QStringLiteral("ui_info_page_version_desc"));
+    this->ui_info_page_version_check_update->setObjectName(QStringLiteral("ui_info_page_version_check_update"));
+    this->ui_info_page_repo_caption->setObjectName(QStringLiteral("ui_info_page_repo_caption"));
+    this->ui_info_page_repo_desc->setObjectName(QStringLiteral("ui_info_page_repo_desc"));
+    this->ui_info_page_github_link->setObjectName(QStringLiteral("ui_info_page_github_link"));
+    this->ui_info_page_doc_caption->setObjectName(QStringLiteral("ui_info_page_doc_caption"));
+    this->ui_info_page_doc_desc->setObjectName(QStringLiteral("ui_info_page_doc_desc"));
+    this->ui_info_page_doc_link->setObjectName(QStringLiteral("ui_info_page_doc_link"));
+    this->ui_info_page_copyright_caption->setObjectName(QStringLiteral("ui_info_page_copyright_caption"));
+    this->ui_info_page_copyright->setObjectName(QStringLiteral("ui_info_page_page_copyright"));
+    this->ui_info_page_author_caption->setObjectName(QStringLiteral("ui_info_page_author_caption"));
+    this->ui_info_page_author->setObjectName(QStringLiteral("ui_info_page_author"));
+    this->ui_info_page_license_caption->setObjectName(QStringLiteral("ui_info_page_license_caption"));
+    this->ui_info_page_license->setObjectName(QStringLiteral("ui_info_page_license"));
+    this->ui_info_page_license_link->setObjectName(QStringLiteral("ui_info_page_license_link"));
 
     // 布局部分
-    this->ui_info_page_layout_main->setObjectName("ui_info_page_layout_main");
-    this->ui_info_page_layout_scrollarea->setObjectName("ui_info_page_layout_scrollarea");
-    this->ui_info_page_layout_scrollarea_basis->setObjectName("ui_info_page_layout_scrollarea_basis");
-    this->ui_info_page_layout_about->setObjectName("ui_info_page_layout_about");
-    this->ui_info_page_layout_log->setObjectName("ui_info_page_layout_log");
-    this->ui_info_page_layout_log_text->setObjectName("ui_info_page_layout_log_text");
-    this->ui_info_page_layout_version->setObjectName("ui_info_page_layout_version");
-    this->ui_info_page_layout_version_text->setObjectName("ui_info_page_layout_version_text");
-    this->ui_info_page_layout_repo->setObjectName("ui_info_page_layout_repo");
-    this->ui_info_page_layout_repo_text->setObjectName("ui_info_page_layout_repo_text");
-    this->ui_info_page_layout_doc->setObjectName("ui_info_page_layout_doc");
-    this->ui_info_page_layout_doc_text->setObjectName("ui_info_page_layout_doc_text");
-    this->ui_info_page_layout_appinfo->setObjectName("ui_info_page_layout_appinfo");
+    this->ui_info_page_layout_main->setObjectName(QStringLiteral("ui_info_page_layout_main"));
+    this->ui_info_page_layout_scrollarea->setObjectName(QStringLiteral("ui_info_page_layout_scrollarea"));
+    this->ui_info_page_layout_scrollarea_basis->setObjectName(QStringLiteral("ui_info_page_layout_scrollarea_basis"));
+    this->ui_info_page_layout_about->setObjectName(QStringLiteral("ui_info_page_layout_about"));
+    this->ui_info_page_layout_log->setObjectName(QStringLiteral("ui_info_page_layout_log"));
+    this->ui_info_page_layout_log_text->setObjectName(QStringLiteral("ui_info_page_layout_log_text"));
+    this->ui_info_page_layout_version->setObjectName(QStringLiteral("ui_info_page_layout_version"));
+    this->ui_info_page_layout_version_text->setObjectName(QStringLiteral("ui_info_page_layout_version_text"));
+    this->ui_info_page_layout_repo->setObjectName(QStringLiteral("ui_info_page_layout_repo"));
+    this->ui_info_page_layout_repo_text->setObjectName(QStringLiteral("ui_info_page_layout_repo_text"));
+    this->ui_info_page_layout_doc->setObjectName(QStringLiteral("ui_info_page_layout_doc"));
+    this->ui_info_page_layout_doc_text->setObjectName(QStringLiteral("ui_info_page_layout_doc_text"));
+    this->ui_info_page_layout_appinfo->setObjectName(QStringLiteral("ui_info_page_layout_appinfo"));
 }
 
 void UiInfoPage::initProperty()
 {
-    this->setProperty("category", "page");
+    this->setProperty("category", QStringLiteral("page"));
     // 部件部分
-    this->ui_info_page_scrollarea->setProperty("category", "info_page_scrollarea");
-    this->ui_info_page_scrollarea_widget->setProperty("category", "info_page_scrollarea_widget");
-    this->ui_info_page_scrollarea_basis->setProperty("category", "info_page_scrollarea_basis_widget");
-    this->ui_info_page_about_icon->setProperty("category", "info_page_icon_label");
-    this->ui_info_page_about->setProperty("category", "info_page_desc_label");
-    this->ui_info_page_log_caption->setProperty("category", "info_page_item_caption_label");
-    this->ui_info_page_log_desc->setProperty("category", "info_page_item_desc_label");
-    this->ui_info_page_log_view->setProperty("category", "info_page_button");
-    this->ui_info_page_version_caption->setProperty("category", "info_page_item_caption_label");
-    this->ui_info_page_version_desc->setProperty("category", "info_page_item_desc_label");
-    this->ui_info_page_version_check_update->setProperty("category", "info_page_button");
-    this->ui_info_page_repo_caption->setProperty("category", "info_page_item_caption_label");
-    this->ui_info_page_repo_desc->setProperty("category", "info_page_item_desc_label");
-    this->ui_info_page_github_link->setProperty("category", "info_page_button");
-    this->ui_info_page_doc_caption->setProperty("category", "info_page_item_caption_label");
-    this->ui_info_page_doc_desc->setProperty("category", "info_page_item_desc_label");
-    this->ui_info_page_doc_link->setProperty("category", "info_page_button");
-    this->ui_info_page_copyright_caption->setProperty("category", "info_page_appinfo_caption_label");
-    this->ui_info_page_copyright->setProperty("category", "info_page_appinfo_text_label");
-    this->ui_info_page_author_caption->setProperty("category", "info_page_appinfo_caption_label");
-    this->ui_info_page_author->setProperty("category", "info_page_appinfo_text_label");
-    this->ui_info_page_license_caption->setProperty("category", "info_page_appinfo_caption_label");
-    this->ui_info_page_license->setProperty("category", "info_page_appinfo_text_label");
-    this->ui_info_page_license_link->setProperty("category", "info_page_button");
+    this->ui_info_page_scrollarea->setProperty("category", QStringLiteral("info_page_scrollarea"));
+    this->ui_info_page_scrollarea_widget->setProperty("category", QStringLiteral("info_page_scrollarea_widget"));
+    this->ui_info_page_scrollarea_basis->setProperty("category", QStringLiteral("info_page_scrollarea_basis_widget"));
+    this->ui_info_page_about_icon->setProperty("category", QStringLiteral("info_page_icon_label"));
+    this->ui_info_page_about->setProperty("category", QStringLiteral("info_page_desc_label"));
+    this->ui_info_page_log_caption->setProperty("category", QStringLiteral("info_page_item_caption_label"));
+    this->ui_info_page_log_desc->setProperty("category", QStringLiteral("info_page_item_desc_label"));
+    this->ui_info_page_log_view->setProperty("category", QStringLiteral("info_page_button"));
+    this->ui_info_page_version_caption->setProperty("category", QStringLiteral("info_page_item_caption_label"));
+    this->ui_info_page_version_desc->setProperty("category", QStringLiteral("info_page_item_desc_label"));
+    this->ui_info_page_version_check_update->setProperty("category", QStringLiteral("info_page_button"));
+    this->ui_info_page_repo_caption->setProperty("category", QStringLiteral("info_page_item_caption_label"));
+    this->ui_info_page_repo_desc->setProperty("category", QStringLiteral("info_page_item_desc_label"));
+    this->ui_info_page_github_link->setProperty("category", QStringLiteral("info_page_button"));
+    this->ui_info_page_doc_caption->setProperty("category", QStringLiteral("info_page_item_caption_label"));
+    this->ui_info_page_doc_desc->setProperty("category", QStringLiteral("info_page_item_desc_label"));
+    this->ui_info_page_doc_link->setProperty("category", QStringLiteral("info_page_button"));
+    this->ui_info_page_copyright_caption->setProperty("category", QStringLiteral("info_page_appinfo_caption_label"));
+    this->ui_info_page_copyright->setProperty("category", QStringLiteral("info_page_appinfo_text_label"));
+    this->ui_info_page_author_caption->setProperty("category", QStringLiteral("info_page_appinfo_caption_label"));
+    this->ui_info_page_author->setProperty("category", QStringLiteral("info_page_appinfo_text_label"));
+    this->ui_info_page_license_caption->setProperty("category", QStringLiteral("info_page_appinfo_caption_label"));
+    this->ui_info_page_license->setProperty("category", QStringLiteral("info_page_appinfo_text_label"));
+    this->ui_info_page_license_link->setProperty("category", QStringLiteral("info_page_button"));
 }
 
 void UiInfoPage::initContent()

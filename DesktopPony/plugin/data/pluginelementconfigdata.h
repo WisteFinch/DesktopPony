@@ -47,7 +47,8 @@ public:
         config_type_real,   ///< 实数型
         config_type_bool,   ///< 布尔型
         config_type_string, ///< 字符串型
-        config_type_select  ///< 下拉框型
+        config_type_select, ///< 下拉框型
+        config_type_list,   ///< 列表型
     };  ///< 配置类型
 
     QVector<QPair<Config_TYPE, QString>> type_vector = {
@@ -56,17 +57,18 @@ public:
         {config_type_real, "real"},
         {config_type_bool, "bool"},
         {config_type_string, "string"},
-        {config_type_select, "select"}
+        {config_type_select, "select"},
+        {config_type_list, "list"}
     };  ///< 配置类型名称
 
     struct Item {
-        struct SelectItem {
+        struct Entry {
             QString id; ///< 标识符
             QString name;   ///< 名称
             QString uuid16; ///< 项16位唯一标识符
             QString orig_uuid16;///< 原项16位唯一标识符
             QString obj_uuid;   ///< 对象uuid
-        };
+        };  ///< 条目
         QString id; ///< 标识符
         QString config_name;///< 配置名称
         QString caption;///< 名称
@@ -80,7 +82,7 @@ public:
         QVariant _default;  ///< 默认值
         QVariant range_from;///< 起始范围
         QVariant range_to;  ///< 终止范围
-        QVector<SelectItem> select; ///< 下拉框
+        QVector<Entry> list;///< 选项列表
         bool isErr = false; ///< 存在错误
         QString category = "general";///< 类别
         bool restart = false;   ///< 请求重启程序

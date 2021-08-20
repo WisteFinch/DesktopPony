@@ -36,6 +36,8 @@
 #include <QJsonObject>
 #include <functional>
 #include <QVariant>
+#include <QSet>
+#include <QHash>
 
 class PluginManager;
 class PluginObject;
@@ -114,7 +116,7 @@ enum PLUGIN_EXCEPTION {
     PLUGIN_EXC_ERR_701, ///< 配置元素：组少项类型
     PLUGIN_EXC_ERR_702, ///< 配置元素：组缺少配置名称
     PLUGIN_EXC_ERR_703, ///< 配置元素：组配置名称冲突
-    PLUGIN_EXC_ERR_704, ///< 配置元素：下拉项缺少标识符
+    PLUGIN_EXC_ERR_704, ///< 配置元素：选项列表缺少标识符
 
     PLUGIN_EXC_WARN_001,///< 插件对象头文件元数据缺少名称
     PLUGIN_EXC_WARN_002,///< 插件对象头文件元数据缺少介绍
@@ -139,7 +141,7 @@ struct PluginExceptionData {
     QString item_uuid;  ///< 项uuid
 };
 
-typedef QVector<PluginExceptionData> PLUGIN_EXC_LIST;   ///< 类型定义：插件异常列表
+typedef QPair<QVector<PluginExceptionData>, QVector<PluginExceptionData>> PLUGIN_EXC_LIST;   ///< 类型定义：插件异常列表<错误列表, 警告列表>
 
 /**
  * @brief 插件对象元数据

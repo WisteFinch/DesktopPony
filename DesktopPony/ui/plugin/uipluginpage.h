@@ -30,6 +30,7 @@
 #define UIPLUGINPAGE_H
 
 #include "ui/plugin/uipluginlistcard.h"
+#include "ui/plugin/uipluginfilter.h"
 #include "ui/tools/vline.h"
 #include "ui/tools/hline.h"
 #include "data/config.h"
@@ -45,6 +46,7 @@
 #include <QAction>
 #include <QVector>
 #include <QMessageBox>
+#include <QSet>
 
 /**
  * @brief 插件页
@@ -67,6 +69,8 @@ public:
      */
     void init(Config *ptrconf, Text *ptrText, PluginManager *ptrPluginManager);
 
+    UiPluginFilter *ui_plugin_page_filter = nullptr;///< 筛选器
+
 signals:
     void sigReloadData();   ///< 信号：重载数据
 
@@ -78,6 +82,8 @@ private:
     qint32 m_list_index = -1;   ///< 列表序号
 
     QVector<UiPluginListCard *> *m_p_cards = nullptr; ///< 卡片
+    QVector<UiPluginListCard *> *m_p_sorted_cards = nullptr; ///< 排序过的卡片
+    QVector<UiPluginListCard *> *m_p_filtered_cards = nullptr;  ///< 筛选过的卡片
 
     // 部件部分
     QLineEdit *ui_plugin_page_search = nullptr; ///< 搜索框
@@ -140,10 +146,38 @@ private:
     void clearList();
 
     /**
+     * @brief 生成筛选过的列表
+     */
+    void creatFilteredList();
+
+    /**
+     * @brief 清除筛选过的列表
+     */
+    void clearFilteredList();
+
+    /**
+     * @brief 刷新除筛选过的列表
+     */
+    void refreshFilteredList();
+
+    /**
      * @brief 刷新列表
      */
     void refreshList();
 
+    /**
+     * @brief 列表筛选
+     * @param 卡片
+     * @return 是否筛选
+     */
+    bool filter(UiPluginListCard *card);
+
+    /**
+     * @brief 列表排序
+     */
+    void sortList();
+
+private slots:
     /**
      * @brief 槽：列表序号改变
      */
@@ -153,6 +187,17 @@ private:
      * @brief 槽：重载列表
      */
     void slotReolad();
+
+    /**
+     * @brief 槽：设置收藏
+     */
+    void slotSetFav();
+
+    /**
+     * @brief 槽：设置启用
+     * @param 是否启用
+     */
+    void slotSetEnable(bool enable);
 };
 
 #endif // UIPLUGINPAGE_H

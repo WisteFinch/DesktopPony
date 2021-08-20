@@ -17,16 +17,6 @@
             "default": 1,
             "range_from": 0,
             "range_to": 100
-        },
-        {
-            "id": "conf_test",
-            "config_name": "switch_test",
-            "caption": "开关测试",
-            "description": "开关测试",
-            "type": "bool",
-            "hidden": false,
-            "read_only": false,
-            "default": true
         }
     ]
 }

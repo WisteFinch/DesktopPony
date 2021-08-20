@@ -91,42 +91,42 @@ void UiMainPanel::initWidget()
 
 void UiMainPanel::initObjectName()
 {
-    this->setObjectName("ui_main_panel");
+    this->setObjectName(QStringLiteral("ui_main_panel"));
     // Widget部分
-    this->ui_main_panel_pages->setObjectName("ui_main_panel_pages");
-    this->ui_main_panel_tab_character->setObjectName("ui_main_panel_tab_character");
-    this->ui_main_panel_tab_plugin->setObjectName("ui_main_panel_tab_plugin");
-    this->ui_main_panel_tab_config->setObjectName("ui_main_panel_tab_config");
-    this->ui_main_panel_tab_info->setObjectName("ui_main_panel_tab_info");
-    this->ui_main_panel_logo->setObjectName("ui_main_panel_logo");
-    this->ui_main_panel_version->setObjectName("ui_main_panel_version");
+    this->ui_main_panel_pages->setObjectName(QStringLiteral("ui_main_panel_pages"));
+    this->ui_main_panel_tab_character->setObjectName(QStringLiteral("ui_main_panel_tab_character"));
+    this->ui_main_panel_tab_plugin->setObjectName(QStringLiteral("ui_main_panel_tab_plugin"));
+    this->ui_main_panel_tab_config->setObjectName(QStringLiteral("ui_main_panel_tab_config"));
+    this->ui_main_panel_tab_info->setObjectName(QStringLiteral("ui_main_panel_tab_info"));
+    this->ui_main_panel_logo->setObjectName(QStringLiteral("ui_main_panel_logo"));
+    this->ui_main_panel_version->setObjectName(QStringLiteral("ui_main_panel_version"));
 
     // Layout部分
-    this->ui_main_panel_layout_main->setObjectName("ui_main_panel_layout_main");
-    this->ui_main_panel_layout_tab->setObjectName("ui_main_panel_layout_tab");
+    this->ui_main_panel_layout_main->setObjectName(QStringLiteral("ui_main_panel_layout_main"));
+    this->ui_main_panel_layout_tab->setObjectName(QStringLiteral("ui_main_panel_layout_tab"));
 }
 
 void UiMainPanel::initProperty()
 {
-    this->setProperty("category", "frame");
+    this->setProperty("category", QStringLiteral("frame"));
     // Widget部分
-    this->ui_main_panel_pages->setProperty("category", "main_panel_stacked_widget");
-    this->ui_main_panel_tab_character->setProperty("category", "main_panel_tab_buttton");
-    this->ui_main_panel_tab_plugin->setProperty("category", "main_panel_tab_buttton");
-    this->ui_main_panel_tab_config->setProperty("category", "main_panel_tab_buttton");
-    this->ui_main_panel_tab_info->setProperty("category", "main_panel_tab_buttton");
-    this->ui_main_panel_logo->setProperty("category", "main_panel_tab_label");
-    this->ui_main_panel_version->setProperty("category", "main_panel_tab_label");
+    this->ui_main_panel_pages->setProperty("category", QStringLiteral("main_panel_stacked_widget"));
+    this->ui_main_panel_tab_character->setProperty("category", QStringLiteral("main_panel_tab_buttton"));
+    this->ui_main_panel_tab_plugin->setProperty("category", QStringLiteral("main_panel_tab_buttton"));
+    this->ui_main_panel_tab_config->setProperty("category", QStringLiteral("main_panel_tab_buttton"));
+    this->ui_main_panel_tab_info->setProperty("category", QStringLiteral("main_panel_tab_buttton"));
+    this->ui_main_panel_logo->setProperty("category", QStringLiteral("main_panel_tab_label"));
+    this->ui_main_panel_version->setProperty("category", QStringLiteral("main_panel_tab_label"));
 }
 
 void UiMainPanel::initContent()
 {
-    this->setWindowTitle(this->m_p_text->getLoc(this->objectName() + "_tit"));
+    this->setWindowTitle(this->m_p_text->getLoc(this->objectName() + QStringLiteral("_tit")));
 
-    this->ui_main_panel_tab_character->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_character->objectName() + "_cap"));
-    this->ui_main_panel_tab_plugin->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_plugin->objectName() + "_cap"));
-    this->ui_main_panel_tab_config->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_config->objectName() + "_cap"));
-    this->ui_main_panel_tab_info->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_info->objectName() + "_cap"));
+    this->ui_main_panel_tab_character->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_character->objectName() + QStringLiteral("_cap")));
+    this->ui_main_panel_tab_plugin->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_plugin->objectName() + QStringLiteral("_cap")));
+    this->ui_main_panel_tab_config->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_config->objectName() + QStringLiteral("_cap")));
+    this->ui_main_panel_tab_info->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_info->objectName() + QStringLiteral("_cap")));
 
     this->ui_main_panel_version->setText(STR_APP_VERSION);
     this->ui_main_panel_version->setAlignment(Qt::AlignCenter);
@@ -197,4 +197,6 @@ void UiMainPanel::slotChangeTab(int index)
         this->ui_main_panel_tab_config->setStyle(QApplication::style());
         this->ui_main_panel_tab_info->setStyle(QApplication::style());
     }
+
+    this->ui_plugin_page->ui_plugin_page_filter->hide();
 }

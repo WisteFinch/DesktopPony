@@ -4,8 +4,8 @@
 VLine::VLine(QWidget *parent) :
     QFrame(parent)
 {
-    this->setObjectName("v_line");
-    this->setProperty("category", "tools");
+    this->setObjectName(QStringLiteral("v_line"));
+    this->setProperty("category", QStringLiteral("tools"));
 }
 
 VLine::~VLine()

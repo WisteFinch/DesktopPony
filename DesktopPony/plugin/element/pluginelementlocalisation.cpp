@@ -47,8 +47,11 @@ PLUGIN_EXC_LIST *PluginElementLocalisation::read(QJsonObject obj, QString filePa
     this->m_p_data->_public = readLang(contentObj.value("public").toArray(), true); //读取公有数据
     this->m_p_data->_private = readLang(contentObj.value("private").toArray(), false);  //读取私有数据
 
-    PLUGIN_EXC_LIST::iterator iter;
-    for(iter = this->m_p_exc_list->begin(); iter != this->m_p_exc_list->end(); iter++) {
+    QVector<PluginExceptionData>::iterator iter;
+    for(iter = this->m_p_exc_list->first.begin(); iter != this->m_p_exc_list->first.end(); iter++) {
+        iter->element_uuid = this->m_p_metadata->uuid16;
+    }
+    for(iter = this->m_p_exc_list->second.begin(); iter != this->m_p_exc_list->second.end(); iter++) {
         iter->element_uuid = this->m_p_metadata->uuid16;
     }
     return this->m_p_exc_list;
@@ -78,7 +81,7 @@ QVector<PluginElementLocalisationData::Lang *> *PluginElementLocalisation::readL
             PluginExceptionData d;
             d.e = PLUGIN_EXC_WARN_007;
             d.group_uuid = lang->uuid16;
-            this->m_p_exc_list->append(d);
+            this->m_p_exc_list->second.append(d);
         }
 
         // 读取语种
@@ -89,7 +92,7 @@ QVector<PluginElementLocalisationData::Lang *> *PluginElementLocalisation::readL
             PluginExceptionData d;
             d.e = PLUGIN_EXC_ERR_100;
             d.group_uuid = lang->uuid16;
-            this->m_p_exc_list->append(d);
+            this->m_p_exc_list->first.append(d);
             lang->isErr = true;
         }
 
