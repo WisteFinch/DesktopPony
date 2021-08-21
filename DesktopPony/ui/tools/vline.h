@@ -30,6 +30,7 @@
 #define VLINE_H
 
 #include <QFrame>
+#include <QVariant>
 
 /**
  * @brief 生成垂直线

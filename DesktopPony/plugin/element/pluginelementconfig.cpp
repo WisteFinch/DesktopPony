@@ -117,16 +117,54 @@ PLUGIN_EXC_LIST *PluginElementConfig::read(QJsonObject obj, QString filePath, QS
         item.restart = itemObj.value("restart").toBool();
         if(item.type == PluginElementConfigData::Config_TYPE::config_type_integer) {
             item._default.setValue(itemObj.value("default").toInt());
-            item.range_from.setValue(itemObj.value("range_from").toInt());
-            item.range_to.setValue(itemObj.value("range_to").toInt());
+            if(itemObj.contains("range_from")) {
+                item.range_from.setValue(itemObj.value("range_from").toInt());
+            } else {
+                item.range_from.setValue(std::numeric_limits<int>::min());
+            }
+            if(itemObj.contains("range_to")) {
+                item.range_to.setValue(itemObj.value("range_to").toInt());
+            } else {
+                item.range_to.setValue(std::numeric_limits<int>::max());
+            }
+            if(item.range_from.toInt() > item.range_to.toInt()) {
+                // 异常：警告700-配置元素：最小值大于最大值
+                PluginExceptionData d;
+                d.e = PLUGIN_EXC_WARN_700;
+                d.group_uuid = item.uuid16;
+                this->m_p_exc_list->first.append(d);
+                item.range_from.setValue(std::numeric_limits<int>::min());
+                item.range_to.setValue(std::numeric_limits<int>::max());
+            }
         } else if(item.type == PluginElementConfigData::Config_TYPE::config_type_real) {
             item._default.setValue(itemObj.value("default").toDouble());
-            item.range_from.setValue(itemObj.value("range_from").toDouble());
-            item.range_to.setValue(itemObj.value("range_to").toDouble());
+            if(itemObj.contains("range_from")) {
+                item.range_from.setValue(itemObj.value("range_from").toDouble());
+            } else {
+                item.range_from.setValue(std::numeric_limits<double>::min());
+            }
+            if(itemObj.contains("range_to")) {
+                item.range_to.setValue(itemObj.value("range_to").toDouble());
+            } else {
+                item.range_to.setValue(std::numeric_limits<double>::max());
+            }
+            if(item.range_from.toDouble() > item.range_to.toDouble()) {
+                // 异常：警告700-配置元素：最小值大于最大值
+                PluginExceptionData d;
+                d.e = PLUGIN_EXC_WARN_700;
+                d.group_uuid = item.uuid16;
+                this->m_p_exc_list->first.append(d);
+                item.range_from.setValue(std::numeric_limits<double>::min());
+                item.range_to.setValue(std::numeric_limits<double>::max());
+            }
         } else if(item.type == PluginElementConfigData::Config_TYPE::config_type_bool) {
-            item._default.setValue(itemObj.value("default").toBool());
+            if(itemObj.contains("default")) {
+                item._default.setValue(itemObj.value("default").toBool());
+            }
         } else if(item.type == PluginElementConfigData::Config_TYPE::config_type_string) {
-            item._default.setValue(itemObj.value("default").toString());
+            if(itemObj.contains("default")) {
+                item._default.setValue(itemObj.value("default").toString());
+            }
         } else if(item.type == PluginElementConfigData::Config_TYPE::config_type_select || item.type == PluginElementConfigData::Config_TYPE::config_type_list) {
             QJsonArray selectList = itemObj.value("select_list").toArray();
             for(int j = 0; j < selectList.count(); j++) {

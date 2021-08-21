@@ -30,6 +30,8 @@
 #define HLINE_H
 
 #include <QFrame>
+#include <QString>
+#include <QVariant>
 
 /**
  * @brief 生成水平线

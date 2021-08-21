@@ -135,9 +135,11 @@ void UiConfigItemCard::initContent()
             this->ui_conf_item_card_combobox->addItem(this->m_p_text->get(this->m_p_item->info->list.at(i).name, this->m_p_item->info->list.at(i).obj_uuid), i);
         }
 
+        bool flag = true;
         for(int i = 0; i < this->m_p_item->info->list.count(); i++) {
             if(this->m_p_item->v.toString() == this->m_p_item->info->list.at(i).id) {
                 this->ui_conf_item_card_combobox->setCurrentIndex(i);
+                flag = false;
             }
         }
 
@@ -180,12 +182,8 @@ void UiConfigItemCard::refreshStatus()
 void UiConfigItemCard::slotValueChanged()
 {
     if(this->m_p_item->info->restart) {
-        QMessageBox::StandardButton b = QMessageBox::warning(this, this->m_p_text->getLoc("ui_conf_page_msgbox_restart_tit"), this->m_p_text->getLoc("ui_conf_page_msgbox_restart_txt"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-        if(b == QMessageBox::Yes) {
-            emit sigRestart();
-        } else if(!this->m_restart_flag) {
-            this->m_restart_flag = true;
-            refreshStatus();
-        }
+        this->m_restart_flag = true;
+        refreshStatus();
+        emit sigShowRestart();
     }
 }

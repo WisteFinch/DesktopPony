@@ -115,33 +115,38 @@ void Config::creatIndex()
 
     // 插件配置
     ELEMENT_PAIR_LIST *rootList = this->m_ptrfunc_get_element_pair_list(PLUGIN_ELEMENT_TYPE::element_type_config);
-    ELEMENT_PAIR_LIST::Iterator rootIter = rootList->begin();
-    while(rootIter != rootList->end()) {
-        PluginElementConfig *element = static_cast<PluginElementConfig *>(rootIter->first);
-        QVector<PluginElementConfigData::Item> *list = element->m_p_data->item_list;
+    QList<QVariant> disabledList = getDisabledPlugins();
+    if(rootList != nullptr) {
+        ELEMENT_PAIR_LIST::Iterator rootIter = rootList->begin();
+        while(rootIter != rootList->end()) {
+            if(!disabledList.contains(rootIter->first->m_p_metadata->obj_id)) {
+                PluginElementConfig *element = static_cast<PluginElementConfig *>(rootIter->first);
+                QVector<PluginElementConfigData::Item> *list = element->m_p_data->item_list;
 
-        // 加入配置元素索引
-        this->m_p_element_index->insert(QPair<QString, QString>(rootIter->first->m_p_metadata->obj_uuid, rootIter->first->m_p_metadata->uuid16), element);
+                // 加入配置元素索引
+                this->m_p_element_index->insert(QPair<QString, QString>(rootIter->first->m_p_metadata->obj_uuid, rootIter->first->m_p_metadata->uuid16), element);
 
-        // 读取配置项
-        QVector<PluginElementConfigData::Item>::iterator listIter = list->begin();
-        while(listIter != list->end()) {
-            if(!listIter->isErr) {
-                Item *item = new Item;
-                item->info = listIter;
-                item->v = listIter->_default;
-                item->obj_uuid = rootIter->first->m_p_metadata->obj_uuid;
-                item->element_uuid = rootIter->first->m_p_metadata->uuid16;
-                item->group_uuid = listIter->uuid16;
-                this->m_p_config_data->insert(item->info->config_name, item);
-                if(!this->m_p_category_index->contains(item->info->category)) {
-                    this->m_p_category_index->insert(item->info->category, new QVector<QString>);
+                // 读取配置项
+                QVector<PluginElementConfigData::Item>::iterator listIter = list->begin();
+                while(listIter != list->end()) {
+                    if(!listIter->isErr) {
+                        Item *item = new Item;
+                        item->info = listIter;
+                        item->v = listIter->_default;
+                        item->obj_uuid = rootIter->first->m_p_metadata->obj_uuid;
+                        item->element_uuid = rootIter->first->m_p_metadata->uuid16;
+                        item->group_uuid = listIter->uuid16;
+                        this->m_p_config_data->insert(item->info->config_name, item);
+                        if(!this->m_p_category_index->contains(item->info->category)) {
+                            this->m_p_category_index->insert(item->info->category, new QVector<QString>);
+                        }
+                        this->m_p_category_index->value(item->info->category)->append(item->info->config_name);
+                    }
+                    listIter++;
                 }
-                this->m_p_category_index->value(item->info->category)->append(item->info->config_name);
             }
-            listIter++;
+            rootIter++;
         }
-        rootIter++;
     }
 }
 
@@ -208,6 +213,30 @@ void Config::load()
         // 异常：无法读取配置文件
         makeJsonObj();
     }
+
+    // 添加系统配置选项
+    ELEMENT_PAIR_LIST *rootList = this->m_ptrfunc_get_element_pair_list(PLUGIN_ELEMENT_TYPE::element_type_style);
+    QList<QVariant> styleDisabledList = getDisabledPlugins();
+    ELEMENT_PAIR_LIST::Iterator rootIter;
+    if(rootList != nullptr) {
+        rootIter = rootList->begin();
+        while(rootIter != rootList->end()) {
+            if(!styleDisabledList.contains(rootIter->first->m_p_metadata->obj_id)) {
+                PluginElementStyle *element = static_cast<PluginElementStyle *>(rootIter->first);
+                PluginElementStyleData *data = element->m_p_data;
+
+                PluginElementConfigData::Item::Entry entry;
+                entry.id = data->style_name;
+                entry.obj_uuid = element->m_p_metadata->obj_uuid;
+                entry.name = QStringLiteral("§[loc_priv:style_") + data->style_name + QStringLiteral("]");
+                this->m_p_sys_item_info_style->list.append(entry);
+            }
+            rootIter++;
+        }
+    }
+
+
+    checkData();
 }
 
 void Config::save()
@@ -349,22 +378,6 @@ void Config::initSystemItem()
     this->m_p_sys_item_info_style->type = PluginElementConfigData::config_type_select;
     this->m_p_sys_item_info_style->_default.setValue(QStringLiteral("default"));
     this->m_p_sys_item_info_style->restart = true;
-    ELEMENT_PAIR_LIST *rootList = this->m_ptrfunc_get_element_pair_list(PLUGIN_ELEMENT_TYPE::element_type_style);
-    ELEMENT_PAIR_LIST::Iterator rootIter;
-    if(rootList != nullptr) {
-        rootIter = rootList->begin();
-        while(rootIter != rootList->end()) {
-            PluginElementStyle *element = static_cast<PluginElementStyle *>(rootIter->first);
-            PluginElementStyleData *data = element->m_p_data;
-
-            PluginElementConfigData::Item::Entry entry;
-            entry.id = data->style_name;
-            entry.obj_uuid = element->m_p_metadata->obj_uuid;
-            entry.name = QStringLiteral("§[loc_priv:style_") + data->style_name + QStringLiteral("]");
-            this->m_p_sys_item_info_style->list.append(entry);
-            rootIter++;
-        }
-    }
 
     // 角色
 
@@ -399,3 +412,51 @@ void Config::initSystemItem()
     this->m_p_sys_item_info_disabled_plugin->read_only = true;
 }
 
+QList<QVariant> Config::getDisabledPlugins()
+{
+    return get(QStringLiteral("sys_disabled_plugin")).toList();
+}
+
+
+void Config::checkData()
+{
+    QMap<QString, Item *>::iterator iter = this->m_p_config_data->begin();
+    while(iter != this->m_p_config_data->end()) {
+        PluginElementConfigData::Config_TYPE type = iter.value()->info->type;
+        if(type == PluginElementConfigData::config_type_integer) {
+            if(iter.value()->v.toInt() < iter.value()->info->range_from.toInt()) {
+                iter.value()->v.setValue(iter.value()->info->range_from.toInt());
+            } else if(iter.value()->v.toInt() > iter.value()->info->range_to.toInt()) {
+                iter.value()->v.setValue(iter.value()->info->range_to.toInt());
+            }
+        } else if(type == PluginElementConfigData::config_type_real) {
+            if(iter.value()->v.toDouble() < iter.value()->info->range_from.toDouble()) {
+                iter.value()->v.setValue(iter.value()->info->range_from.toDouble());
+            } else if(iter.value()->v.toDouble() > iter.value()->info->range_to.toDouble()) {
+                iter.value()->v.setValue(iter.value()->info->range_to.toDouble());
+            }
+        } else if(type == PluginElementConfigData::config_type_select) {
+            bool vFlag = false, dFlag = false;
+            QVector<PluginElementConfigData::Item::Entry>::iterator entryIter = iter.value()->info->list.begin();
+            while(entryIter != iter.value()->info->list.end()) {
+                if(iter.value()->v.toString() == entryIter->id) {
+                    vFlag = true;
+                }
+                if(iter.value()->info->_default.toString() == entryIter->id) {
+                    dFlag = true;
+                }
+                entryIter++;
+            }
+            if(!vFlag) {
+                if(dFlag) {
+                    iter.value()->v.setValue(iter.value()->info->_default.toString());
+                } else if(!iter.value()->info->list.isEmpty()) {
+                    iter.value()->v.setValue(iter.value()->info->list.first().id);
+                } else {
+                    iter.value()->v.setValue(iter.value()->info->_default.toString());
+                }
+            }
+        }
+        iter++;
+    }
+}

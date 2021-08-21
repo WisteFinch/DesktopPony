@@ -42,7 +42,6 @@
 #include <QDoubleSpinBox>
 #include <QSpinBox>
 #include <QListView>
-#include <QMessageBox>
 
 /**
  * @brief 配置项
@@ -67,7 +66,7 @@ public:
 
 signals:
     void sigValueChanged(); ///< 信号：值改变
-    void sigRestart();  ///< 信号：重启
+    void sigShowRestart();  ///< 信号：显示重启按钮
 
 private:
     Text *m_p_text = nullptr;   ///< 文本

@@ -1,6 +1,7 @@
 {
     "metadata": {
         "id": "localisation",
+        "uuid": "1000000000000000",
         "caption": "§[loc_priv:sys_plugin_loc_c]",
         "description": "§[loc_priv:sys_plugin_loc_d]",
         "type": "localisation"
@@ -53,6 +54,7 @@
                     "ui_main_panel_tab_plugin_cap": "插件",
                     "ui_main_panel_tab_config_cap": "配置",
                     "ui_main_panel_tab_info_cap": "信息",
+                    "ui_main_panel_restart_cap": "重启以应用更改",
                     "ui_plugin_page_search_cap": "搜索",
                     "ui_plugin_page_search_filters_tip": "筛选",
                     "ui_plugin_page_filter_null_txt": "空白",
@@ -62,11 +64,13 @@
                     "ui_plugin_page_tools_enable_tip": "启用",
                     "ui_plugin_page_tools_disable_tip": "禁用",
                     "ui_plugin_page_tools_star_tip": "收藏",
+                    "ui_plugin_page_list_card_status_fav_tip": "已收藏",
+                    "ui_plugin_page_list_card_status_disabled_tip": "已禁用",
                     "ui_plugin_page_msgbox_reload_tit": "是否重新载入插件？",
                     "ui_plugin_page_msgbox_reload_txt": "这可能会花费一些时间...",
+                    "ui_conf_page_msgbox_disable_sys_plugin_tit": "确定要禁用系统插件吗？",
+                    "ui_conf_page_msgbox_disable_sys_plugin_txt": "系统插件包含程序基础功能，禁用后可能导致程序无法正常运行。",
                     "ui_conf_page_item_card_status_restart": "程序重启后生效",
-                    "ui_conf_page_msgbox_restart_tit": "立即应用改动？",
-                    "ui_conf_page_msgbox_restart_txt": "改动将在程序重启后生效，是否立即重启？",
                     "ui_info_page_about_txt": "DesktopPony是一款以小马为主题的桌面宠物。 用C++/QT编写。",
                     "ui_info_page_log_caption_txt": "日志",
                     "ui_info_page_log_desc_txt": "查看程序运行日志",

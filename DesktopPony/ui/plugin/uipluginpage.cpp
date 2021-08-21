@@ -192,7 +192,7 @@ void UiPluginPage::creatList()
     OBJECT_LIST::iterator iter = this->m_p_plugin->m_p_plugin_obj_list->begin();
     qint32 index = 0;
     QList<QVariant> favList = this->m_p_conf->get(QStringLiteral("sys_fav_plugin")).toList();
-    QList<QVariant> disabledList = this->m_p_conf->get(QStringLiteral("sys_fav_plugin")).toList();
+    QList<QVariant> disabledList = this->m_p_conf->get(QStringLiteral("sys_disabled_plugin")).toList();
     while(iter != this->m_p_plugin->m_p_plugin_obj_list->end()) {
         UiPluginListCard *card = new UiPluginListCard;
         bool isFav = favList.contains((*iter)->m_p_metadata->id);
@@ -225,6 +225,7 @@ void UiPluginPage::creatFilteredList()
         if(filter(*iter)) {
             this->m_p_filtered_cards->append(*iter);
             this->ui_plugin_page_layout_list->addWidget(*iter);
+            (*iter)->setStyle(QApplication::style());
         }
         iter++;
     }
@@ -370,15 +371,28 @@ void UiPluginPage::slotSetEnable(bool enable)
 {
     if(this->m_list_index != -1) {
         UiPluginListCard *card = this->m_p_cards->at(this->m_list_index);
-        card->m_is_disabled = !enable;
-        card->refreshStatus();
-        QList<QVariant> vl = this->m_p_conf->get(QStringLiteral("sys_disabled_plugin")).toList();
-        if(enable) {
-            vl.removeAll(card->m_p_obj->m_p_metadata->id);
-        } else {
-            vl.append(card->m_p_obj->m_p_metadata->id);
+        if(card->m_is_disabled == enable) {
+            bool flag = true;
+            if(card->m_p_obj->m_p_metadata->is_system && !enable) {
+                QMessageBox::StandardButton b = QMessageBox::warning(this, this->m_p_text->getLoc(QStringLiteral("ui_conf_page_msgbox_disable_sys_plugin_tit")),
+                                                this->m_p_text->getLoc(QStringLiteral("ui_conf_page_msgbox_disable_sys_plugin_txt")),
+                                                QMessageBox::Yes | QMessageBox::No,
+                                                QMessageBox::No);
+                flag = b == QMessageBox::Yes ? true : false;
+            }
+            if(flag) {
+                card->m_is_disabled = !enable;
+                card->refreshStatus();
+                QList<QVariant> vl = this->m_p_conf->get(QStringLiteral("sys_disabled_plugin")).toList();
+                if(enable) {
+                    vl.removeAll(card->m_p_obj->m_p_metadata->id);
+                } else {
+                    vl.append(card->m_p_obj->m_p_metadata->id);
+                }
+                this->m_p_conf->set(QStringLiteral("sys_disabled_plugin"), vl);
+                refreshFilteredList();
+                emit sigShowRestart();
+            }
         }
-        this->m_p_conf->set(QStringLiteral("sys_disabled_plugin"), vl);
-        refreshFilteredList();
     }
 }

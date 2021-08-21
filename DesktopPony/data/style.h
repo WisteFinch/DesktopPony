@@ -45,9 +45,10 @@ public:
 
     /**
      * @brief 初始化
-     * @param "插件元素组合列表"函数指针
+     * @param 函数指针：获取"插件元素组合列表"
+     * @param 函数指针：获取禁用的插件
      */
-    void init(PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfunc);
+    void init(PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfunc1, PTRFUNC_GET_DEISABLED_PLUGINS ptrfunc2);
 
     /**
      * @brief 获取全局文本
@@ -68,7 +69,8 @@ public:
     void refreshStyle();
 
 private:
-    PTRFUNC_GET_ELEMENT_PAIR_LIST m_ptrfunc_get_element_pair_list = nullptr;   ///< "插件元素组合列表"函数指针
+    PTRFUNC_GET_ELEMENT_PAIR_LIST m_ptrfunc_get_element_pair_list = nullptr;///< 函数指针：获取"插件元素组合列表"
+    PTRFUNC_GET_DEISABLED_PLUGINS m_ptrfunc_get_disabled_plugins = nullptr; ///< 函数指针：获取禁用的插件
     QString qss;///< Qt样式表
     QString m_s_style_name = "default"; ///< 当前样式名称
 };

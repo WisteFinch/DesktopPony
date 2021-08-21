@@ -66,7 +66,7 @@ public:
 
     bool m_value_changed = false;
 signals:
-    void sigRestart();  ///< 信号：重启
+    void sigShowRestart();  ///< 信号：显示重启按钮
 
 private:
     Config *m_p_conf = nullptr; ///< 配置

@@ -32,6 +32,7 @@
 #include "plugin/element/pluginelementconfig.h"
 #include "plugin/element/pluginelementstyle.h"
 #include "plugin/element/pluginelementlocalisation.h"
+#include "plugin/pluginmanager.h"
 #include "metadata.h"
 #include <QSet>
 
@@ -122,7 +123,14 @@ public:
      */
     QMap<QString, QVector<QString>*> *getCategoryIndex();
 
+    /**
+     * @brief 获取禁用的插件
+     * @return 列表
+     */
+    QList<QVariant> getDisabledPlugins();
+
 private:
+
     QMap<QString, Item *> *m_p_config_data = nullptr;  ///< 配置数据
     QMap<QString, QVector<QString>*> *m_p_category_index = nullptr;  ///< 配置项类别索引 <类别, <配置项id>>
     QMap<QPair<QString, QString>, PluginElementConfig *> *m_p_element_index = nullptr;///< 配置元素索引 <<对象uuid, 元素uuid>, 配置元素>
@@ -141,6 +149,11 @@ private:
      * @brief 初始化系统配置项信息
      */
     void initSystemItem();
+
+    /**
+     * @brief 检查数据
+     */
+    void checkData();
 };
 
 #endif // CONFIG_H

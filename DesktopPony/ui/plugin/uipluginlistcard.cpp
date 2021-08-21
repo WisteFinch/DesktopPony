@@ -1,5 +1,4 @@
 #include "uipluginlistcard.h"
-#include "ui_uipluginlistcard.h"
 
 UiPluginListCard::UiPluginListCard(QWidget *parent) :
     QWidget(parent)
@@ -225,6 +224,17 @@ QString UiPluginListCard::getAllText()
 
 void UiPluginListCard::refreshStatus()
 {
+    QString tip;
+    if(this->m_is_fav) {
+        tip.append(this->m_p_text->getLoc(QStringLiteral("ui_plugin_page_list_card_status_fav_tip")));
+    }
+    if(this->m_is_disabled) {
+        if(!tip.isEmpty()) {
+            tip.append(QStringLiteral(" | "));
+        }
+        tip.append(this->m_p_text->getLoc(QStringLiteral("ui_plugin_page_list_card_status_disabled_tip")));
+    }
+    this->setToolTip(tip);
     this->setProperty("contains_errors", !this->m_p_obj->m_p_exc_list->first.isEmpty());
     this->setProperty("contains_warnings", !this->m_p_obj->m_p_exc_list->second.isEmpty());
     this->setProperty("is_fav", this->m_is_fav);

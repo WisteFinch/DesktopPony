@@ -32,6 +32,7 @@
 #include "pluginelement.h"
 #include "../data/pluginelementconfigdata.h"
 #include <QSet>
+#include <limits.h>
 
 /**
  * @brief 配置元素

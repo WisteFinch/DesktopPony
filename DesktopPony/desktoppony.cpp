@@ -32,9 +32,10 @@ void DesktopPony::initData()
 
     // 初始化数据
     this->m_ptrfunc_get_element_pair_list = std::bind(&PluginManager::getElementPairList, this->m_p_plugin_manager, std::placeholders::_1);
+    this->m_ptrfunc_get_disabled_plugins = std::bind(&Config::getDisabledPlugins, this->m_p_config);
     this->m_p_config->init(this->m_ptrfunc_get_element_pair_list, this->m_p_plugin_manager->getLangList());
-    this->m_p_localisation->init(this->m_ptrfunc_get_element_pair_list);
-    this->m_p_style->init(this->m_ptrfunc_get_element_pair_list);
+    this->m_p_localisation->init(this->m_ptrfunc_get_element_pair_list, this->m_ptrfunc_get_disabled_plugins);
+    this->m_p_style->init(this->m_ptrfunc_get_element_pair_list, this->m_ptrfunc_get_disabled_plugins);
     this->m_p_text->init(this->m_p_localisation);
 
     //读取配置文件

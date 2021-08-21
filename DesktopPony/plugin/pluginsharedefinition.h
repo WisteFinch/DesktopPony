@@ -1,6 +1,6 @@
 /**
  * @file plugin/sharedefinition.h
- * @brief 鎻掍欢-鍏敤瀹氫箟
+ * @brief 插件-公用定义
  * @author WisteFinch
  * @date 2021.6.8
  *
@@ -128,6 +128,7 @@ enum PLUGIN_EXCEPTION {
     PLUGIN_EXC_WARN_600,///< 模型元素：缺少图层
     PLUGIN_EXC_WARN_601,///< 模型元素：缺少图像类别
     PLUGIN_EXC_WARN_602,///< 模型元素：缺少部件
+    PLUGIN_EXC_WARN_700,///< 配置元素：最小值大于最大值
 };
 
 /**
@@ -175,6 +176,7 @@ struct PluginObjectMetadata {
  */
 struct PluginElementMetadata {
     QString id; ///< 标识符
+    QString obj_id;  ///< 父对象标识符
     QString uuid16; ///< 16位唯一标识符
     QString orig_uuid16;///< 原16位唯一标识符
     QString obj_uuid;   ///< 父对象uuid
@@ -232,6 +234,7 @@ typedef QVector<QPair<PluginElement *, QString>> ELEMENT_PAIR_LIST;  ///< 元素
 typedef QMap<PLUGIN_ELEMENT_TYPE, ELEMENT_PAIR_LIST *> ELEMENT_TYPE_INDEX; ///< 类型定义：元素类型索引 <元素类型, 元素组合列表>
 typedef QMap<QString, UuidIndexItem> ELEMENT_CONFIG_NAME_INDEX;   ///< 类型定义：配置元素名称索引
 
-typedef std::function<ELEMENT_PAIR_LIST*(PLUGIN_ELEMENT_TYPE)> PTRFUNC_GET_ELEMENT_PAIR_LIST;///< 类型定义：函数指针:获取元素组合列表
+typedef std::function<ELEMENT_PAIR_LIST *(PLUGIN_ELEMENT_TYPE)> PTRFUNC_GET_ELEMENT_PAIR_LIST;   ///< 类型定义：函数指针:获取元素组合列表
+typedef std::function<QList<QVariant>()> PTRFUNC_GET_DEISABLED_PLUGINS; ///< 类型定义：函数指针：获取禁用的插件
 
 #endif // PLUGINSHAREDEFINITION_H

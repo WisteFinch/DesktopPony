@@ -127,7 +127,7 @@ void UiConfigPage::addItem(QMap<QString, QVector<QString>*>::iterator indexIter,
         this->m_p_items->append(itemCard);
         categoryItemLayout->addWidget(itemCard);
         connect(itemCard, &UiConfigItemCard::sigValueChanged, this, [ = ] {this->m_value_changed = true;});
-        connect(itemCard, &UiConfigItemCard::sigRestart, this, [ = ] {emit sigRestart();});
+        connect(itemCard, &UiConfigItemCard::sigShowRestart, this, [ = ] {emit sigShowRestart();});
         containItem = true;
     }
 
@@ -162,7 +162,7 @@ void UiConfigPage::clearList()
     if(this->m_p_items != nullptr) {
         while(!this->m_p_items->isEmpty()) {
             disconnect(this->m_p_items->last(), &UiConfigItemCard::sigValueChanged, this, nullptr);
-            disconnect(this->m_p_items->last(), &UiConfigItemCard::sigRestart, this, nullptr);
+            disconnect(this->m_p_items->last(), &UiConfigItemCard::sigShowRestart, this, nullptr);
             this->ui_conf_page_layout_list->removeWidget(this->m_p_items->last());
             this->m_p_items->last()->setParent(nullptr);
             delete this->m_p_items->last();

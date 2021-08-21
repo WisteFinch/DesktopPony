@@ -1,6 +1,7 @@
 {
     "metadata": {
         "id": "system_plugin",
+        "uuid": "10000000000000000000000000000000",
         "caption": "§[loc_priv:sys_plugin_c]",
         "description": "§[loc_priv:sys_plugin_d]",
         "author": "WisteFinch",

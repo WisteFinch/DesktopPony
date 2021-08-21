@@ -54,9 +54,10 @@ public:
 
     /**
      * @brief 初始化
-     * @param "插件元素组合列表"函数指针
+     * @param 函数指针：获取"插件元素组合列表"
+     * @param 函数指针：获取禁用的插件
      */
-    void init(PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfunc);
+    void init(PTRFUNC_GET_ELEMENT_PAIR_LIST ptrfunc1, PTRFUNC_GET_DEISABLED_PLUGINS ptrfunc2);
 
     /**
      * @brief 设置语言
@@ -107,7 +108,8 @@ private:
 
     TABLE *m_p_public = nullptr;///< 公有文本
     QMap<QString, TABLE *> *m_p_private = nullptr;   ///< 私有文本 <插件uuid, 局部本地化>
-    PTRFUNC_GET_ELEMENT_PAIR_LIST m_ptrfunc_get_element_pair_list = nullptr;   ///< "插件元素组合列表"函数指针
+    PTRFUNC_GET_ELEMENT_PAIR_LIST m_ptrfunc_get_element_pair_list = nullptr;///< 函数指针：获取"插件元素组合列表"
+    PTRFUNC_GET_DEISABLED_PLUGINS m_ptrfunc_get_disabled_plugins = nullptr; ///< 函数指针：获取禁用的插件
 
     QString m_s_language = "zh-hans";
 };

@@ -1,6 +1,7 @@
 {
     "metadata": {
         "id": "style",
+        "uuid": "2000000000000000",
         "caption": "§[loc_priv:sys_plugin_style_c]",
         "description": "§[loc_priv:sys_plugin_style_d]",
         "type": "style"

@@ -1,5 +1,4 @@
 #include "vline.h"
-#include "ui_vline.h"
 
 VLine::VLine(QWidget *parent) :
     QFrame(parent)

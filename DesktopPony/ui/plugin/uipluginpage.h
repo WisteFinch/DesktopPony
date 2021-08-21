@@ -73,7 +73,7 @@ public:
 
 signals:
     void sigReloadData();   ///< 信号：重载数据
-
+    void sigShowRestart();  ///< 信号：显示重启按钮
 private:
     Config *m_p_conf = nullptr; ///< 配置
     Text *m_p_text = nullptr;   ///< 文本

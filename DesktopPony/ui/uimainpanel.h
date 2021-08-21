@@ -79,6 +79,12 @@ public:
      */
     void init(Config *ptrconf, Style *ptrStyle, Text *ptrText, PluginManager *ptrPluginManager, Config::PTRFUNC_GET_CONFIG ptrfuncGetConf);
 
+public slots:
+    /**
+     * @brief 显示重启按钮
+     */
+    void slotShowRestart();
+
     /**
      * @brief 槽：切换标签
      */
@@ -96,6 +102,7 @@ private:
     PluginManager *m_p_plugin = nullptr;///< 插件
     Config::PTRFUNC_GET_CONFIG m_ptrfunc_get_conf;///< 函数指针：获取配置
     int m_page_index;   ///< 当前页序号
+    bool m_show_restart;///< 显示重启按钮
 
     // Widget部分
     AnimationStackedWidget *ui_main_panel_pages = nullptr;  ///< 页堆
@@ -103,11 +110,13 @@ private:
     QPushButton *ui_main_panel_tab_plugin = nullptr;///< “插件”选项卡
     QPushButton *ui_main_panel_tab_config = nullptr;///< “配置”选项卡
     QPushButton *ui_main_panel_tab_info = nullptr;  ///< “信息”选项卡
+    QPushButton *ui_main_panel_restart = nullptr;   ///< 重启程序
     QLabel *ui_main_panel_logo = nullptr;   ///< 标志
     QLabel *ui_main_panel_version = nullptr;///< 版本
 
     // Layout部分
     QHBoxLayout *ui_main_panel_layout_main = nullptr;   ///< 主界面布局
+    QVBoxLayout *ui_main_panel_layout_menu = nullptr;   ///< 菜单布局
     QVBoxLayout *ui_main_panel_layout_tab = nullptr;///< 选项卡布局
 
     // 页部分

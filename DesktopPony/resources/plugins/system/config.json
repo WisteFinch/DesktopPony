@@ -1,6 +1,7 @@
 {
     "metadata": {
         "id": "config",
+        "uuid": "7000000000000000",
         "caption": "§[loc_priv:sys_plugin_conf_c]",
         "description": "§[loc_priv:sys_plugin_conf_d]",
         "type": "config"
@@ -8,6 +9,7 @@
     "content": [
         {
             "id": "conf_g",
+            "uuid": "7000000000000001",
             "config_name": "gravitational_acceleration",
             "caption": "§[loc_priv:sys_plugin_conf_grav_c]",
             "description": "§[loc_priv:sys_plugin_conf_grav_d]",

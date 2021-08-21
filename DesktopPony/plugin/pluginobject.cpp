@@ -257,6 +257,7 @@ PluginElement *PluginObject::readElement(QString path, ELEMENT_CONFIG_NAME_INDEX
             this->m_p_exc_list->first.append(d);
         }
         e->m_p_metadata->obj_uuid = this->m_p_metadata->uuid;
+        e->m_p_metadata->obj_id = this->m_p_metadata->id;
         return e;
     } else {// 文件是否打开:否
         // 异常：错误005-插件元素头文件无法读取
@@ -268,6 +269,8 @@ PluginElement *PluginObject::readElement(QString path, ELEMENT_CONFIG_NAME_INDEX
         d.e = PLUGIN_EXC_ERR_005;
         d.element_uuid = e->m_p_metadata->uuid16;
         this->m_p_exc_list->first.append(d);
+        e->m_p_metadata->obj_uuid = this->m_p_metadata->uuid;
+        e->m_p_metadata->obj_id = this->m_p_metadata->id;
         return e;
     }
 }

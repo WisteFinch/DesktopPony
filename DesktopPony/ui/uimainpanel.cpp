@@ -15,6 +15,7 @@ UiMainPanel::~UiMainPanel()
     this->m_p_text = nullptr;
     this->m_p_plugin = nullptr;
     clearConnect();
+    delete this->ui_main_panel_restart;
     delete ui;
 }
 
@@ -56,22 +57,27 @@ void UiMainPanel::initWidget()
     this->ui_main_panel_layout_main->setSpacing(5);
     this->setLayout(this->ui_main_panel_layout_main);
     // 选项卡
+    this->ui_main_panel_layout_menu = new QVBoxLayout;
+    this->ui_main_panel_layout_menu->setSpacing(0);
+    this->ui_main_panel_layout_main->addLayout(this->ui_main_panel_layout_menu);
     this->ui_main_panel_layout_tab = new QVBoxLayout;
     this->ui_main_panel_layout_tab->setSpacing(0);
+    this->ui_main_panel_layout_tab->setMargin(0);
+    this->ui_main_panel_layout_menu->addLayout(this->ui_main_panel_layout_tab);
     this->ui_main_panel_tab_character = new QPushButton;
     this->ui_main_panel_tab_plugin = new QPushButton;
     this->ui_main_panel_tab_config = new QPushButton;
     this->ui_main_panel_tab_info = new QPushButton;
+    this->ui_main_panel_restart = new QPushButton;
     this->ui_main_panel_logo = new QLabel;
     this->ui_main_panel_version = new QLabel;
     this->ui_main_panel_layout_tab->addWidget(this->ui_main_panel_tab_character);
     this->ui_main_panel_layout_tab->addWidget(this->ui_main_panel_tab_plugin);
     this->ui_main_panel_layout_tab->addWidget(this->ui_main_panel_tab_config);
     this->ui_main_panel_layout_tab->addWidget(this->ui_main_panel_tab_info);
-    this->ui_main_panel_layout_tab->addStretch();
-    this->ui_main_panel_layout_tab->addWidget(this->ui_main_panel_logo);
-    this->ui_main_panel_layout_tab->addWidget(this->ui_main_panel_version);
-    this->ui_main_panel_layout_main->addLayout(this->ui_main_panel_layout_tab);
+    this->ui_main_panel_layout_menu->addStretch();
+    this->ui_main_panel_layout_menu->addWidget(this->ui_main_panel_logo);
+    this->ui_main_panel_layout_menu->addWidget(this->ui_main_panel_version);
     // 页
     this->ui_main_panel_pages = new AnimationStackedWidget;
     this->ui_main_panel_layout_main->addWidget(this->ui_main_panel_pages);
@@ -98,12 +104,13 @@ void UiMainPanel::initObjectName()
     this->ui_main_panel_tab_plugin->setObjectName(QStringLiteral("ui_main_panel_tab_plugin"));
     this->ui_main_panel_tab_config->setObjectName(QStringLiteral("ui_main_panel_tab_config"));
     this->ui_main_panel_tab_info->setObjectName(QStringLiteral("ui_main_panel_tab_info"));
+    this->ui_main_panel_restart->setObjectName(QStringLiteral("ui_main_panel_restart"));
     this->ui_main_panel_logo->setObjectName(QStringLiteral("ui_main_panel_logo"));
     this->ui_main_panel_version->setObjectName(QStringLiteral("ui_main_panel_version"));
 
     // Layout部分
     this->ui_main_panel_layout_main->setObjectName(QStringLiteral("ui_main_panel_layout_main"));
-    this->ui_main_panel_layout_tab->setObjectName(QStringLiteral("ui_main_panel_layout_tab"));
+    this->ui_main_panel_layout_menu->setObjectName(QStringLiteral("ui_main_panel_layout_menu"));
 }
 
 void UiMainPanel::initProperty()
@@ -115,6 +122,7 @@ void UiMainPanel::initProperty()
     this->ui_main_panel_tab_plugin->setProperty("category", QStringLiteral("main_panel_tab_buttton"));
     this->ui_main_panel_tab_config->setProperty("category", QStringLiteral("main_panel_tab_buttton"));
     this->ui_main_panel_tab_info->setProperty("category", QStringLiteral("main_panel_tab_buttton"));
+    this->ui_main_panel_restart->setProperty("category", QStringLiteral("main_panel_restart_buttton"));
     this->ui_main_panel_logo->setProperty("category", QStringLiteral("main_panel_tab_label"));
     this->ui_main_panel_version->setProperty("category", QStringLiteral("main_panel_tab_label"));
 }
@@ -127,7 +135,7 @@ void UiMainPanel::initContent()
     this->ui_main_panel_tab_plugin->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_plugin->objectName() + QStringLiteral("_cap")));
     this->ui_main_panel_tab_config->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_config->objectName() + QStringLiteral("_cap")));
     this->ui_main_panel_tab_info->setText(this->m_p_text->getLoc(this->ui_main_panel_tab_info->objectName() + QStringLiteral("_cap")));
-
+    this->ui_main_panel_restart->setText(this->m_p_text->getLoc(this->ui_main_panel_restart->objectName() + QStringLiteral("_cap")));
     this->ui_main_panel_version->setText(STR_APP_VERSION);
     this->ui_main_panel_version->setAlignment(Qt::AlignCenter);
 }
@@ -140,9 +148,13 @@ void UiMainPanel::initConnect()
     connect(this->ui_main_panel_tab_config, &QPushButton::clicked, this, [ = ] {slotChangeTab(2);});
     connect(this->ui_main_panel_tab_info, &QPushButton::clicked, this, [ = ] {slotChangeTab(3);});
 
+    //显示重启
+    connect(this->ui_plugin_page, &UiPluginPage::sigShowRestart, this, &UiMainPanel::slotShowRestart);
+    connect(this->ui_config_page, &UiConfigPage::sigShowRestart, this, &UiMainPanel::slotShowRestart);
+
     // 重启
+    connect(this->ui_main_panel_restart, &QPushButton::clicked, this, [ = ] {emit sigRestart();});
     connect(this->ui_plugin_page, &UiPluginPage::sigReloadData, this, [ = ] {emit sigRestart();});
-    connect(this->ui_config_page, &UiConfigPage::sigRestart, this, [ = ] {emit sigRestart();});
 }
 
 void UiMainPanel::clearConnect()
@@ -153,9 +165,13 @@ void UiMainPanel::clearConnect()
     disconnect(this->ui_main_panel_tab_config, &QPushButton::clicked, this, nullptr);
     disconnect(this->ui_main_panel_tab_info, &QPushButton::clicked, this, nullptr);
 
+    //显示重启
+    disconnect(this->ui_plugin_page, &UiPluginPage::sigShowRestart, this, &UiMainPanel::slotShowRestart);
+    disconnect(this->ui_config_page, &UiConfigPage::sigShowRestart, this, &UiMainPanel::slotShowRestart);
+
     // 重启
+    disconnect(this->ui_main_panel_restart, &QPushButton::clicked, this, nullptr);
     disconnect(this->ui_plugin_page, &UiPluginPage::sigReloadData, this, nullptr);
-    disconnect(this->ui_config_page, &UiConfigPage::sigRestart, this, nullptr);
 }
 
 void UiMainPanel::slotChangeTab(int index)
@@ -199,4 +215,12 @@ void UiMainPanel::slotChangeTab(int index)
     }
 
     this->ui_plugin_page->ui_plugin_page_filter->hide();
+}
+
+void UiMainPanel::slotShowRestart()
+{
+    if(!this->m_show_restart) {
+        this->m_show_restart = true;
+        this->ui_main_panel_layout_tab->addWidget(this->ui_main_panel_restart);
+    }
 }

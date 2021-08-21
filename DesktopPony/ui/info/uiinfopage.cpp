@@ -54,6 +54,7 @@ void UiInfoPage::initWidget()
     this->ui_info_page_about = new QLabel;
     this->ui_info_page_about->setWordWrap(true);
     this->ui_info_page_layout_about->addWidget(this->ui_info_page_about);
+    this->ui_info_page_layout_about->addStretch();
     this->ui_info_page_layout_scrollarea->addLayout(this->ui_info_page_layout_about);
     // 项
     this->ui_info_page_layout_scrollarea->addWidget(new HLine);
