@@ -54,7 +54,9 @@ enum PLUGIN_ELEMENT_TYPE {
     element_type_action,
     element_type_accessories,
     element_type_model,
-    element_type_config
+    element_type_config,
+    element_type_resources,
+    element_type_library
 };
 
 /**
@@ -73,6 +75,8 @@ struct PluginElementTypeName {
         this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_accessories, "accessories"));
         this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_model, "model"));
         this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_config, "config"));
+        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_resources, "resources"));
+        this->m_d.append(QPair<PLUGIN_ELEMENT_TYPE, QString>(element_type_resources, "library"));
     }
     PLUGIN_ELEMENT_TYPE getType(QString s)
     {
@@ -169,6 +173,8 @@ struct PluginObjectMetadata {
     bool has_accessories = false;   ///< 拥有配件元素
     bool has_model = false; ///< 拥有模型元素
     bool has_config = false;///< 拥有配置元素
+    bool has_resources = false; ///< 拥有资源元素
+    bool has_library = false;///< 拥有库元素
 };
 
 /**

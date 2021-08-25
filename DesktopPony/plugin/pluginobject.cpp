@@ -245,6 +245,22 @@ PluginElement *PluginObject::readElement(QString path, ELEMENT_CONFIG_NAME_INDEX
             this->m_p_exc_list->first.append(excList.first);
             this->m_p_exc_list->second.append(excList.second);
             this->m_p_metadata->has_config = true;
+        }
+        // 元素为资源
+        else if(type == element_type_resources) {
+            e = new PluginElementResources();
+            PLUGIN_EXC_LIST excList = *e->read(rootObj, path, dirPath, true);
+            this->m_p_exc_list->first.append(excList.first);
+            this->m_p_exc_list->second.append(excList.second);
+            this->m_p_metadata->has_resources = true;
+        }
+        // 元素为库
+        else if(type == element_type_library) {
+            e = new PluginElementLibrary();
+            PLUGIN_EXC_LIST excList = *e->read(rootObj, path, dirPath, true);
+            this->m_p_exc_list->first.append(excList.first);
+            this->m_p_exc_list->second.append(excList.second);
+            this->m_p_metadata->has_library = true;
         } else {
             // 异常：错误009-插件元素类型不存在
             e = new PluginElement();

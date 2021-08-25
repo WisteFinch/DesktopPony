@@ -65,49 +65,49 @@ private:
     Text *m_p_text = nullptr;   ///< 文本
 
     // 部件部分
-    QScrollArea *ui_info_page_scrollarea = nullptr;   ///< 滚动区域
-    QWidget *ui_info_page_scrollarea_widget = nullptr;///< 滚动区域显示部件
-    QWidget *ui_info_page_scrollarea_basis = nullptr;///< 滚动区域基础部件
-    QLabel *ui_info_page_about_icon = nullptr;  ///< 关于-图标
-    QLabel *ui_info_page_about = nullptr;   ///< 关于
-    QLabel *ui_info_page_log_caption = nullptr; ///< 日志-标题
-    QLabel *ui_info_page_log_desc = nullptr;///< 日志-描述
-    QPushButton *ui_info_page_log_view = nullptr;   ///< 查看日志
-    QLabel *ui_info_page_version_caption = nullptr; ///< 版本-标题
-    QLabel *ui_info_page_version_desc = nullptr;///< 版本-描述
-    QPushButton *ui_info_page_version_check_update = nullptr;   ///< 检查更新
-    QLabel *ui_info_page_repo_caption = nullptr;///< 仓库
-    QLabel *ui_info_page_repo_desc = nullptr;   ///< 仓库
-    QPushButton *ui_info_page_github_link = nullptr;///< 打开GitHub
-    QLabel *ui_info_page_doc_caption = nullptr; ///< GitHub
-    QLabel *ui_info_page_doc_desc = nullptr;///< GitHub
-    QPushButton *ui_info_page_doc_link = nullptr;   ///< 打开GitHub
-    QLabel *ui_info_page_copyright_caption = nullptr;   ///< 版权-标题
-    QLabel *ui_info_page_copyright = nullptr;   ///< 版权
-    QLabel *ui_info_page_author_caption = nullptr;  ///< 作者-标题
-    QLabel *ui_info_page_author = nullptr;  ///< 作者
-    QLabel *ui_info_page_license_caption = nullptr; ///< 许可证-标题
-    QLabel *ui_info_page_license = nullptr; ///< 许可证
-    QPushButton *ui_info_page_license_link = nullptr;///< 许可证链接
+    QScrollArea *ui_scrollarea = nullptr;   ///< 滚动区域
+    QWidget *ui_scrollarea_widget = nullptr;///< 滚动区域显示部件
+    QWidget *ui_scrollarea_basis = nullptr;///< 滚动区域基础部件
+    QLabel *ui_about_icon = nullptr;  ///< 关于-图标
+    QLabel *ui_about = nullptr;   ///< 关于
+    QLabel *ui_log_caption = nullptr; ///< 日志-标题
+    QLabel *ui_log_desc = nullptr;///< 日志-描述
+    QPushButton *ui_log_view = nullptr;   ///< 查看日志
+    QLabel *ui_version_caption = nullptr; ///< 版本-标题
+    QLabel *ui_version_desc = nullptr;///< 版本-描述
+    QPushButton *ui_version_check_update = nullptr;   ///< 检查更新
+    QLabel *ui_repo_caption = nullptr;///< 仓库
+    QLabel *ui_repo_desc = nullptr;   ///< 仓库
+    QPushButton *ui_github_link = nullptr;///< 打开GitHub
+    QLabel *ui_doc_caption = nullptr; ///< GitHub
+    QLabel *ui_doc_desc = nullptr;///< GitHub
+    QPushButton *ui_doc_link = nullptr;   ///< 打开GitHub
+    QLabel *ui_copyright_caption = nullptr;   ///< 版权-标题
+    QLabel *ui_copyright = nullptr;   ///< 版权
+    QLabel *ui_author_caption = nullptr;  ///< 作者-标题
+    QLabel *ui_author = nullptr;  ///< 作者
+    QLabel *ui_license_caption = nullptr; ///< 许可证-标题
+    QLabel *ui_license = nullptr; ///< 许可证
+    QPushButton *ui_license_link = nullptr;///< 许可证链接
 
     // 布局部分
-    QVBoxLayout *ui_info_page_layout_main = nullptr;  ///< 主界面布局
-    QVBoxLayout *ui_info_page_layout_scrollarea = nullptr;  ///< 滚动区域布局
-    QVBoxLayout *ui_info_page_layout_scrollarea_basis = nullptr;  ///< 滚动区域基础布局
-    QHBoxLayout *ui_info_page_layout_about = nullptr; ///< 关于布局
-    QHBoxLayout *ui_info_page_layout_log = nullptr; ///< 日志布局
-    QVBoxLayout *ui_info_page_layout_log_text = nullptr;///< 日志-文本布局
-    QHBoxLayout *ui_info_page_layout_version = nullptr; ///< 版本布局
-    QVBoxLayout *ui_info_page_layout_version_text = nullptr;///< 版本-文本布局
-    QHBoxLayout *ui_info_page_layout_repo = nullptr;///< 仓库布局
-    QVBoxLayout *ui_info_page_layout_repo_text = nullptr;   ///< 仓库-文本布局
-    QHBoxLayout *ui_info_page_layout_doc = nullptr; ///< 文档布局
-    QVBoxLayout *ui_info_page_layout_doc_text = nullptr;///< 文档-文本布局
-    QHBoxLayout *ui_info_page_layout_copyright = nullptr;   ///< 版权部件
-    QHBoxLayout *ui_info_page_layout_author = nullptr;  ///< 版权部件
-    QHBoxLayout *ui_info_page_layout_license = nullptr; ///< 许可证部件
+    QVBoxLayout *ui_layout_main = nullptr;  ///< 主界面布局
+    QVBoxLayout *ui_layout_scrollarea = nullptr;  ///< 滚动区域布局
+    QVBoxLayout *ui_layout_scrollarea_basis = nullptr;  ///< 滚动区域基础布局
+    QHBoxLayout *ui_layout_about = nullptr; ///< 关于布局
+    QHBoxLayout *ui_layout_log = nullptr; ///< 日志布局
+    QVBoxLayout *ui_layout_log_text = nullptr;///< 日志-文本布局
+    QHBoxLayout *ui_layout_version = nullptr; ///< 版本布局
+    QVBoxLayout *ui_layout_version_text = nullptr;///< 版本-文本布局
+    QHBoxLayout *ui_layout_repo = nullptr;///< 仓库布局
+    QVBoxLayout *ui_layout_repo_text = nullptr;   ///< 仓库-文本布局
+    QHBoxLayout *ui_layout_doc = nullptr; ///< 文档布局
+    QVBoxLayout *ui_layout_doc_text = nullptr;///< 文档-文本布局
+    QHBoxLayout *ui_layout_copyright = nullptr;   ///< 版权部件
+    QHBoxLayout *ui_layout_author = nullptr;  ///< 版权部件
+    QHBoxLayout *ui_layout_license = nullptr; ///< 许可证部件
 
-    QGridLayout *ui_info_page_layout_appinfo = nullptr;
+    QGridLayout *ui_layout_appinfo = nullptr;
 
 
     /**

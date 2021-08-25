@@ -29,7 +29,9 @@
 #ifndef UIPLUGINLISTCARD_H
 #define UIPLUGINLISTCARD_H
 
+#include "ui/plugin/editor/uipluginobjeditor.h"
 #include "data/text.h"
+#include "data/style.h"
 #include "plugin/pluginobject.h"
 #include <QWidget>
 #include <QLabel>
@@ -60,12 +62,13 @@ public:
      * @brief 初始化
      * @details 初始化界面内容
      * @param 文本指针
+     * @param 样式指针
      * @param 插件对象指针
      * @param 序号
      * @param 是否收藏
      * @param 是否禁用
      */
-    void init(Text *ptrText, PluginObject *ptrObj, qint32 index, bool isFav, bool isDisabled);
+    void init(Text *ptrText, Style *ptrStyle, PluginObject *ptrObj, qint32 index, bool isFav, bool isDisabled);
 
     /**
      * @brief 设置选定
@@ -86,20 +89,23 @@ public:
 
 private:
     Text *m_p_text = nullptr;   ///< 文本
+    Style *m_p_style = nullptr; ///< 样式
+
+    UiPluginObjEditor *m_p_editor = nullptr;///< 编辑器
 
     // 部件部分
-    QLabel *ui_plugin_list_card_icon = nullptr; ///< 图标
-    QLabel *ui_plugin_list_card_caption = nullptr;  ///< 名称
-    QLabel *ui_plugin_list_card_author = nullptr;   ///< 作者
-    QLabel *ui_plugin_list_card_version = nullptr;  ///< 版本
-    QLabel *ui_plugin_list_card_desc = nullptr; ///< 介绍
-    QLabel *ui_plugin_list_card_status = nullptr;   ///< 状态
-    QVector<QLabel *> *ui_plugin_list_card_elements = nullptr;  ///< 元素列表
+    QLabel *ui_icon = nullptr;  ///< 图标
+    QLabel *ui_caption = nullptr;   ///< 名称
+    QLabel *ui_author = nullptr;///< 作者
+    QLabel *ui_version = nullptr;   ///< 版本
+    QLabel *ui_desc = nullptr;  ///< 介绍
+    QLabel *ui_status = nullptr;///< 状态
+    QVector<QLabel *> *ui_elements = nullptr;   ///< 元素列表
     // 部件部分
-    QHBoxLayout *ui_plugin_list_card_layout_main = nullptr; ///< 主布局
-    QVBoxLayout *ui_plugin_list_card_layout_content = nullptr;  ///< 内容布局
-    QHBoxLayout *ui_plugin_list_card_layout_title = nullptr;///< 标题布局
-    QHBoxLayout *ui_plugin_list_card_layout_elements = nullptr; ///< 元素布局
+    QHBoxLayout *ui_layout_main = nullptr;  ///< 主布局
+    QVBoxLayout *ui_layout_content = nullptr;   ///< 内容布局
+    QHBoxLayout *ui_layout_title = nullptr; ///< 标题布局
+    QHBoxLayout *ui_layout_elements = nullptr;  ///< 元素布局
 
     /**
      * @brief 初始化部件
@@ -142,11 +148,26 @@ private:
      */
     QLabel *getElementIcon();
 
+private slots:
+    /**
+     * @brief 槽：打开编辑器
+     */
+    void slotOpenEditor();
+
+    /**
+     * @brief 槽：编辑器返回
+     * @param 信号值
+     */
+    void slotEditorBack(UiPluginObjEditor::SIG_BACK_TYPE sig);
+
 signals:
-    void clicked(qint32);
+    void clicked(qint32);   ///< 信号：单击
+    void doubleClicked();   ///< 信号：双击
+    void sigEdited();   ///< 信号：已编辑
 
 protected:
-    virtual void mouseReleaseEvent(QMouseEvent *ev);
+    virtual void mouseReleaseEvent(QMouseEvent *ev);///< 鼠标松开事件
+    virtual void mouseDoubleClickEvent(QMouseEvent *ev);///< 双击事件
 };
 
 #endif // UIPLUGINLISTCARD_H

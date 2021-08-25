@@ -55,7 +55,7 @@ QString Text::getPara(QString para, QVariant var)
     } else if(key == QStringLiteral("var")) {
         qint32 s = value.toInt();
         s = s < 1 ? 1 : s;
-        return varToString(getVar(var, s).toInt());
+        return varToString(getVar(var, s));
     } else {
         return nullptr;
     }

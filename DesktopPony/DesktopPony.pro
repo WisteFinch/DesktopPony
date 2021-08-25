@@ -57,9 +57,11 @@ SOURCES += \
     plugin/data/pluginelementlocalisationdata.cpp \
     plugin/element/pluginelementconfig.cpp \
     plugin/element/pluginelementevent.cpp \
+    plugin/element/pluginelementlibrary.cpp \
     plugin/element/pluginelementlocalisation.cpp \
     plugin/element/pluginelement.cpp \
     plugin/element/pluginelementmodel.cpp \
+    plugin/element/pluginelementresources.cpp \
     plugin/element/pluginelementstyle.cpp \
     plugin/pluginmanager.cpp \
     plugin/pluginobject.cpp \
@@ -81,6 +83,8 @@ SOURCES += \
     ui/config/uiconfigitemcard.cpp \
     ui/config/uiconfigpage.cpp \
     ui/info/uiinfopage.cpp \
+    ui/plugin/editor/uipluginobjeditor.cpp \
+    ui/plugin/editor/uipluginobjmetadataeditor.cpp \
     ui/plugin/uipluginfilter.cpp \
     ui/plugin/uipluginlistcard.cpp \
     ui/plugin/uipluginpage.cpp \
@@ -101,9 +105,11 @@ HEADERS += \
     plugin/data/pluginelementlocalisationdata.h \
     plugin/element/pluginelementconfig.h \
     plugin/element/pluginelementevent.h \
+    plugin/element/pluginelementlibrary.h \
     plugin/element/pluginelementlocalisation.h \
     plugin/element/pluginelement.h \
     plugin/element/pluginelementmodel.h \
+    plugin/element/pluginelementresources.h \
     plugin/element/pluginelementstyle.h \
     plugin/pluginmanager.h \
     plugin/pluginobject.h \
@@ -125,6 +131,8 @@ HEADERS += \
     ui/config/uiconfigitemcard.h \
     ui/config/uiconfigpage.h \
     ui/info/uiinfopage.h \
+    ui/plugin/editor/uipluginobjeditor.h \
+    ui/plugin/editor/uipluginobjmetadataeditor.h \
     ui/plugin/uipluginfilter.h \
     ui/plugin/uipluginlistcard.h \
     ui/plugin/uipluginpage.h \
@@ -134,6 +142,7 @@ HEADERS += \
     ui/uimainpanel.h
 
 FORMS += \
+    ui/plugin/editor/uipluginobjeditor.ui \
     ui/uimainpanel.ui
 
 RESOURCES += \

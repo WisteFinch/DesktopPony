@@ -85,7 +85,7 @@ void UiMainPanel::initWidget()
     //this->ui_character_page->init(this->m_p_conf, this->m_p_text);
     this->ui_main_panel_pages->addWidget(this->ui_character_page);
     this->ui_plugin_page = new UiPluginPage;
-    this->ui_plugin_page->init(this->m_p_conf, this->m_p_text, this->m_p_plugin);
+    this->ui_plugin_page->init(this->m_p_conf, this->m_p_text, this->m_p_style, this->m_p_plugin);
     this->ui_main_panel_pages->addWidget(this->ui_plugin_page);
     this->ui_config_page = new UiConfigPage;
     this->ui_config_page->init(this->m_p_conf, this->m_p_text, this->m_p_plugin, this->m_ptrfunc_get_conf);
@@ -214,7 +214,7 @@ void UiMainPanel::slotChangeTab(int index)
         this->ui_main_panel_tab_info->setStyle(QApplication::style());
     }
 
-    this->ui_plugin_page->ui_plugin_page_filter->hide();
+    this->ui_plugin_page->ui_filter->hide();
 }
 
 void UiMainPanel::slotShowRestart()

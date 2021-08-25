@@ -37,39 +37,39 @@ void UiConfigPage::init(Config *ptrconf, Text *ptrText, PluginManager *ptrPlugin
 
 void UiConfigPage::initWidget()
 {
-    this->ui_conf_page_layout_main = new QVBoxLayout;
-    this->ui_conf_page_layout_main->setSpacing(0);
-    this->ui_conf_page_layout_main->setMargin(0);
-    this->ui_conf_page_scrollarea = new QScrollArea;
-    this->ui_conf_page_scrollarea->setWidgetResizable(true);
-    this->ui_conf_page_layout_main->addWidget(this->ui_conf_page_scrollarea);
-    this->ui_conf_page_scrollarea_widget = new QWidget;
-    this->ui_conf_page_layout_list = new QVBoxLayout;
-    this->ui_conf_page_layout_list->setSpacing(5);
-    this->ui_conf_page_layout_list->setContentsMargins(0, 0, 2, 0);
-    this->ui_conf_page_scrollarea_widget->setLayout(this->ui_conf_page_layout_list);
-    this->ui_conf_page_scrollarea->setWidget(this->ui_conf_page_scrollarea_widget);
+    this->ui_layout_main = new QVBoxLayout;
+    this->ui_layout_main->setSpacing(0);
+    this->ui_layout_main->setMargin(0);
+    this->ui_scrollarea = new QScrollArea;
+    this->ui_scrollarea->setWidgetResizable(true);
+    this->ui_layout_main->addWidget(this->ui_scrollarea);
+    this->ui_scrollarea_widget = new QWidget;
+    this->ui_layout_list = new QVBoxLayout;
+    this->ui_layout_list->setSpacing(5);
+    this->ui_layout_list->setContentsMargins(0, 0, 2, 0);
+    this->ui_scrollarea_widget->setLayout(this->ui_layout_list);
+    this->ui_scrollarea->setWidget(this->ui_scrollarea_widget);
 
-    this->setLayout(this->ui_conf_page_layout_main);
+    this->setLayout(this->ui_layout_main);
 }
 
 void UiConfigPage::initObjectName()
 {
     this->setObjectName(QStringLiteral("ui_conf_page"));
     // 部件部分
-    this->ui_conf_page_scrollarea->setObjectName(QStringLiteral("ui_conf_page_scrollarea"));
-    this->ui_conf_page_scrollarea_widget->setObjectName(QStringLiteral("ui_conf_page_scrollarea_widget"));
+    this->ui_scrollarea->setObjectName(QStringLiteral("ui_conf_page_scrollarea"));
+    this->ui_scrollarea_widget->setObjectName(QStringLiteral("ui_conf_page_scrollarea_widget"));
     // 布局
-    this->ui_conf_page_scrollarea->setObjectName(QStringLiteral("ui_conf_page_scrollarea"));
-    this->ui_conf_page_layout_list->setObjectName(QStringLiteral("ui_conf_page_scrollarea"));
+    this->ui_scrollarea->setObjectName(QStringLiteral("ui_conf_page_scrollarea"));
+    this->ui_layout_list->setObjectName(QStringLiteral("ui_conf_page_scrollarea"));
 }
 
 void UiConfigPage::initProperty()
 {
     this->setProperty("category", QStringLiteral("page"));
     // 部件部分
-    this->ui_conf_page_scrollarea->setProperty("category", QStringLiteral("conf_page_scrollarea"));
-    this->ui_conf_page_scrollarea_widget->setProperty("category", QStringLiteral("conf_page_widget"));
+    this->ui_scrollarea->setProperty("category", QStringLiteral("conf_page_scrollarea"));
+    this->ui_scrollarea_widget->setProperty("category", QStringLiteral("conf_page_widget"));
 }
 
 void UiConfigPage::initContent()
@@ -108,7 +108,7 @@ void UiConfigPage::creatList()
         }
         indexIter++;
     }
-    this->ui_conf_page_layout_list->addStretch();
+    this->ui_layout_list->addStretch();
 }
 
 void UiConfigPage::addItem(QMap<QString, QVector<QString>*>::iterator indexIter, QMap<QString, Config::Item *> *list)
@@ -151,7 +151,7 @@ void UiConfigPage::addItem(QMap<QString, QVector<QString>*>::iterator indexIter,
 
         categoryCaption->setText(this->m_p_text->getLoc("config_category_" + indexIter.key()));
 
-        this->ui_conf_page_layout_list->addWidget(categoryWidget);
+        this->ui_layout_list->addWidget(categoryWidget);
     } else {
         delete categoryItemLayout;
     }
@@ -163,7 +163,7 @@ void UiConfigPage::clearList()
         while(!this->m_p_items->isEmpty()) {
             disconnect(this->m_p_items->last(), &UiConfigItemCard::sigValueChanged, this, nullptr);
             disconnect(this->m_p_items->last(), &UiConfigItemCard::sigShowRestart, this, nullptr);
-            this->ui_conf_page_layout_list->removeWidget(this->m_p_items->last());
+            this->ui_layout_list->removeWidget(this->m_p_items->last());
             this->m_p_items->last()->setParent(nullptr);
             delete this->m_p_items->last();
             this->m_p_items->pop_back();

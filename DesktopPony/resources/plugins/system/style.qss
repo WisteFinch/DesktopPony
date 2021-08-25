@@ -68,6 +68,41 @@ QScrollArea{
     border: none;
 }
 
+QWidget[category = 'frame']{
+	background-image: url(background.jpg);
+    background-position: center;
+    min-width: 600px;
+    min-height: 370px;
+}
+
+QSpinBox, QDoubleSpinBox, QLineEdit, QComboBox, QTextEdit{
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 100);
+    border-radius: 3px;
+}
+
+QSpinBox:selected:hover, QDoubleSpinBox:hover, QLineEdit:hover, QComboBox:hover, QTextEdit:hover{
+    border: 1px solid rgba(47, 144, 185, 200);
+}
+
+QSpinBox:selected:focus, QDoubleSpinBox:focus, QLineEdit:focus, QTextEdit:focus{
+    border: 1px solid rgba(47, 144, 185, 200);
+    background: rgba(47, 144, 185, 25);
+}
+
+QSpinBox::up-button, QSpinBox::down-button, QDoubleSpinBox::up-button, QDoubleSpinBox::down-button{
+    width: 0px;
+}
+
+QCheckBox{
+    background: transparent;
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid rgb(47,144,185);
+    background: rgba(255, 255, 255, 200);
+}
+
 /* 工具 */
 #h_line{
     min-height: 1px;
@@ -80,13 +115,6 @@ QScrollArea{
 }
 
 /* 主界面 */
-QWidget[category = 'frame']{
-	background-image: url(background.jpg);
-    background-position: center;
-    min-width: 600px;
-    min-height: 370px;
-}
-
 QPushButton[category = 'main_panel_tab_buttton']{
     background-color: rgba(255, 255, 255, 150);
     color: black;
@@ -301,7 +329,6 @@ QLabel[category = 'plugin_list_card_element_icon_label']{
 #ui_conf_page_category_widget{
     background-color: rgba(255, 255, 255, 200);
     border-radius: 5px;
-    height: 30px;
 }
 
 #ui_conf_page_category_caption{
@@ -321,33 +348,8 @@ QLabel[category = 'plugin_list_card_element_icon_label']{
 }
 
 QSpinBox[category = 'conf_item_card_value'], QDoubleSpinBox[category = 'conf_item_card_value'], QLineEdit[category = 'conf_item_card_value'], QComboBox[category = 'conf_item_card_value']{
-    background: transparent;
-    border: 1px solid rgba(0, 0, 0, 100);
     min-width: 200px;
     max-width: 200px;
-    border-radius: 3px;
-}
-
-QSpinBox[category = 'conf_item_card_value']:selected:hover, QDoubleSpinBox[category = 'conf_item_card_value']:hover, QLineEdit[category = 'conf_item_card_value']:hover, QComboBox[category = 'conf_item_card_value']:hover{
-    border: 1px solid rgba(47, 144, 185, 200);
-}
-
-QSpinBox:selected[category = 'conf_item_card_value']:focus, QDoubleSpinBox[category = 'conf_item_card_value']:focus, QLineEdit[category = 'conf_item_card_value']:focus{
-    border: 1px solid rgba(47, 144, 185, 200);
-    background: rgba(47, 144, 185, 25);
-}
-
-QSpinBox[category = 'conf_item_card_value']::up-button, QSpinBox[category = 'conf_item_card_value']::down-button, QDoubleSpinBox[category = 'conf_item_card_value']::up-button, QDoubleSpinBox[category = 'conf_item_card_value']::down-button{
-    width: 0px;
-}
-
-QCheckBox[category = 'conf_item_card_value']{
-    background: transparent;
-}
-
-QComboBox[category = 'conf_item_card_value'] QAbstractItemView {
-    border: 1px solid rgb(47,144,185);
-    background: rgba(255, 255, 255, 200);
 }
 
 /* 信息页 */
@@ -389,4 +391,71 @@ QPushButton[category = 'info_page_button']:pressed{
 
 QLabel[category = 'info_page_item_desc_label']{
     color: rgb(100, 100, 100);
+}
+
+/* 插件对象编辑器 */
+#ui_plugin_obj_editor_widget{
+    background: transparent;
+}
+
+#ui_plugin_obj_editor_tools_widget{
+    background: rgba(255, 255, 255, 200);
+    max-height: 30px;
+}
+
+QPushButton[category = 'plugin_obj_editor_tools_button']{
+    background: rgba(47,144,185,0);
+    max-width: 30px;
+    max-height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    border-radius: 15px;
+}
+
+QPushButton[category = 'plugin_obj_editor_tools_button']:hover{
+    background: rgba(47,144,185,40);
+}
+
+QPushButton[category = 'plugin_obj_editor_tools_button']:pressed{
+    background: rgba(47,144,185,80);
+}
+
+/* 插件对象元数据编辑器 */
+#ui_plugin_obj_metadata_editor{
+    background-color: rgba(255, 255, 255, 200);
+    border-radius: 5px;
+}
+
+#ui_plugin_obj_metadata_editor_title{
+    font: bold;
+}
+
+QLineEdit[category = "plugin_obj_metadata_editor_lineedit"]{
+    max-width: 500px;
+}
+
+#ui_plugin_obj_metadata_editor_desc_textedit{
+    max-width: 500px;
+    max-height: 40px;
+}
+
+#ui_plugin_obj_metadata_editor_uuid_lineedit{
+    max-width: 475px;
+}
+
+#ui_plugin_obj_metadata_editor_uuid_button{
+    background: rgba(47,144,185,0);
+    max-width: 20px;
+    max-height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    border-radius: 10px;
+}
+
+#ui_plugin_obj_metadata_editor_uuid_button:hover{
+    background: rgba(47,144,185,40);
+}
+
+#ui_plugin_obj_metadata_editor_uuid_button:pressed{
+    background: rgba(47,144,185,80);
 }

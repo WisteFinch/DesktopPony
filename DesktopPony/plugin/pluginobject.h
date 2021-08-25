@@ -35,6 +35,8 @@
 #include "element/pluginelementmodel.h"
 #include "element/pluginelementstyle.h"
 #include "element/pluginelementconfig.h"
+#include "element/pluginelementresources.h"
+#include "element/pluginelementlibrary.h"
 #include "tools.h"
 #include <QFile>
 #include <QDir>
@@ -87,6 +89,7 @@ public:
     PluginObjectMetadata *m_p_metadata = nullptr;   ///< 元数据
     PLUGIN_ELEMENT_LIST *m_p_element_list = nullptr;///< 元素列表
     QMap<QString, uint> *m_p_element_uuid_index = nullptr;  ///< 元素uuid索引
+    PluginObject *m_p_edited_obj = nullptr; ///< 编辑过的对象
 private:
     PluginElementTypeName m_plugin_type_name;
 };

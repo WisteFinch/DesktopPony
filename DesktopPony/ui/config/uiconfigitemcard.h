@@ -75,20 +75,20 @@ private:
     Config::PTRFUNC_GET_CONFIG m_ptrfunc_get_conf;///< 函数指针：获取配置
 
     // 部件部分
-    QLabel *ui_conf_item_card_caption = nullptr;///< 标题
-    QLabel *ui_conf_item_card_desc = nullptr;   ///< 描述
-    QLabel *ui_conf_item_card_name = nullptr;   ///< 配置名称
-    QLabel *ui_conf_item_card_status = nullptr; ///< 状态
+    QLabel *ui_caption = nullptr;   ///< 标题
+    QLabel *ui_desc = nullptr;  ///< 描述
+    QLabel *ui_name = nullptr;  ///< 配置名称
+    QLabel *ui_status = nullptr;///< 状态
 
-    QCheckBox *ui_conf_item_card_switch = nullptr;  ///< 开关
-    QLineEdit *ui_conf_item_card_lineedit = nullptr;///< 文本编辑
-    QDoubleSpinBox *ui_conf_item_card_spin_box_real = nullptr;///< 实数数值框
-    QSpinBox *ui_conf_item_card_spin_box = nullptr;  ///< 整数数值框
-    QComboBox *ui_conf_item_card_combobox = nullptr;///< 组合框
+    QCheckBox *ui_switch = nullptr; ///< 开关
+    QLineEdit *ui_lineedit = nullptr;   ///< 文本编辑
+    QDoubleSpinBox *ui_spin_box_real = nullptr; ///< 实数数值框
+    QSpinBox *ui_spin_box = nullptr;///< 整数数值框
+    QComboBox *ui_combobox = nullptr;   ///< 组合框
 
     // 部件部分
-    QHBoxLayout *ui_conf_item_card_layout_main = nullptr; ///< 主布局
-    QVBoxLayout *ui_conf_item_card_layout_text = nullptr; ///< 文本布局
+    QHBoxLayout *ui_layout_main = nullptr;  ///< 主布局
+    QVBoxLayout *ui_layout_text = nullptr;  ///< 文本布局
 
     /**
      * @brief 初始化部件

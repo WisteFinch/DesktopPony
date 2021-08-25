@@ -76,12 +76,12 @@ private:
     QVector<UiConfigItemCard *> *m_p_items = nullptr;   ///< 项列表
 
     // 部件部分
-    QScrollArea *ui_conf_page_scrollarea = nullptr;   ///< 滚动区域
-    QWidget *ui_conf_page_scrollarea_widget = nullptr;   ///< 滚动区域部件
+    QScrollArea *ui_scrollarea = nullptr;   ///< 滚动区域
+    QWidget *ui_scrollarea_widget = nullptr;///< 滚动区域部件
 
     // 布局部分
-    QVBoxLayout *ui_conf_page_layout_main = nullptr;  ///< 主界面布局
-    QVBoxLayout *ui_conf_page_layout_list = nullptr;  ///< 列表布局
+    QVBoxLayout *ui_layout_main = nullptr;  ///< 主界面布局
+    QVBoxLayout *ui_layout_list = nullptr;///< 列表布局
 
 
     /**

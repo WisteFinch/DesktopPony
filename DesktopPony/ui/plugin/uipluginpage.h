@@ -35,6 +35,7 @@
 #include "ui/tools/hline.h"
 #include "data/config.h"
 #include "data/text.h"
+#include "data/style.h"
 #include "plugin/pluginmanager.h"
 #include <QWidget>
 #include <QLayout>
@@ -65,11 +66,12 @@ public:
      * @details 初始化界面内容
      * @param 配置指针
      * @param 文本指针
+     * @param 样式指针
      * @param 插件管理指针
      */
-    void init(Config *ptrconf, Text *ptrText, PluginManager *ptrPluginManager);
+    void init(Config *ptrconf, Text *ptrText, Style *ptrStyle, PluginManager *ptrPluginManager);
 
-    UiPluginFilter *ui_plugin_page_filter = nullptr;///< 筛选器
+    UiPluginFilter *ui_filter = nullptr;///< 筛选器
 
 signals:
     void sigReloadData();   ///< 信号：重载数据
@@ -77,33 +79,34 @@ signals:
 private:
     Config *m_p_conf = nullptr; ///< 配置
     Text *m_p_text = nullptr;   ///< 文本
+    Style *m_p_style = nullptr; ///< 样式
     PluginManager *m_p_plugin = nullptr;///< 插件
 
     qint32 m_list_index = -1;   ///< 列表序号
 
-    QVector<UiPluginListCard *> *m_p_cards = nullptr; ///< 卡片
-    QVector<UiPluginListCard *> *m_p_sorted_cards = nullptr; ///< 排序过的卡片
+    QVector<UiPluginListCard *> *m_p_cards = nullptr;   ///< 卡片
+    QVector<UiPluginListCard *> *m_p_sorted_cards = nullptr;///< 排序过的卡片
     QVector<UiPluginListCard *> *m_p_filtered_cards = nullptr;  ///< 筛选过的卡片
 
     // 部件部分
-    QLineEdit *ui_plugin_page_search = nullptr; ///< 搜索框
-    QPushButton *ui_plugin_page_search_filters = nullptr;   ///< 过滤器
-    QScrollArea *ui_plugin_page_scrollarea = nullptr;   ///< 滚动区域
-    QWidget *ui_plugin_page_list = nullptr; ///< 列表界面
-    QPushButton *ui_plugin_page_tools_reload = nullptr; ///< 重新读取
-    QPushButton *ui_plugin_page_tools_addnew = nullptr; ///< 新建
-    QPushButton *ui_plugin_page_tools_delete = nullptr; ///< 删除
-    QPushButton *ui_plugin_page_tools_enable = nullptr; ///< 启用
-    QPushButton *ui_plugin_page_tools_disable = nullptr;///< 禁用
-    QPushButton *ui_plugin_page_tools_star = nullptr;   ///< 收藏
+    QLineEdit *ui_search = nullptr; ///< 搜索框
+    QPushButton *ui_search_filters = nullptr;   ///< 过滤器
+    QScrollArea *ui_scrollarea = nullptr;   ///< 滚动区域
+    QWidget *ui_list = nullptr; ///< 列表界面
+    QPushButton *ui_tools_reload = nullptr; ///< 重新读取
+    QPushButton *ui_tools_addnew = nullptr; ///< 新建
+    QPushButton *ui_tools_delete = nullptr; ///< 删除
+    QPushButton *ui_tools_enable = nullptr; ///< 启用
+    QPushButton *ui_tools_disable = nullptr;///< 禁用
+    QPushButton *ui_tools_star = nullptr;   ///< 收藏
 
     // 布局部分
-    QVBoxLayout *ui_plugin_page_layout_main = nullptr;  ///< 主界面布局
-    QHBoxLayout *ui_plugin_page_layout_search = nullptr;///< 搜索布局
-    QVBoxLayout *ui_plugin_page_layout_list = nullptr;  ///< 列表布局
-    QHBoxLayout *ui_plugin_page_layout_tools = nullptr; ///< 工具布局
+    QVBoxLayout *ui_layout_main = nullptr;  ///< 主界面布局
+    QHBoxLayout *ui_layout_search = nullptr;///< 搜索布局
+    QVBoxLayout *ui_layout_list = nullptr;  ///< 列表布局
+    QHBoxLayout *ui_layout_tools = nullptr; ///< 工具布局
 
-    QAction *ui_plugin_page_search_icon = nullptr; ///< 搜索图标
+    QAction *ui_search_icon = nullptr;  ///< 搜索图标
 
     /**
      * @brief 初始化部件

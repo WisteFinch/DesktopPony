@@ -32,5 +32,8 @@
         <file>resources/img/style.svg</file>
         <file>resources/img/doc.svg</file>
         <file>resources/img/update.svg</file>
+        <file>resources/img/edit.svg</file>
+        <file>resources/img/save.svg</file>
+        <file>resources/img/file.svg</file>
     </qresource>
 </RCC>

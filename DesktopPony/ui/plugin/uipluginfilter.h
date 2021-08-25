@@ -51,6 +51,8 @@ public:
     bool m_filter_acc = true;   ///< 部件筛选
     bool m_filter_model = true; ///< 模型筛选
     bool m_filter_conf = true;  ///< 配置筛选
+    bool m_filter_rc = true;///< 资源筛选
+    bool m_filter_lib = true;   ///< 库筛选
     bool m_filter_null = true;  ///< 空白筛选
 
 
@@ -83,34 +85,40 @@ private:
     int m_mouse_unentered_time; ///< 鼠标未移入时间
 
     // 部件部分
-    QWidget *ui_plugin_filter_widget = nullptr;
-    QLabel *ui_plugin_filter_localisation = nullptr;///< 本地化
-    QLabel *ui_plugin_filter_style = nullptr;   ///< 样式
-    QLabel *ui_plugin_filter_event = nullptr;   ///< 事件
-    QLabel *ui_plugin_filter_action = nullptr;  ///< 动作
-    QLabel *ui_plugin_filter_accessories = nullptr; ///< 部件
-    QLabel *ui_plugin_filter_model = nullptr;   ///< 模型
-    QLabel *ui_plugin_filter_config = nullptr;  ///< 配置
-    QLabel *ui_plugin_filter_null = nullptr;///< 空白
-    QCheckBox *ui_plugin_filter_localisation_switch = nullptr;  ///< 本地化开关
-    QCheckBox *ui_plugin_filter_style_switch = nullptr; ///< 样式开关
-    QCheckBox *ui_plugin_filter_event_switch = nullptr; ///< 事件开关
-    QCheckBox *ui_plugin_filter_action_switch = nullptr;///< 动作开关
-    QCheckBox *ui_plugin_filter_accessories_switch = nullptr;   ///< 部件开关
-    QCheckBox *ui_plugin_filter_model_switch = nullptr; ///< 模型开关
-    QCheckBox *ui_plugin_filter_config_switch = nullptr;///< 配置开关
-    QCheckBox *ui_plugin_filter_null_switch = nullptr;  ///< 空白开关
+    QWidget *ui_widget = nullptr;
+    QLabel *ui_localisation = nullptr;  ///< 本地化
+    QLabel *ui_style = nullptr; ///< 样式
+    QLabel *ui_event = nullptr; ///< 事件
+    QLabel *ui_action = nullptr;///< 动作
+    QLabel *ui_accessories = nullptr;   ///< 部件
+    QLabel *ui_model = nullptr; ///< 模型
+    QLabel *ui_config = nullptr;///< 配置
+    QLabel *ui_rc = nullptr;///< 资源
+    QLabel *ui_lib = nullptr;   ///< 库
+    QLabel *ui_null = nullptr;  ///< 空白
+    QCheckBox *ui_localisation_switch = nullptr;///< 本地化开关
+    QCheckBox *ui_style_switch = nullptr;   ///< 样式开关
+    QCheckBox *ui_event_switch = nullptr;   ///< 事件开关
+    QCheckBox *ui_action_switch = nullptr;  ///< 动作开关
+    QCheckBox *ui_accessories_switch = nullptr; ///< 部件开关
+    QCheckBox *ui_model_switch = nullptr;   ///< 模型开关
+    QCheckBox *ui_config_switch = nullptr;  ///< 配置开关
+    QCheckBox *ui_rc_switch = nullptr;  ///< 资源开关
+    QCheckBox *ui_lib_switch = nullptr; ///< 库开关
+    QCheckBox *ui_null_switch = nullptr;///< 空白开关
     // 部件部分
-    QVBoxLayout *ui_plugin_filter_layout_main = nullptr; ///< 主布局布局
-    QVBoxLayout *ui_plugin_filter_layout_widget = nullptr; ///< 控件布局
-    QHBoxLayout *ui_plugin_filter_layout_localisation = nullptr;///< 本地化布局
-    QHBoxLayout *ui_plugin_filter_layout_style = nullptr;   ///< 样式布局
-    QHBoxLayout *ui_plugin_filter_layout_event = nullptr;   ///< 事件布局
-    QHBoxLayout *ui_plugin_filter_layout_action = nullptr;  ///< 动作布局
-    QHBoxLayout *ui_plugin_filter_layout_accessories = nullptr; ///< 部件布局
-    QHBoxLayout *ui_plugin_filter_layout_model = nullptr;   ///< 模型布局
-    QHBoxLayout *ui_plugin_filter_layout_config = nullptr;  ///< 配置布局
-    QHBoxLayout *ui_plugin_filter_layout_null = nullptr;///< 空白布局
+    QVBoxLayout *ui_layout_main = nullptr;  ///< 主布局布局
+    QVBoxLayout *ui_layout_widget = nullptr;///< 控件布局
+    QHBoxLayout *ui_layout_localisation = nullptr;  ///< 本地化布局
+    QHBoxLayout *ui_layout_style = nullptr; ///< 样式布局
+    QHBoxLayout *ui_layout_event = nullptr; ///< 事件布局
+    QHBoxLayout *ui_layout_action = nullptr;///< 动作布局
+    QHBoxLayout *ui_layout_accessories = nullptr;   ///< 部件布局
+    QHBoxLayout *ui_layout_model = nullptr; ///< 模型布局
+    QHBoxLayout *ui_layout_config = nullptr;///< 配置布局
+    QHBoxLayout *ui_layout_rc = nullptr;///< 资源布局
+    QHBoxLayout *ui_layout_lib = nullptr;   ///< 库布局
+    QHBoxLayout *ui_layout_null = nullptr;  ///< 空白布局
 
     /**
      * @brief 初始化部件
